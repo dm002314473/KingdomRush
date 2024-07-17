@@ -3,6 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
+#include <iostream>
+#include <sstream>
+#include <fstream>
 
 class MainMenu
 {
@@ -11,5 +14,5 @@ private:
     sf::Sprite sprite;
     std::string mainMenuDocumentPath;
 
-    std::vector<std::string> levelDocumentPaths;
+    void levelReader(int index);
 };
