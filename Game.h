@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "mainMenu/MainMenu.h"
+#include "level/Level.h"
 
 enum GameState
 {
@@ -12,14 +13,11 @@ class Game
 private:
     sf::RenderWindow window;
     GameState currentState;
-    MainMenu mainMenu;
-    // Level level;
-
-    void processEvents();
-    void update();
-    void render();
+    MainMenu *mainMenu;
+    Level *level;
 
 public:
-    Game(std::string mainMenuDocumentPath);
+    Game();
     void run();
+    void changeState(GameState newState);
 };

@@ -1,10 +1,12 @@
 #include <iostream>
 #include "Game.h"
-#include "Level.h"
 
 int main(void)
 {
     std::cout << "Soso";
+
+    Game game;
+    game.run();
 
     return 0;
 }
