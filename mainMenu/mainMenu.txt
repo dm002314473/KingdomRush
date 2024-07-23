@@ -1,2 +1,0 @@
-GeneralRehearsal\levels\level1.txt
-GeneralRehearsal\levels\level2.txt

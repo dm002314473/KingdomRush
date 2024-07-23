@@ -1,14 +1,24 @@
 #pragma once
-
 #include <SFML/Graphics.hpp>
-#include <string>
-#include <vector>
+
+enum GameState
+{
+    MAIN_MENU,
+    LEVEL
+};
 
 class Game
 {
 private:
     sf::RenderWindow window;
-    sf::Texture texture;
+    GameState currentState;
+    // Level level;
+
+    void processEvents();
+    void update();
+    void render();
+
 public:
-    Game();
+    Game(std::string mainMenuDocumentPath);
+    void run();
 };
