@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include "mainMenu/MainMenu.h"
 #include "level/Level.h"
@@ -7,6 +9,9 @@ enum GameState
     MAIN_MENU,
     LEVEL
 };
+
+class MainMenu;
+class Level;
 
 class Game
 {

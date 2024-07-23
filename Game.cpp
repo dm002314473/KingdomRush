@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : window(sf::VideoMode(800, 600), "Kingdom Rush"), currentState(MAIN_MENU), mainMenu(/*imageTXTpath*/), level(nullptr) {}
+Game::Game() : window(sf::VideoMode(1920, 1080), "Kingdom Rush"), currentState(MAIN_MENU), mainMenu(new MainMenu(/*Here paths for .txt files may be send if needed*/)), level(nullptr) {}
 
 void Game::run()
 {
@@ -15,10 +15,10 @@ void Game::run()
             switch (currentState)
             {
             case MAIN_MENU:
-                mainMenu.handleEvent(event, *this);
+                mainMenu->handleEvent(event, *this);
                 break;
             case LEVEL:
-                level.handleEvent(event, *this);
+                level->handleEvent(event, *this);
                 break;
 
             default:
@@ -28,11 +28,8 @@ void Game::run()
 
         switch (currentState)
         {
-        case MAIN_MENU:
-            mainMenu.update();
-            break;
         case LEVEL:
-            level.update();
+            level->update();
             break;
         }
 
@@ -40,11 +37,11 @@ void Game::run()
         switch (currentState)
         {
         case MAIN_MENU:
-            mainMenu.render(window);
+            mainMenu->render(window);
             break;
 
         case LEVEL:
-            level.render(window);
+            level->render(window);
             break;
         default:
             break;
@@ -53,4 +50,17 @@ void Game::run()
     }
 }
 
-void Game::changeState(GameState newState) { currentState = newState; }
+void Game::changeState(GameState newState)
+{
+    if (newState == LEVEL)
+    {
+        delete level;
+        level = new Level();
+    }
+    else if (newState == MAIN_MENU)
+    {
+        delete level;
+        level = nullptr;
+    }
+    currentState = newState;
+}
