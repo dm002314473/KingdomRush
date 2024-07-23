@@ -1,5 +1,5 @@
-#pragma once
 #include <SFML/Graphics.hpp>
+#include "mainMenu/MainMenu.h"
 
 enum GameState
 {
@@ -12,6 +12,7 @@ class Game
 private:
     sf::RenderWindow window;
     GameState currentState;
+    MainMenu mainMenu;
     // Level level;
 
     void processEvents();
