@@ -1,6 +1,14 @@
 #include "MainMenu.h"
 
+
 MainMenu::MainMenu(){
+    imagesReader(allImagesMatrix);
+    textureMatrixFiller(allTexturesMatrix);
+    enemyStatsReader(enemyStatsMatrix);
+    towerStatsReader(towerStatsMatrix);
+}
+
+void MainMenu::textureMatrixFiller(std::vector<std::vector<sf::Texture>>& allTexturesMatrix){
     for (int i = 0; i < allImagesMatrix.size(); ++i) {
         allTexturesMatrix[i].resize(allImagesMatrix[i].size());
         for (size_t j = 0; j < allImagesMatrix[i].size(); ++j) {
