@@ -1,15 +1,20 @@
 #include "MainMenu.h"
 
-void MainMenu::textureMatrixFiller(std::vector<std::vector<sf::Texture>>& allTexturesMatrix){
-     for (size_t i = 0; i < allImagesMatrix.size(); ++i) {
+void MainMenu::textureMatrixFiller(std::vector<std::vector<sf::Texture>> &allTexturesMatrix)
+{
+    for (size_t i = 0; i < allImagesMatrix.size(); ++i)
+    {
         allTexturesMatrix[i].resize(allImagesMatrix[i].size());
-        for (size_t j = 0; j < allImagesMatrix[i].size(); ++j) {
-            if (!allTexturesMatrix[i][j].loadFromFile(allImagesMatrix[i][j])) {
+        for (size_t j = 0; j < allImagesMatrix[i].size(); ++j)
+        {
+            if (!allTexturesMatrix[i][j].loadFromFile(allImagesMatrix[i][j]))
+            {
                 std::cerr << "Failed to load " << allImagesMatrix[i][j] << std::endl;
             }
         }
     }
 }
+
 // Check the paths
 MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
 {
@@ -31,9 +36,9 @@ MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
         }
     }
 
-    backgroundSprite.setTexture(allTexturesMatrix[0][0]);
-    for (auto &stand : towerStands)
-        stand->setTexture(allTexturesMatrix[0][1]);
+    // backgroundSprite.setTexture(allTexturesMatrix[0][0]);
+    // for (auto &stand : towerStands)
+    //     stand->setTexture(allTexturesMatrix[0][1]);
 }
 
 void MainMenu::handleEvent(sf::Event &event, Game &game)
