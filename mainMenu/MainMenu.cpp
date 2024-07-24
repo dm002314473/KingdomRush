@@ -19,9 +19,9 @@ void MainMenu::textureMatrixFiller(std::vector<std::vector<sf::Texture>> &allTex
 MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
 {
     imagesReader(allImagesMatrix);
-    textureMatrixFiller(allTexturesMatrix);
     enemyStatsReader(enemyStatsMatrix);
     towerStatsReader(towerStatsMatrix);
+    textureMatrixFiller(allTexturesMatrix);
     std::cout << "MainMenu constructor reached!" << std::endl;
 
     for (int i = 0; i < allImagesMatrix.size(); ++i)
@@ -60,7 +60,7 @@ void MainMenu::render(sf::RenderWindow &window)
 
 void MainMenu::imagesReader(std::vector<std::vector<std::string>> &allImagesMatrix)
 {
-    std::ifstream file("imagesPaths.txt");
+    std::ifstream file("GeneralRehearsal\\mainMenu\\imagesPaths.txt");
     if (!file.is_open())
     {
         std::cerr << "Unable to open imagesPaths.txt" << std::endl;
@@ -106,7 +106,7 @@ bool MainMenu::isNumber(std::string &line)
 
 void MainMenu::enemyStatsReader(std::vector<std::vector<int>> &enemyStatsMatrix)
 {
-    std::ifstream file("enemyStats.txt");
+    std::ifstream file("GeneralRehearsal\\mainMenu\\enemyStats.txt");
     if (!file.is_open())
     {
         std::cerr << "Unable to open enemyStats.txt" << std::endl;
@@ -142,10 +142,10 @@ void MainMenu::enemyStatsReader(std::vector<std::vector<int>> &enemyStatsMatrix)
 
 void MainMenu::towerStatsReader(std::vector<std::vector<int>> &towerStatsMatrix)
 {
-    std::ifstream file("tower_stats.txt");
+    std::ifstream file("GeneralRehearsal\\mainMenu\\towerStats.txt");
     if (!file.is_open())
     {
-        std::cerr << "Unable to open tower_stats.txt" << std::endl;
+        std::cerr << "Unable to open towerStats.txt" << std::endl;
         return;
     }
 
