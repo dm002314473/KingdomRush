@@ -6,4 +6,9 @@ class Enemy
 {
     // sprite, health, damage, speed
     // getters, moveAnimation
+private:
+    sf::Sprite sprite;
+
+public:
+    sf::Sprite getSprite();
 };

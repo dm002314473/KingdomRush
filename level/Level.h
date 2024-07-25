@@ -10,11 +10,12 @@ class Game;
 class Level
 {
 private:
-    std::vector<std::vector<Enemy *>> enemies;
+    std::vector<Enemy *> enemies;
     std::vector<sf::Sprite *> towerStands;
     std::vector<Tower *> towers;
 
 public:
+    Level();
     void handleEvent(sf::Event &event, Game &game);
     void update();
     void render(sf::RenderWindow &window);
