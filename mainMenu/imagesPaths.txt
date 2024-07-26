@@ -13,8 +13,6 @@ GeneralRehearsal\images\hero_walking2.png
 GeneralRehearsal\images\hero_walking3.png
 70000
 GeneralRehearsal\images\wiz_lvl1.png
-70001
-GeneralRehearsal\images\wiz_lvl2.png
 80000
 GeneralRehearsal\images\arc_lvl1.png
 90000

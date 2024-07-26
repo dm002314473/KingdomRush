@@ -1,13 +1,14 @@
 #include "Enemy.h"
 
-void Enemy::setHealth(int hlth){health = hlth;}
-void Enemy::setDamage(int dmg){damage = dmg;}
-void Enemy::setSpeedX(int spdX){speedX = spdX;}
-void Enemy::setSpeedY(int spdY){speedY = spdY;}
-void Enemy::setMagicArmor(int mgcArmr){magicArmor = mgcArmr;}
-void Enemy::setPhysicalArmor(int physclArmr){physicalArmor = physclArmr;}
-void Enemy::setBounty(int bnty){bounty = bnty;}
-void Enemy::setAttckSpd(int attSpd){attackSpeed = attSpd;}
+void Enemy::setHealth(int newHealth){health = newHealth;}
+void Enemy::setDamage(int newDamage){damage = newDamage;}
+void Enemy::setSpeedX(int newSpeedX){speedX = newSpeedX;}
+void Enemy::setSpeedY(int newSpeedY){speedY = newSpeedY;}
+void Enemy::setMagicArmor(int newMagicArmor){magicArmor = newMagicArmor;}
+void Enemy::setPhysicalArmor(int newPhysicalArmor){physicalArmor = newPhysicalArmor;}
+void Enemy::setBounty(int newBounty){bounty = newBounty;}
+void Enemy::setAttackSpeed(int newAttackSpeed){attackSpeed = newAttackSpeed;}
+void Enemy::setSprite(sf::Sprite newSprite){sprite = newSprite;}
 
 
 int Enemy::getHealth(){return health;}
@@ -17,4 +18,6 @@ int Enemy::getSpeedY(){return speedY;}
 int Enemy::getMagicArmor(){return magicArmor;}
 int Enemy::getPhysicalArmor(){return physicalArmor;}
 int Enemy::getBounty(){return bounty;}
-int Enemy::getAttckSpd(){return attackSpeed;}
+int Enemy::getAttackSpeed(){return attackSpeed;}
+
+sf::Sprite Enemy::getSprite() { return sprite; }

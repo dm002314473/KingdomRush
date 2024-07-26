@@ -14,6 +14,9 @@ class MainMenu
 {
 private:
     sf::Sprite backgroundSprite;
+    sf::Sprite towerStandSprite;
+    sf::Texture backgroundTexture;
+    sf::Texture towerStandTexture;
     std::vector<sf::Sprite *> towerStands;
 
     std::vector<std::vector<std::string>> allImagesMatrix;
