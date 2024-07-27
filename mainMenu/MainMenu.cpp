@@ -22,39 +22,41 @@ void MainMenu::textureMatrixFiller(std::vector<Row> &allTexturesMatrix)
 // Check the paths
 MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
 {
-    //tower stand je zapravo flag for lvl triba postavit njihovo pushbackanje, scale, postavit setorigin 
-    towerStandSprite.setTexture(towerStandTexture);
-    sf::Sprite* newStand = new sf::Sprite ();
-    newStand = &towerStandSprite;
-    newStand->setOrigin(0.5, 0.5);
-    newStand->setScale(0.2, 0.2);
-    backgroundSprite.setTexture(backgroundTexture);
     imagesReader(allImagesMatrix);
     enemyStatsReader(enemyStatsMatrix);
     towerStatsReader(towerStatsMatrix);
     textureMatrixFiller(allTexturesMatrix);
-    towerStands.push_back(newStand);
-    for (const auto& row : allTexturesMatrix) {
-        std::cout << "ID: " << row.id << std::endl;
-        for (size_t i = 0; i < row.texturePaths.size(); ++i) {
-            std::cout << "  Texture " << i << ": " << row.texturePaths[i] << std::endl;
-        }
+    sf::Sprite* newFlag = new sf::Sprite ();
+    levelFlagTexture = getTexture(allTexturesMatrix, 9998, 0);
+    if (levelFlagTexture.getSize().x > 0 && levelFlagTexture.getSize().y > 0) {    
+        levelFlagSprite.setTexture(levelFlagTexture);
+        newFlag = &levelFlagSprite;
+    } else {
+        std::cerr << "Failed to get valid texture for id 9998, column 0." << std::endl;
     }
-    std::cout << "MainMenu constructor reached!" << std::endl;
-
-    // backgroundSprite.setTexture(allTexturesMatrix[0][0]);
-    // for (auto &stand : towerStands)
-    //     stand->setTexture(allTexturesMatrix[0][1]);
+    backgroundSprite.setTexture(backgroundTexture);
+    newFlag->setOrigin(0.5, 0.5);
+    newFlag->setScale(0.2, 0.2);
+    levelFlags.push_back(newFlag);
+    levelFlags.push_back(newFlag);
+    std::cout << std:: endl << "MainMenu constructor reached!" << std::endl;
 }
 
-void MainMenu::handleEvent(sf::Event &event, Game &game)
+void MainMenu::handleEvent(sf::Vector2i &mousePos, Game &game)
 {
-    if (event.type == sf::Event::MouseButtonPressed)
-        if (event.mouseButton.button == sf::Mouse::Left)
+    for (auto &flag : levelFlags)
+    {
+        if (flag->getGlobalBounds().contains((sf::Vector2f)mousePos))
         {
-            std::cout << "Mouse clicked!" << std::endl;
-            /*If mouseClick position is inside of one of the levelFlags start new level*/
+            std::cout << "Mouse clicked on Level Flag" << std::endl;
+            // start new level
+            game.changeState(LEVEL);
+            int levelIndex = 1 /* some logic to determine which level this flag represents */;
+            Level *level = new Level(levelIndex);
+            game.setLevel(level);
+            break;
         }
+    }
 }
 
 void MainMenu::render(sf::RenderWindow &window)
@@ -67,11 +69,11 @@ void MainMenu::render(sf::RenderWindow &window)
     } else {
         std::cerr << "Failed to get valid texture for id 9999, column 0." << std::endl;
     }
-    // for (auto &stand : towerStands){
-    //     std::cout<<"crta stend"<<std::endl;
-    //     stand->setPosition(300, 300);
-    //     window.draw(*stand);
-    // }
+    for (auto &flag : levelFlags)
+    {
+        flag->setPosition(300, 300);
+        window.draw(*flag);
+    }
 }
 
 

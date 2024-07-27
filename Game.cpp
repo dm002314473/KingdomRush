@@ -15,7 +15,11 @@ void Game::run()
             switch (currentState)
             {
             case MAIN_MENU:
-                mainMenu->handleEvent(event, *this);
+                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    mainMenu->handleEvent(mousePos, *this);
+                }
                 break;
             case LEVEL:
                 level->handleEvent(event, *this);
@@ -30,7 +34,7 @@ void Game::run()
         case LEVEL:
             level->update();
             break;
-        default: 
+        default:
             break;
         }
         window.clear();
@@ -42,6 +46,7 @@ void Game::run()
 
         case LEVEL:
             level->render(window);
+            std::cout << "Renderamo level" << std::endl;
             break;
         default:
             break;
@@ -52,15 +57,10 @@ void Game::run()
 
 void Game::changeState(GameState newState)
 {
-    if (newState == LEVEL)
-    {
-        delete level;
-        level = new Level();
-    }
-    else if (newState == MAIN_MENU)
-    {
-        delete level;
-        level = nullptr;
-    }
+    delete level;
+    level = nullptr;
+
     currentState = newState;
 }
+
+void Game::setLevel(Level *newLevel) { level = newLevel; }

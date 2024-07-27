@@ -25,4 +25,5 @@ public:
     Game();
     void run();
     void changeState(GameState newState);
+    void setLevel(Level *newLevel);
 };

@@ -15,7 +15,7 @@ private:
     std::vector<Tower *> towers;
 
 public:
-    Level();
+    Level(int levelIndex);
     void handleEvent(sf::Event &event, Game &game);
     void update();
     void render(sf::RenderWindow &window);
