@@ -4,7 +4,6 @@ Game::Game() : window(sf::VideoMode(1920, 1080), "Kingdom Rush"), currentState(M
 
 void Game::run()
 {
-    std::cout<<"game run"<< std::endl;
     while (window.isOpen())
     {
         sf::Event event;
@@ -26,7 +25,6 @@ void Game::run()
                 break;
             }
         }
-std::cout<<"nakon whilea"<< std::endl;
         switch (currentState)
         {
         case LEVEL:
@@ -35,7 +33,6 @@ std::cout<<"nakon whilea"<< std::endl;
         default: 
             break;
         }
-        std::cout<<"nakon switcha currwent state"<< std::endl;
         window.clear();
         switch (currentState)
         {
@@ -51,7 +48,6 @@ std::cout<<"nakon whilea"<< std::endl;
         }
         window.display();
     }
-    std::cout<<"drugi while"<< std::endl;
 }
 
 void Game::changeState(GameState newState)

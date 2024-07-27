@@ -8,6 +8,12 @@
 #include <fstream>
 #include "../Game.h"
 
+struct Row {
+    int id;
+    std::vector<sf::Texture> textures;
+    std::vector<std::string> texturePaths;
+    };
+
 class Game;
 
 class MainMenu
@@ -22,7 +28,9 @@ private:
     std::vector<std::vector<std::string>> allImagesMatrix;
     std::vector<std::vector<int>> enemyStatsMatrix;
     std::vector<std::vector<int>> towerStatsMatrix;
-    std::vector<std::vector<sf::Texture>> allTexturesMatrix;
+    std::vector<Row> allTexturesMatrix;
+
+    
 
 public:
     MainMenu();
@@ -30,7 +38,8 @@ public:
     void enemyStatsReader(std::vector<std::vector<int>> &enemyStatsMatrix);
     void towerStatsReader(std::vector<std::vector<int>> &towerStatsMatrix);
     bool isNumber(std::string &line);
-    void textureMatrixFiller(std::vector<std::vector<sf::Texture>> &allTexturesMatrix);
+    void textureMatrixFiller(std::vector<Row> &allTexturesMatrix);
+    sf::Texture getTexture(std::vector<Row> &allTexturesMatrix, int code, int column);
 
     void handleEvent(sf::Event &event, Game &game);
     void render(sf::RenderWindow &window);

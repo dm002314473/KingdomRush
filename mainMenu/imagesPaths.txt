@@ -1,3 +1,7 @@
+9999
+GeneralRehearsal\images\main_map.png
+9998
+GeneralRehearsal\images\flag_for_lvl.png
 10000
 GeneralRehearsal\images\tower_stand.png
 10001

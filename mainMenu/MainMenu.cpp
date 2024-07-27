@@ -1,20 +1,19 @@
 #include "MainMenu.h"
 
-void MainMenu::textureMatrixFiller(std::vector<std::vector<sf::Texture>> &allTexturesMatrix)
+void MainMenu::textureMatrixFiller(std::vector<Row> &allTexturesMatrix)
 {
     allTexturesMatrix.resize(allImagesMatrix.size());
 
-    for (size_t i = 0; i < allImagesMatrix.size(); ++i)
-    {
-        allTexturesMatrix[i].resize(allImagesMatrix[i].size() - 1);
+    for (size_t i = 0; i < allImagesMatrix.size(); ++i) {
+        allTexturesMatrix[i].id = std::stoi(allImagesMatrix[i][0]); // Assuming the first element is the id as string
+        allTexturesMatrix[i].textures.resize(allImagesMatrix[i].size() - 1);
+        allTexturesMatrix[i].texturePaths.resize(allImagesMatrix[i].size() - 1);
 
-        for (size_t j = 1; j < allImagesMatrix[i].size(); ++j)
-        {
-            std::cout << "Loading texture from: " << allImagesMatrix[i][j] << std::endl;
-
-            if (!allTexturesMatrix[i][j - 1].loadFromFile(allImagesMatrix[i][j]))
-            {
+        for (size_t j = 1; j < allImagesMatrix[i].size(); ++j) {
+            if (!allTexturesMatrix[i].textures[j - 1].loadFromFile(allImagesMatrix[i][j])) {
                 std::cerr << "Failed to load " << allImagesMatrix[i][j] << std::endl;
+            } else {
+                allTexturesMatrix[i].texturePaths[j - 1] = allImagesMatrix[i][j];
             }
         }
     }
@@ -23,14 +22,6 @@ void MainMenu::textureMatrixFiller(std::vector<std::vector<sf::Texture>> &allTex
 // Check the paths
 MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
 {
-    if (!backgroundTexture.loadFromFile("GeneralRehearsal/images/main_map.png")) {
-        std::cout<<"unable to load GeneralRehearsal/images/main_map.png"<< std::endl; 
-        return;
-    }
-    if (!towerStandTexture.loadFromFile("GeneralRehearsal/images/flag_for_lvl.png")) {
-        std::cout<<"unable to load GeneralRehearsal/images/flag_for_lvl.png"<< std::endl; 
-        return;
-    }
     //tower stand je zapravo flag for lvl triba postavit njihovo pushbackanje, scale, postavit setorigin 
     towerStandSprite.setTexture(towerStandTexture);
     sf::Sprite* newStand = new sf::Sprite ();
@@ -43,19 +34,13 @@ MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
     towerStatsReader(towerStatsMatrix);
     textureMatrixFiller(allTexturesMatrix);
     towerStands.push_back(newStand);
+    for (const auto& row : allTexturesMatrix) {
+        std::cout << "ID: " << row.id << std::endl;
+        for (size_t i = 0; i < row.texturePaths.size(); ++i) {
+            std::cout << "  Texture " << i << ": " << row.texturePaths[i] << std::endl;
+        }
+    }
     std::cout << "MainMenu constructor reached!" << std::endl;
-
-    // for (int i = 0; i < allImagesMatrix.size(); ++i)
-    // {
-    //     allTexturesMatrix[i].resize(allImagesMatrix[i].size());
-    //     for (size_t j = 0; j < allImagesMatrix[i].size(); ++j)
-    //     {
-    //         if (!allTexturesMatrix[i][j].loadFromFile(allImagesMatrix[i][j]))
-    //         {
-    //             std::cerr << "Failed to load " << allImagesMatrix[i][j] << std::endl;
-    //         }
-    //     }
-    // }
 
     // backgroundSprite.setTexture(allTexturesMatrix[0][0]);
     // for (auto &stand : towerStands)
@@ -74,14 +59,37 @@ void MainMenu::handleEvent(sf::Event &event, Game &game)
 
 void MainMenu::render(sf::RenderWindow &window)
 {
-    std::cout<<"render"<< std::endl;
-    window.draw(backgroundSprite);
-    for (auto &stand : towerStands){
-        std::cout<<"crta stend"<<std::endl;
-        stand->setPosition(300, 300);
-        window.draw(*stand);
+    sf::Texture texture = getTexture(allTexturesMatrix, 9999, 0);
+    if (texture.getSize().x > 0 && texture.getSize().y > 0) {
+        sf::Sprite newSprite;
+        newSprite.setTexture(texture);
+        window.draw(newSprite);
+    } else {
+        std::cerr << "Failed to get valid texture for id 9999, column 0." << std::endl;
     }
-    std::cout<<"kraj render"<< std::endl;
+    // for (auto &stand : towerStands){
+    //     std::cout<<"crta stend"<<std::endl;
+    //     stand->setPosition(300, 300);
+    //     window.draw(*stand);
+    // }
+}
+
+
+
+sf::Texture MainMenu::getTexture(std::vector<Row> &allTexturesMatrix, int code, int column){
+     for (const auto& row : allTexturesMatrix) {
+        if (row.id == code) {
+            if (column >= 0 && column < (int)(row.textures.size())) {
+                return row.textures[column];
+            } else {
+                std::cerr << "Column index out of bounds." << std::endl;
+                return sf::Texture();
+            }
+        }
+    }
+
+    std::cerr << "Row with id " << code << " not found." << std::endl;
+    return sf::Texture();
 }
 
 void MainMenu::imagesReader(std::vector<std::vector<std::string>> &allImagesMatrix)
