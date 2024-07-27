@@ -14,10 +14,10 @@ class MainMenu
 {
 private:
     sf::Sprite backgroundSprite;
-    sf::Sprite towerStandSprite;
+    sf::Sprite levelFlagSprite;
     sf::Texture backgroundTexture;
-    sf::Texture towerStandTexture;
-    std::vector<sf::Sprite *> towerStands;
+    sf::Texture levelFlagTexture;
+    std::vector<sf::Sprite *> levelFlags;
 
     std::vector<std::vector<std::string>> allImagesMatrix;
     std::vector<std::vector<int>> enemyStatsMatrix;
@@ -32,6 +32,6 @@ public:
     bool isNumber(std::string &line);
     void textureMatrixFiller(std::vector<std::vector<sf::Texture>> &allTexturesMatrix);
 
-    void handleEvent(sf::Event &event, Game &game);
+    void handleEvent(sf::Vector2i &mousePos, Game &game);
     void render(sf::RenderWindow &window);
 };

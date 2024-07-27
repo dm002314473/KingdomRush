@@ -1,8 +1,9 @@
 #include "Level.h"
 
-Level::Level()
+Level::Level(int levelIndex)
 {
     // Load data which was read by MainMenu
+    std::cout << "Level constructor" << std::endl;
 }
 
 void Level::handleEvent(sf::Event &event, Game &game)

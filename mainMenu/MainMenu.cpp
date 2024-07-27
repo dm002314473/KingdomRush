@@ -23,18 +23,20 @@ void MainMenu::textureMatrixFiller(std::vector<std::vector<sf::Texture>> &allTex
 // Check the paths
 MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
 {
-    if (!backgroundTexture.loadFromFile("GeneralRehearsal/images/main_map.png")) {
-        std::cout<<"unable to load GeneralRehearsal/images/main_map.png"<< std::endl; 
+    if (!backgroundTexture.loadFromFile("GeneralRehearsal/images/main_map.png"))
+    {
+        std::cout << "unable to load GeneralRehearsal/images/main_map.png" << std::endl;
         return;
     }
-    if (!towerStandTexture.loadFromFile("GeneralRehearsal/images/flag_for_lvl.png")) {
-        std::cout<<"unable to load GeneralRehearsal/images/flag_for_lvl.png"<< std::endl; 
+    if (!levelFlagTexture.loadFromFile("GeneralRehearsal/images/flag_for_lvl.png"))
+    {
+        std::cout << "unable to load GeneralRehearsal/images/flag_for_lvl.png" << std::endl;
         return;
     }
-    //tower stand je zapravo flag for lvl triba postavit njihovo pushbackanje, scale, postavit setorigin 
-    towerStandSprite.setTexture(towerStandTexture);
-    sf::Sprite* newStand = new sf::Sprite ();
-    newStand = &towerStandSprite;
+    // tower stand je zapravo flag for lvl triba postavit njihovo pushbackanje, scale, postavit setorigin
+    levelFlagSprite.setTexture(levelFlagTexture);
+    sf::Sprite *newStand = new sf::Sprite();
+    newStand = &levelFlagSprite;
     newStand->setOrigin(0.5, 0.5);
     newStand->setScale(0.2, 0.2);
     backgroundSprite.setTexture(backgroundTexture);
@@ -42,7 +44,7 @@ MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
     enemyStatsReader(enemyStatsMatrix);
     towerStatsReader(towerStatsMatrix);
     textureMatrixFiller(allTexturesMatrix);
-    towerStands.push_back(newStand);
+    levelFlags.push_back(newStand);
     std::cout << "MainMenu constructor reached!" << std::endl;
 
     // for (int i = 0; i < allImagesMatrix.size(); ++i)
@@ -62,26 +64,31 @@ MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
     //     stand->setTexture(allTexturesMatrix[0][1]);
 }
 
-void MainMenu::handleEvent(sf::Event &event, Game &game)
+void MainMenu::handleEvent(sf::Vector2i &mousePos, Game &game)
 {
-    if (event.type == sf::Event::MouseButtonPressed)
-        if (event.mouseButton.button == sf::Mouse::Left)
+    for (auto &flag : levelFlags)
+    {
+        if (flag->getGlobalBounds().contains((sf::Vector2f)mousePos))
         {
-            std::cout << "Mouse clicked!" << std::endl;
-            /*If mouseClick position is inside of one of the levelFlags start new level*/
+            std::cout << "Mouse clicked on Level Flag" << std::endl;
+            // start new level
+            game.changeState(LEVEL);
+            int levelIndex = 1 /* some logic to determine which level this flag represents */;
+            Level *level = new Level(levelIndex);
+            game.setLevel(level);
+            break;
         }
+    }
 }
 
 void MainMenu::render(sf::RenderWindow &window)
 {
-    std::cout<<"render"<< std::endl;
     window.draw(backgroundSprite);
-    for (auto &stand : towerStands){
-        std::cout<<"crta stend"<<std::endl;
-        stand->setPosition(300, 300);
-        window.draw(*stand);
+    for (auto &flag : levelFlags)
+    {
+        flag->setPosition(300, 300);
+        window.draw(*flag);
     }
-    std::cout<<"kraj render"<< std::endl;
 }
 
 void MainMenu::imagesReader(std::vector<std::vector<std::string>> &allImagesMatrix)

@@ -4,7 +4,7 @@ Game::Game() : window(sf::VideoMode(1920, 1080), "Kingdom Rush"), currentState(M
 
 void Game::run()
 {
-    std::cout<<"game run"<< std::endl;
+    std::cout << "game run" << std::endl;
     while (window.isOpen())
     {
         sf::Event event;
@@ -16,7 +16,11 @@ void Game::run()
             switch (currentState)
             {
             case MAIN_MENU:
-                mainMenu->handleEvent(event, *this);
+                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    mainMenu->handleEvent(mousePos, *this);
+                }
                 break;
             case LEVEL:
                 level->handleEvent(event, *this);
@@ -26,16 +30,14 @@ void Game::run()
                 break;
             }
         }
-std::cout<<"nakon whilea"<< std::endl;
         switch (currentState)
         {
         case LEVEL:
             level->update();
             break;
-        default: 
+        default:
             break;
         }
-        std::cout<<"nakon switcha currwent state"<< std::endl;
         window.clear();
         switch (currentState)
         {
@@ -45,26 +47,21 @@ std::cout<<"nakon whilea"<< std::endl;
 
         case LEVEL:
             level->render(window);
+            std::cout << "Renderamo level" << std::endl;
             break;
         default:
             break;
         }
         window.display();
     }
-    std::cout<<"drugi while"<< std::endl;
 }
 
 void Game::changeState(GameState newState)
 {
-    if (newState == LEVEL)
-    {
-        delete level;
-        level = new Level();
-    }
-    else if (newState == MAIN_MENU)
-    {
-        delete level;
-        level = nullptr;
-    }
+    delete level;
+    level = nullptr;
+
     currentState = newState;
 }
+
+void Game::setLevel(Level *newLevel) { level = newLevel; }
