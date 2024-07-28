@@ -6,11 +6,11 @@ Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu)
     std::string levelFile = "GeneralRehearsal\\level\\lvl" + std::to_string(levelIndex) + ".txt";
     readingLevelData(levelFile);
 
-    backgroundTexture = mainMenu.getTexture(mainMenu.getAllTexturesMatrix(), levelIndex, 0);
+    //backgroundTexture = mainMenu.getTexture(mainMenu.getAllTexturesMatrix(), levelIndex, 0);
 
-    if (backgroundTexture.getSize().x > 0 && backgroundTexture.getSize().y > 0)
+    if (/*backgroundTexture.getSize().x > 0 && backgroundTexture.getSize().y > 0*/1)
     {
-        levelBackground.setTexture(backgroundTexture);
+        levelBackground.setTexture(mainMenu.getTexture(mainMenu.getAllTexturesMatrix(), levelIndex, 0));
     }
     else
         std::cerr << "Failed to get valid texture." << std::endl;
@@ -28,19 +28,17 @@ void Level::handleEvent(sf::Vector2i &mousePos, Game &game)
     // Handle creating towers, and starting new waves
     if (newWaveButton.getGlobalBounds().contains((sf::Vector2f)mousePos))
     {
-        // Instead of creating one enemy, here the wave should be started
-        Enemy *enemy = new Enemy(mainMenu);
-        enemies.push_back(enemy);
 
         // newWave
-        startNewWave(1);
+        wave++;
+        startNewWave(wave);
     }
 }
 
 void Level::update()
 {
     for (auto &enemy : enemies)
-        enemy->move();
+        enemy->move(deltaTime);
     // Implement logic for tower shooting
 }
 
@@ -99,4 +97,8 @@ void Level::readingLevelData(std::string &levelTxtFile){
 
 void Level::startNewWave(int waveIndex)
 {
+    for (int i = 0; i < 5; i++){
+        Enemy *enemy = new Enemy(mainMenu);       
+        enemies.push_back(enemy);
+    }
 }

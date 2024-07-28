@@ -2,6 +2,8 @@
 
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include <iostream>
+#include <cmath>
 #include "../../mainMenu/MainMenu.h"
 
 class MainMenu;
@@ -20,6 +22,10 @@ private:
     sf::Texture texture;
     sf::Sprite sprite;
 
+    std::vector<std::vector<int>> waypoints;
+    size_t currentWaypointIndex;
+    
+
 public:
     // moveAnimation
     Enemy(MainMenu &mainMenu);
@@ -32,7 +38,7 @@ public:
     void setBounty(int newBounty);
     void setAttackSpeed(int newAttackSpeed);
     void setSprite(sf::Sprite newSprite);
-    void move();
+    void move(float deltaTime);
 
     int getHealth();
     int getDamage();
@@ -43,4 +49,8 @@ public:
     int getBounty();
     int getAttackSpeed();
     sf::Sprite getSprite();
+
+    void setWaypoints(const std::vector<std::vector<int>> &waypoints);
+
+    int generateRandomNumber(int min, int max);
 };

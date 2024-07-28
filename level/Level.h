@@ -26,6 +26,10 @@ private:
     std::vector<std::vector<int>> waypoints;
     std::vector<std::vector<int>> towerStandsPositions;
     std::vector<int> heroStandPosition;
+    int wave = 0;
+
+    sf::Clock clock;
+    float deltaTime = clock.restart().asSeconds();
 
 public:
     Level(int levelIndex, MainMenu &mainMenu);
