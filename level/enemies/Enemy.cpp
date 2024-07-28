@@ -1,9 +1,15 @@
 #include "Enemy.h"
 
-Enemy::Enemy(MainMenu &mainMenu)
+Enemy::Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints) : waypoints(waypoints)
 {
-    texture.loadFromFile("GeneralRehearsal/images/giant_walking1.png");
-    sprite.setTexture(texture);
+
+    sf::Texture *texture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 50000, 0);
+    sprite.setTexture(*texture);
+    sprite.setOrigin(250, 250);
+    sprite.setScale(.2, .2);
+    int positionX = generateRandomNumber(waypoints[0][0] - 70, waypoints[0][0] + 70);
+    int positionY = generateRandomNumber(waypoints[0][1] - 70, waypoints[0][1] + 70);
+    sprite.setPosition(positionX, positionY);
 }
 
 void Enemy::setHealth(int newHealth) { health = newHealth; }
@@ -16,26 +22,7 @@ void Enemy::setBounty(int newBounty) { bounty = newBounty; }
 void Enemy::setAttackSpeed(int newAttackSpeed) { attackSpeed = newAttackSpeed; }
 void Enemy::setSprite(sf::Sprite newSprite) { sprite = newSprite; }
 
-void Enemy::move(float deltaTime) { 
-    sprite.setPosition(sprite.getPosition().x + 1, sprite.getPosition().y - 1); 
-    if (currentWaypointIndex < waypoints.size()) {
-            sf::Vector2f currentPosition = sprite.getPosition();
-            sf::Vector2f targetPosition(waypoints[currentWaypointIndex][0], waypoints[currentWaypointIndex][1]);
-            sf::Vector2f direction = targetPosition - currentPosition;
-            float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-            float speed = 100.0f; // Adjust speed as needed
-
-            if (distance < speed * deltaTime) {
-                // Move directly to the waypoint if close enough
-                sprite.setPosition(targetPosition);
-                currentWaypointIndex++;
-            } else {
-                // Normalize the direction and move towards the waypoint
-                direction /= distance;
-                sprite.move(direction * speed * deltaTime);
-            }
-        }
-}
+void Enemy::move() { sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + 1);}
 
 int Enemy::getHealth() { return health; }
 int Enemy::getDamage() { return damage; }
@@ -48,14 +35,4 @@ int Enemy::getAttackSpeed() { return attackSpeed; }
 
 sf::Sprite Enemy::getSprite() { return sprite; }
 
-void Enemy::setWaypoints(const std::vector<std::vector<int>>& waypoints){
-    this->waypoints = waypoints;
-}
-
-
-int Enemy::generateRandomNumber(int min, int max) {
-    if (min > max) {
-        std::swap(min, max);
-    }
-    return min + rand() % (max - min + 1);
-}
+int Enemy::generateRandomNumber(int min, int max) { return rand()%(max-min) + min; }

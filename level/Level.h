@@ -14,12 +14,10 @@ class Tower;
 class Level
 {
 private:
-    sf::Texture backgroundTexture;
     sf::Sprite levelBackground;
     std::vector<Enemy *> enemies;
     std::vector<sf::Sprite *> towerStands;
     std::vector<Tower *> towers;
-    sf::Texture newWaveButtonTexture;
     sf::Sprite newWaveButton;
     MainMenu &mainMenu;
 
@@ -27,9 +25,6 @@ private:
     std::vector<std::vector<int>> towerStandsPositions;
     std::vector<int> heroStandPosition;
     int wave = 0;
-
-    sf::Clock clock;
-    float deltaTime = clock.restart().asSeconds();
 
 public:
     Level(int levelIndex, MainMenu &mainMenu);

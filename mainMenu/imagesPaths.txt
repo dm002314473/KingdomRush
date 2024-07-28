@@ -6,6 +6,8 @@ GeneralRehearsal\images\lvl2.png
 GeneralRehearsal\images\main_map.png
 9998
 GeneralRehearsal\images\flag_for_lvl.png
+5000
+GeneralRehearsal\images\wave_sign.png
 10000
 GeneralRehearsal\images\tower_stand.png
 10001

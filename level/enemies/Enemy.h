@@ -19,16 +19,14 @@ private:
     int physicalArmor;
     int bounty;
     int attackSpeed;
-    sf::Texture texture;
     sf::Sprite sprite;
 
-    std::vector<std::vector<int>> waypoints;
-    size_t currentWaypointIndex;
+    std::vector<std::vector<int>> &waypoints;
     
 
 public:
     // moveAnimation
-    Enemy(MainMenu &mainMenu);
+    Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints);
     void setHealth(int newHealth);
     void setDamage(int newDamage);
     void setSpeedX(int newSpeedX);
@@ -38,7 +36,7 @@ public:
     void setBounty(int newBounty);
     void setAttackSpeed(int newAttackSpeed);
     void setSprite(sf::Sprite newSprite);
-    void move(float deltaTime);
+    void move();
 
     int getHealth();
     int getDamage();
@@ -49,8 +47,6 @@ public:
     int getBounty();
     int getAttackSpeed();
     sf::Sprite getSprite();
-
-    void setWaypoints(const std::vector<std::vector<int>> &waypoints);
 
     int generateRandomNumber(int min, int max);
 };

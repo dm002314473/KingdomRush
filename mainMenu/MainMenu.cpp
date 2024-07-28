@@ -122,6 +122,16 @@ sf::Texture MainMenu::getTexture(std::vector<Row> &allTexturesMatrix, int code, 
     return sf::Texture();
 }
 
+sf::Texture *MainMenu::getTexturePtr(std::vector<Row> &allTexturesMatrix, int code, int column)
+{
+    for (auto &row : allTexturesMatrix)
+    {
+        if (row.id == code && column < row.textures.size())
+            return &row.textures[column];
+    }
+    return nullptr;
+}
+
 void MainMenu::imagesReader(std::vector<std::vector<std::string>> &allImagesMatrix)
 {
     std::ifstream file("GeneralRehearsal\\mainMenu\\imagesPaths.txt");
