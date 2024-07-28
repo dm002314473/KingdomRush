@@ -46,7 +46,6 @@ void Game::run()
 
         case LEVEL:
             level->render(window);
-            std::cout << "Renderamo level" << std::endl;
             break;
         default:
             break;
