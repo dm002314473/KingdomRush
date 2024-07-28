@@ -18,6 +18,10 @@ private:
     std::vector<sf::Sprite *> towerStands;
     std::vector<Tower *> towers;
 
+    std::vector<std::vector<int>> waypoints;
+    std::vector<std::vector<int>> towerStandsPositions;
+    std::vector<int> heroStandPosition;
+
 public:
     Level(int levelIndex, MainMenu &mainMenu);
     sf::Sprite getSprite();
@@ -25,4 +29,5 @@ public:
     void handleEvent(sf::Event &event, Game &game);
     void update();
     void render(sf::RenderWindow &window);
+    void readingLevelData(std::string &levelTxtFile);
 };
