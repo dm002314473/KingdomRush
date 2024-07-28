@@ -8,11 +8,12 @@
 #include <fstream>
 #include "../Game.h"
 
-struct Row {
+struct Row
+{
     int id;
     std::vector<sf::Texture> textures;
     std::vector<std::string> texturePaths;
-    };
+};
 
 class Game;
 
@@ -30,7 +31,7 @@ private:
     std::vector<std::vector<int>> towerStatsMatrix;
     std::vector<Row> allTexturesMatrix;
 
-    
+    sf::Sprite noviSprite;
 
 public:
     MainMenu();
@@ -40,6 +41,11 @@ public:
     bool isNumber(std::string &line);
     void textureMatrixFiller(std::vector<Row> &allTexturesMatrix);
     sf::Texture getTexture(std::vector<Row> &allTexturesMatrix, int code, int column);
+
+    std::vector<std::vector<std::string>> getAllImagesMatrix();
+    std::vector<std::vector<int>> getEnemyStatsMatrix();
+    std::vector<std::vector<int>> getTowerStatsMatrix();
+    std::vector<Row> &getAllTexturesMatrix();
 
     void handleEvent(sf::Vector2i &mousePos, Game &game);
     void render(sf::RenderWindow &window);

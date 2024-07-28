@@ -4,15 +4,20 @@ void MainMenu::textureMatrixFiller(std::vector<Row> &allTexturesMatrix)
 {
     allTexturesMatrix.resize(allImagesMatrix.size());
 
-    for (size_t i = 0; i < allImagesMatrix.size(); ++i) {
+    for (size_t i = 0; i < allImagesMatrix.size(); ++i)
+    {
         allTexturesMatrix[i].id = std::stoi(allImagesMatrix[i][0]); // Assuming the first element is the id as string
         allTexturesMatrix[i].textures.resize(allImagesMatrix[i].size() - 1);
         allTexturesMatrix[i].texturePaths.resize(allImagesMatrix[i].size() - 1);
 
-        for (size_t j = 1; j < allImagesMatrix[i].size(); ++j) {
-            if (!allTexturesMatrix[i].textures[j - 1].loadFromFile(allImagesMatrix[i][j])) {
+        for (size_t j = 1; j < allImagesMatrix[i].size(); ++j)
+        {
+            if (!allTexturesMatrix[i].textures[j - 1].loadFromFile(allImagesMatrix[i][j]))
+            {
                 std::cerr << "Failed to load " << allImagesMatrix[i][j] << std::endl;
-            } else {
+            }
+            else
+            {
                 allTexturesMatrix[i].texturePaths[j - 1] = allImagesMatrix[i][j];
             }
         }
@@ -26,24 +31,38 @@ MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
     enemyStatsReader(enemyStatsMatrix);
     towerStatsReader(towerStatsMatrix);
     textureMatrixFiller(allTexturesMatrix);
-    sf::Sprite* newFlag = new sf::Sprite ();
+    sf::Sprite *newFlag = new sf::Sprite();
     levelFlagTexture = getTexture(allTexturesMatrix, 9998, 0);
-    if (levelFlagTexture.getSize().x > 0 && levelFlagTexture.getSize().y > 0) {    
+    if (levelFlagTexture.getSize().x > 0 && levelFlagTexture.getSize().y > 0)
+    {
         levelFlagSprite.setTexture(levelFlagTexture);
         newFlag = &levelFlagSprite;
-    } else {
+    }
+    else
+    {
         std::cerr << "Failed to get valid texture for id 9998, column 0." << std::endl;
     }
-    backgroundSprite.setTexture(backgroundTexture);
+    backgroundSprite.setTexture(getTexture(allTexturesMatrix, 9998, 0));
     newFlag->setOrigin(0.5, 0.5);
     newFlag->setScale(0.2, 0.2);
     levelFlags.push_back(newFlag);
     levelFlags.push_back(newFlag);
-    std::cout << std:: endl << "MainMenu constructor reached!" << std::endl;
+    std::cout << std::endl
+              << "MainMenu constructor reached!" << std::endl;
+
+    noviSprite.setTexture(getTexture(allTexturesMatrix, 9998, 0));
+    noviSprite.setScale(0.2, 0.2);
+    noviSprite.setPosition(500, 500);
 }
+
+std::vector<std::vector<std::string>> MainMenu::getAllImagesMatrix() { return allImagesMatrix; }
+std::vector<std::vector<int>> MainMenu::getEnemyStatsMatrix() { return enemyStatsMatrix; }
+std::vector<std::vector<int>> MainMenu::getTowerStatsMatrix() { return towerStatsMatrix; }
+std::vector<Row> &MainMenu::getAllTexturesMatrix() { return allTexturesMatrix; }
 
 void MainMenu::handleEvent(sf::Vector2i &mousePos, Game &game)
 {
+    int levelIndex = 1;
     for (auto &flag : levelFlags)
     {
         if (flag->getGlobalBounds().contains((sf::Vector2f)mousePos))
@@ -51,22 +70,25 @@ void MainMenu::handleEvent(sf::Vector2i &mousePos, Game &game)
             std::cout << "Mouse clicked on Level Flag" << std::endl;
             // start new level
             game.changeState(LEVEL);
-            int levelIndex = 1 /* some logic to determine which level this flag represents */;
-            Level *level = new Level(levelIndex);
+            Level *level = new Level(levelIndex, *this);
             game.setLevel(level);
             break;
         }
+        levelIndex++;
     }
 }
 
 void MainMenu::render(sf::RenderWindow &window)
 {
     sf::Texture texture = getTexture(allTexturesMatrix, 9999, 0);
-    if (texture.getSize().x > 0 && texture.getSize().y > 0) {
+    if (texture.getSize().x > 0 && texture.getSize().y > 0)
+    {
         sf::Sprite newSprite;
         newSprite.setTexture(texture);
         window.draw(newSprite);
-    } else {
+    }
+    else
+    {
         std::cerr << "Failed to get valid texture for id 9999, column 0." << std::endl;
     }
     for (auto &flag : levelFlags)
@@ -74,16 +96,22 @@ void MainMenu::render(sf::RenderWindow &window)
         flag->setPosition(300, 300);
         window.draw(*flag);
     }
+
+    window.draw(noviSprite);
 }
 
-
-
-sf::Texture MainMenu::getTexture(std::vector<Row> &allTexturesMatrix, int code, int column){
-     for (const auto& row : allTexturesMatrix) {
-        if (row.id == code) {
-            if (column >= 0 && column < (int)(row.textures.size())) {
+sf::Texture MainMenu::getTexture(std::vector<Row> &allTexturesMatrix, int code, int column)
+{
+    for (const auto &row : allTexturesMatrix)
+    {
+        if (row.id == code)
+        {
+            if (column >= 0 && column < (int)(row.textures.size()))
+            {
                 return row.textures[column];
-            } else {
+            }
+            else
+            {
                 std::cerr << "Column index out of bounds." << std::endl;
                 return sf::Texture();
             }
