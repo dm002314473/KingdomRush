@@ -41,6 +41,7 @@ public:
     bool isNumber(std::string &line);
     void textureMatrixFiller(std::vector<Row> &allTexturesMatrix);
     sf::Texture getTexture(std::vector<Row> &allTexturesMatrix, int code, int column);
+    sf::Texture *getTexturePtr(std::vector<Row> &allTexturesMatrix, int code, int column);
 
     std::vector<std::vector<std::string>> getAllImagesMatrix();
     std::vector<std::vector<int>> getEnemyStatsMatrix();

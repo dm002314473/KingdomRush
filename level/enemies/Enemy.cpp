@@ -2,8 +2,8 @@
 
 Enemy::Enemy(MainMenu &mainMenu)
 {
-    texture.loadFromFile("GeneralRehearsal/images/giant_walking1.png");
-    sprite.setTexture(texture);
+    sf::Texture *texture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 50000, 0);
+    sprite.setTexture(*texture);
 
     // Random start position outside of the map
     sprite.setPosition(500, 500);

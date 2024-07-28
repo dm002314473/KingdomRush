@@ -17,7 +17,6 @@ private:
     int physicalArmor;
     int bounty;
     int attackSpeed;
-    sf::Texture texture;
     sf::Sprite sprite;
 
 public:

@@ -3,18 +3,18 @@
 // Should try to remove the texture variable from class and use texture directly from AllTextureMatrix
 Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu)
 {
-    backgroundTexture = mainMenu.getTexture(mainMenu.getAllTexturesMatrix(), levelIndex, 0);
+    sf::Texture *backgroundTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), levelIndex, 0);
 
-    if (backgroundTexture.getSize().x > 0 && backgroundTexture.getSize().y > 0)
+    if (backgroundTexture && backgroundTexture->getSize().x > 0 && backgroundTexture->getSize().y > 0)
     {
-        levelBackground.setTexture(backgroundTexture);
-        std::cout << "ucitan sprite" << std::endl;
+        levelBackground.setTexture(*backgroundTexture);
+        std::cout << "Loaded sprite" << std::endl;
     }
     else
         std::cerr << "Failed to get valid texture." << std::endl;
 
-    newWaveButtonTexture.loadFromFile("GeneralRehearsal/images/wiz_lvl1.png");
-    newWaveButton.setTexture(newWaveButtonTexture);
+    sf::Texture *newWaveButtonTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 5000, 0);
+    newWaveButton.setTexture(*newWaveButtonTexture);
     newWaveButton.setPosition(20, 20);
 }
 
