@@ -1,3 +1,7 @@
+1
+GeneralRehearsal\images\lvl1.png
+2
+GeneralRehearsal\images\lvl2.png
 9999
 GeneralRehearsal\images\main_map.png
 9998
