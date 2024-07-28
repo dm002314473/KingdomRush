@@ -1,7 +1,10 @@
 #pragma once
 
-#include<vector>
+#include <vector>
 #include <SFML/Graphics.hpp>
+#include "../../mainMenu/MainMenu.h"
+
+class MainMenu;
 
 class Enemy
 {
@@ -14,10 +17,12 @@ private:
     int physicalArmor;
     int bounty;
     int attackSpeed;
+    sf::Texture texture;
     sf::Sprite sprite;
-    // sprite, health, damage, speed
-    // getters, moveAnimation
+
 public:
+    // moveAnimation
+    Enemy(MainMenu &mainMenu);
     void setHealth(int newHealth);
     void setDamage(int newDamage);
     void setSpeedX(int newSpeedX);
@@ -27,6 +32,7 @@ public:
     void setBounty(int newBounty);
     void setAttackSpeed(int newAttackSpeed);
     void setSprite(sf::Sprite newSprite);
+    void move();
 
     int getHealth();
     int getDamage();
@@ -35,6 +41,6 @@ public:
     int getMagicArmor();
     int getPhysicalArmor();
     int getBounty();
-    int getAttackSpeed();  
+    int getAttackSpeed();
     sf::Sprite getSprite();
 };
