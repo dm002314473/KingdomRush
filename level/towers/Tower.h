@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include "../enemies/Enemy.h"
 
+class Enemy;
+
 class Tower
 {
     // sprite, damage, attackSpeed

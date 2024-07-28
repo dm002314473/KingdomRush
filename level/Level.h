@@ -8,6 +8,8 @@
 
 class Game;
 class MainMenu;
+class Enemy;
+class Tower;
 
 class Level
 {
@@ -17,6 +19,9 @@ private:
     std::vector<Enemy *> enemies;
     std::vector<sf::Sprite *> towerStands;
     std::vector<Tower *> towers;
+    sf::Texture newWaveButtonTexture;
+    sf::Sprite newWaveButton;
+    MainMenu &mainMenu;
 
     std::vector<std::vector<int>> waypoints;
     std::vector<std::vector<int>> towerStandsPositions;
@@ -26,8 +31,10 @@ public:
     Level(int levelIndex, MainMenu &mainMenu);
     sf::Sprite getSprite();
 
-    void handleEvent(sf::Event &event, Game &game);
+    void handleEvent(sf::Vector2i &mousePos, Game &game);
     void update();
     void render(sf::RenderWindow &window);
     void readingLevelData(std::string &levelTxtFile);
+
+    void startNewWave(int waveIndex);
 };

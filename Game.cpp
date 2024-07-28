@@ -22,7 +22,11 @@ void Game::run()
                 }
                 break;
             case LEVEL:
-                level->handleEvent(event, *this);
+                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    level->handleEvent(mousePos, *this);
+                }
                 break;
 
             default:
