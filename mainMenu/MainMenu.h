@@ -1,6 +1,5 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -22,16 +21,16 @@ class MainMenu
 private:
     sf::Sprite backgroundSprite;
     sf::Sprite levelFlagSprite;
+    sf::Sprite levelFlagSprite2;
     sf::Texture backgroundTexture;
     sf::Texture levelFlagTexture;
+    sf::Texture levelFlagTexture2;
     std::vector<sf::Sprite *> levelFlags;
 
     std::vector<std::vector<std::string>> allImagesMatrix;
     std::vector<std::vector<int>> enemyStatsMatrix;
     std::vector<std::vector<int>> towerStatsMatrix;
     std::vector<Row> allTexturesMatrix;
-
-    sf::Sprite noviSprite;
 
 public:
     MainMenu();

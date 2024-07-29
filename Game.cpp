@@ -7,6 +7,8 @@ void Game::run()
     while (window.isOpen())
     {
         sf::Event event;
+        bool exitLevel = false;
+
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
@@ -25,7 +27,7 @@ void Game::run()
                 if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
                 {
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    level->handleEvent(mousePos, *this);
+                    level->handleEvent(mousePos, *this, exitLevel);
                 }
                 break;
 
@@ -33,6 +35,14 @@ void Game::run()
                 break;
             }
         }
+        if (exitLevel)
+        {
+            delete level;
+            level = nullptr;
+            changeState(MAIN_MENU);
+            continue;
+        }
+
         switch (currentState)
         {
         case LEVEL:

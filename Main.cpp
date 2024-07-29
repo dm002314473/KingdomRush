@@ -3,7 +3,7 @@
 
 int main(void)
 {
-    std::cout << "Soso";
+    std::cout << "Soso" << std::endl;
 
     Game game;
     game.run();

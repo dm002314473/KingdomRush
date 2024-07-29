@@ -7,10 +7,7 @@ Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu)
     readingLevelData(levelFile);
     sf::Texture *backgroundTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), levelIndex, 0);
     if (backgroundTexture && backgroundTexture->getSize().x > 0 && backgroundTexture->getSize().y > 0)
-    {
         levelBackground.setTexture(*backgroundTexture);
-        std::cout << "Loaded sprite" << std::endl;
-    }
     else
         std::cerr << "Failed to get valid texture." << std::endl;
 
@@ -18,26 +15,43 @@ Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu)
     newWaveButton.setTexture(*newWaveButtonTexture);
     newWaveButton.setPosition(20, 20);
     newWaveButton.setScale(0.2, 0.2);
+
+    exitButton.setPosition(1600, 20);
+    exitButton.setSize(sf::Vector2f(50, 50));
+    exitButton.setFillColor(sf::Color::Red);
 }
 
 sf::Sprite Level::getSprite() { return levelBackground; }
 
-void Level::handleEvent(sf::Vector2i &mousePos, Game &game)
+void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
 {
     // Handle creating towers, and starting new waves
     if (newWaveButton.getGlobalBounds().contains((sf::Vector2f)mousePos))
     {
-
-        // newWave
         wave++;
         startNewWave(wave);
+    }
+    if (exitButton.getGlobalBounds().contains((sf::Vector2f)mousePos))
+    {
+        std::cout << "Izlaz iz levela" << std::endl;
+        exitLevel = true;
     }
 }
 
 void Level::update()
 {
-    for (auto &enemy : enemies)
-        enemy->move();
+    for (auto it = enemies.begin(); it != enemies.end();)
+    {
+        (*it)->move();
+        if ((*it)->isOutOfMap())
+        {
+            delete *it;
+            it = enemies.erase(it);
+            std::cout << "Count: " << enemies.size() << std::endl;
+        }
+        else
+            ++it;
+    }
     // Implement logic for tower shooting
 }
 
@@ -45,6 +59,7 @@ void Level::render(sf::RenderWindow &window)
 {
     window.draw(levelBackground);
     window.draw(newWaveButton);
+    window.draw(exitButton);
     for (auto &enemy : enemies)
         window.draw(enemy->getSprite());
     for (auto &tower : towers)
@@ -53,15 +68,14 @@ void Level::render(sf::RenderWindow &window)
         window.draw(*towerStand);
 }
 
-
-void Level::readingLevelData(std::string &levelTxtFile){
+void Level::readingLevelData(std::string &levelTxtFile)
+{
     std::ifstream file(levelTxtFile);
     if (!file.is_open())
     {
         std::cerr << "Unable to open " << levelTxtFile << std::endl;
         return;
     }
-    std::vector<std::string> currentRow;
     std::string line;
     std::string currentState;
     while (std::getline(file, line))
@@ -71,23 +85,26 @@ void Level::readingLevelData(std::string &levelTxtFile){
         iss >> word;
         if (word == "waypoints" || word == "tower" || word == "hero")
             currentState = word;
-        else{
+        else
+        {
             std::istringstream iss(line);
-            int x, y;
+            int x, y, direction;
             char comma;
             iss.seekg(0);
-            iss >> x >> comma >> y;
-            if (comma != ',') {
+            iss >> x >> comma >> y >> direction;
+            if (comma != ',')
+            {
                 std::cerr << "Error: Expected comma between coordinates." << std::endl;
                 continue;
             }
-            std::vector<int> position = {x, y};
+            std::vector<int> position = {x, y, direction};
+            std::vector<int> directionVector;
             if (currentState == "waypoints")
                 waypoints.push_back(position);
-            else if(currentState == "tower")
+            else if (currentState == "tower")
                 towerStandsPositions.push_back(position);
             else
-                heroStandPosition = position;    
+                heroStandPosition = position;
         }
     }
 
@@ -96,8 +113,9 @@ void Level::readingLevelData(std::string &levelTxtFile){
 
 void Level::startNewWave(int waveIndex)
 {
-    for (int i = 0; i < 5; i++){
-        Enemy *enemy = new Enemy(mainMenu, waypoints);       
+    for (int i = 0; i < 5; i++)
+    {
+        Enemy *enemy = new Enemy(mainMenu, waypoints);
         enemies.push_back(enemy);
     }
 }
