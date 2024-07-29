@@ -2,6 +2,12 @@
 GeneralRehearsal\images\lvl1.png
 2
 GeneralRehearsal\images\lvl2.png
+35
+GeneralRehearsal\images\continue.png
+36
+GeneralRehearsal\images\exit.png
+37
+GeneralRehearsal\images\pause.png
 9999
 GeneralRehearsal\images\main_map.png
 9998
