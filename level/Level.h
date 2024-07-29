@@ -19,6 +19,7 @@ private:
     std::vector<sf::Sprite *> towerStands;
     std::vector<Tower *> towers;
     sf::Sprite newWaveButton;
+    sf::RectangleShape exitButton;
     MainMenu &mainMenu;
 
     std::vector<std::vector<int>> waypoints;
@@ -30,7 +31,7 @@ public:
     Level(int levelIndex, MainMenu &mainMenu);
     sf::Sprite getSprite();
 
-    void handleEvent(sf::Vector2i &mousePos, Game &game);
+    void handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel);
     void update();
     void render(sf::RenderWindow &window);
     void readingLevelData(std::string &levelTxtFile);

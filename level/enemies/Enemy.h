@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <SFML/Graphics.hpp>
 #include <iostream>
 #include <cmath>
 #include "../../mainMenu/MainMenu.h"
@@ -22,7 +21,8 @@ private:
     sf::Sprite sprite;
 
     std::vector<std::vector<int>> &waypoints;
-    
+    int currentWaypointIndex;
+    bool outOfMap = false;
 
 public:
     // moveAnimation
@@ -37,6 +37,8 @@ public:
     void setAttackSpeed(int newAttackSpeed);
     void setSprite(sf::Sprite newSprite);
     void move();
+    bool shouldEnemyTurn();
+    bool isOutOfMap() { return outOfMap; }
 
     int getHealth();
     int getDamage();
