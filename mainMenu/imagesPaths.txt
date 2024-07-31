@@ -2,6 +2,8 @@
 GeneralRehearsal\images\lvl1.png
 2
 GeneralRehearsal\images\lvl2.png
+3
+GeneralRehearsal\images\lvl3.png
 35
 GeneralRehearsal\images\continue.png
 36

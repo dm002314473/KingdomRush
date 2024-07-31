@@ -22,9 +22,11 @@ private:
     sf::Sprite backgroundSprite;
     sf::Sprite levelFlagSprite;
     sf::Sprite levelFlagSprite2;
+    sf::Sprite levelFlagSprite3;
     sf::Texture backgroundTexture;
     sf::Texture levelFlagTexture;
     sf::Texture levelFlagTexture2;
+    sf::Texture levelFlagTexture3;
     std::vector<sf::Sprite *> levelFlags;
 
     std::vector<std::vector<std::string>> allImagesMatrix;

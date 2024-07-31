@@ -83,7 +83,6 @@ void Level::update()
             {
                 delete *it;
                 it = enemies.erase(it);
-                std::cout << "Count: " << enemies.size() << std::endl;
             }
             else
                 ++it;

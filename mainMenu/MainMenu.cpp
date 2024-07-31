@@ -41,6 +41,22 @@ MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
     newFlag2->setScale(0.2, 0.2);
     newFlag2->setPosition(450, 400);
     levelFlags.push_back(newFlag2);
+
+    sf::Sprite *newFlag3 = new sf::Sprite();
+    levelFlagTexture3 = getTexture(allTexturesMatrix, 9998, 0);
+    if (levelFlagTexture3.getSize().x > 0 && levelFlagTexture3.getSize().y > 0)
+    {
+        levelFlagSprite3.setTexture(levelFlagTexture3);
+        newFlag3 = &levelFlagSprite3;
+    }
+    else
+    {
+        std::cerr << "Failed to get valid texture for id 9998, column 0." << std::endl;
+    }
+    newFlag3->setOrigin(0.5, 0.5);
+    newFlag3->setScale(0.2, 0.2);
+    newFlag3->setPosition(600, 500);
+    levelFlags.push_back(newFlag3);
 }
 
 void MainMenu::textureMatrixFiller(std::vector<Row> &allTexturesMatrix)
