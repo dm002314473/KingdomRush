@@ -1,24 +1,5 @@
 #include "MainMenu.h"
 
-void MainMenu::textureMatrixFiller(std::vector<Row> &allTexturesMatrix)
-{
-    allTexturesMatrix.resize(allImagesMatrix.size());
-
-    for (size_t i = 0; i < allImagesMatrix.size(); ++i)
-    {
-        allTexturesMatrix[i].id = std::stoi(allImagesMatrix[i][0]); // Assuming the first element is the id as string
-        allTexturesMatrix[i].textures.resize(allImagesMatrix[i].size() - 1);
-        allTexturesMatrix[i].texturePaths.resize(allImagesMatrix[i].size() - 1);
-
-        for (size_t j = 1; j < allImagesMatrix[i].size(); ++j)
-        {
-            if (!allTexturesMatrix[i].textures[j - 1].loadFromFile(allImagesMatrix[i][j]))
-                std::cerr << "Failed to load " << allImagesMatrix[i][j] << std::endl;
-            else
-                allTexturesMatrix[i].texturePaths[j - 1] = allImagesMatrix[i][j];
-        }
-    }
-}
 
 // Check the paths
 MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
@@ -60,6 +41,26 @@ MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
     newFlag2->setScale(0.2, 0.2);
     newFlag2->setPosition(450, 400);
     levelFlags.push_back(newFlag2);
+}
+
+void MainMenu::textureMatrixFiller(std::vector<Row> &allTexturesMatrix)
+{
+    allTexturesMatrix.resize(allImagesMatrix.size());
+
+    for (size_t i = 0; i < allImagesMatrix.size(); ++i)
+    {
+        allTexturesMatrix[i].id = std::stoi(allImagesMatrix[i][0]); // Assuming the first element is the id as string
+        allTexturesMatrix[i].textures.resize(allImagesMatrix[i].size() - 1);
+        allTexturesMatrix[i].texturePaths.resize(allImagesMatrix[i].size() - 1);
+
+        for (size_t j = 1; j < allImagesMatrix[i].size(); ++j)
+        {
+            if (!allTexturesMatrix[i].textures[j - 1].loadFromFile(allImagesMatrix[i][j]))
+                std::cerr << "Failed to load " << allImagesMatrix[i][j] << std::endl;
+            else
+                allTexturesMatrix[i].texturePaths[j - 1] = allImagesMatrix[i][j];
+        }
+    }
 }
 
 std::vector<std::vector<std::string>> MainMenu::getAllImagesMatrix() { return allImagesMatrix; }

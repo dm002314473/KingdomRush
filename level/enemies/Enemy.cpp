@@ -1,12 +1,16 @@
 #include "Enemy.h"
 
+void stopMoving(sf::Sprite &sprite);
+void moveUp(sf::Sprite &sprite);
+void moveDown(sf::Sprite &sprite);
+void moveLeft(sf::Sprite &sprite);
+void moveRight(sf::Sprite &sprite);
+
 Enemy::Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints) : waypoints(waypoints)
 {
 
     sf::Texture *texture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 50000, 0);
-    sprite.setTexture(*texture);
-    sprite.setOrigin(250, 250);
-    sprite.setScale(.2, .2);
+    spriteSetting(sprite, *texture, .2);
     int positionX = generateRandomNumber(waypoints[0][0] - 70, waypoints[0][0] + 70);
     int positionY = generateRandomNumber(waypoints[0][1] - 70, waypoints[0][1] + 70);
     sprite.setPosition(positionX, positionY);
@@ -32,23 +36,29 @@ void Enemy::move()
     switch (waypoints[currentWaypointIndex][2])
     {
     case 1:
-        sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - 1);
+        moveUp(sprite);
         break;
     case 2:
-        sprite.setPosition(sprite.getPosition().x + 1, sprite.getPosition().y);
+        moveRight(sprite);
         break;
     case 3:
-        sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + 1);
+        moveDown(sprite);
         break;
     case 4:
-        sprite.setPosition(sprite.getPosition().x - 1, sprite.getPosition().y);
+        moveLeft(sprite);
         break;
     default:
-        sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y);
+        stopMoving(sprite);
         outOfMap = true;
         break;
     }
 }
+
+void stopMoving(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y); }
+void moveRight(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x + 1, sprite.getPosition().y); }
+void moveLeft(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x - 1, sprite.getPosition().y); }
+void moveUp(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - 1); }
+void moveDown(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + 1); }
 
 bool Enemy::shouldEnemyTurn()
 {

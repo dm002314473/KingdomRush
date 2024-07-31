@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cmath>
 #include "../../mainMenu/MainMenu.h"
+#include "../../commonFunctions/CommonFunctions.h"
 
 class MainMenu;
 

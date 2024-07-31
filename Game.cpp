@@ -1,6 +1,23 @@
 #include "Game.h"
 
+void poolEventHandleMainMenu(sf::Event &event, sf::RenderWindow &window, MainMenu *mainMenu, Game &game);
+void poolEventHandleLevel(sf::Event &event, sf::RenderWindow &window, Level *level, bool &exitLevel, Game &game);
+
 Game::Game() : window(sf::VideoMode(1920, 1080), "Kingdom Rush"), currentState(MAIN_MENU), mainMenu(new MainMenu()), level(nullptr) {}
+
+void poolEventHandleMainMenu(sf::Event &event, sf::RenderWindow &window, MainMenu *mainMenu, Game &game){
+    if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+        mainMenu->handleEvent(mousePos, game);
+    }
+}
+
+void poolEventHandleLevel(sf::Event &event, sf::RenderWindow &window, Level *level, bool &exitLevel, Game &game){
+    if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+        level->handleEvent(mousePos, game, exitLevel);
+    }
+}
 
 void Game::run()
 {
@@ -17,18 +34,10 @@ void Game::run()
             switch (currentState)
             {
             case MAIN_MENU:
-                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    mainMenu->handleEvent(mousePos, *this);
-                }
+                poolEventHandleMainMenu(event, window, mainMenu, *this);
                 break;
             case LEVEL:
-                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
-                {
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    level->handleEvent(mousePos, *this, exitLevel);
-                }
+                poolEventHandleLevel(event, window, level, exitLevel, *this);
                 break;
 
             default:

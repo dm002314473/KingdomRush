@@ -3,6 +3,7 @@
 // Should try to remove the texture variable from class and use texture directly from AllTextureMatrix
 Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu)
 {
+    isLevelPaused = false;
     std::string levelFile = "GeneralRehearsal\\level\\lvl" + std::to_string(levelIndex) + ".txt";
     readingLevelData(levelFile);
     sf::Texture *backgroundTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), levelIndex, 0);
@@ -12,13 +13,24 @@ Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu)
         std::cerr << "Failed to get valid texture." << std::endl;
 
     sf::Texture *newWaveButtonTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 5000, 0);
-    newWaveButton.setTexture(*newWaveButtonTexture);
+    spriteSetting(newWaveButton, *newWaveButtonTexture, 0.2);
     newWaveButton.setPosition(20, 20);
-    newWaveButton.setScale(0.2, 0.2);
 
-    exitButton.setPosition(1600, 20);
-    exitButton.setSize(sf::Vector2f(50, 50));
-    exitButton.setFillColor(sf::Color::Red);
+    sf::Texture *pauseButtonTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 37, 0);
+    spriteSetting(pauseButton, *pauseButtonTexture, 0.2);
+    pauseButton.setPosition(1800, 20);
+
+    sf::Texture *forPauseButtonTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 38, 0);
+    spriteSetting(forPauseButton, *forPauseButtonTexture, 0.7);
+    forPauseButton.setPosition(-1000, -1000);
+
+    sf::Texture *exitButtonTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 36, 0);
+    spriteSetting(exitButton, *exitButtonTexture, 0.2);
+    exitButton.setPosition(-500, -500);
+
+    sf::Texture *continueButtonTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 35, 0);
+    spriteSetting(continueButton, *continueButtonTexture, 0.2);
+    continueButton.setPosition(-500, -500);
 }
 
 sf::Sprite Level::getSprite() { return levelBackground; }
@@ -31,26 +43,51 @@ void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
         wave++;
         startNewWave(wave);
     }
+    if (pauseButton.getGlobalBounds().contains((sf::Vector2f)mousePos))
+    {
+        if(isLevelPaused == true){
+            continueButton.setPosition(-500, -500);
+            exitButton.setPosition(-500, -500);
+            forPauseButton.setPosition(-1000, -1000);
+            isLevelPaused = false;
+        }
+        else{
+            forPauseButton.setPosition(960, 540);
+            exitButton.setPosition(1060, 540);
+            continueButton.setPosition(860, 540);
+            isLevelPaused = true;
+        }
+        pauseButton.setPosition(-500, -500);
+    }
     if (exitButton.getGlobalBounds().contains((sf::Vector2f)mousePos))
     {
-        std::cout << "Izlaz iz levela" << std::endl;
         exitLevel = true;
+    }
+    if (continueButton.getGlobalBounds().contains((sf::Vector2f)mousePos))
+    {
+        pauseButton.setPosition(1800, 20);
+        continueButton.setPosition(-500, -500);
+        exitButton.setPosition(-500, -500);
+        forPauseButton.setPosition(-1000, -1000);
+        isLevelPaused = false;
     }
 }
 
 void Level::update()
 {
-    for (auto it = enemies.begin(); it != enemies.end();)
-    {
-        (*it)->move();
-        if ((*it)->isOutOfMap())
+    if(!isLevelPaused){
+        for (auto it = enemies.begin(); it != enemies.end();)
         {
-            delete *it;
-            it = enemies.erase(it);
-            std::cout << "Count: " << enemies.size() << std::endl;
+            (*it)->move();
+            if ((*it)->isOutOfMap())
+            {
+                delete *it;
+                it = enemies.erase(it);
+                std::cout << "Count: " << enemies.size() << std::endl;
+            }
+            else
+                ++it;
         }
-        else
-            ++it;
     }
     // Implement logic for tower shooting
 }
@@ -58,14 +95,17 @@ void Level::update()
 void Level::render(sf::RenderWindow &window)
 {
     window.draw(levelBackground);
-    window.draw(newWaveButton);
-    window.draw(exitButton);
     for (auto &enemy : enemies)
         window.draw(enemy->getSprite());
     for (auto &tower : towers)
         window.draw(tower->getSprite());
     for (auto &towerStand : towerStands)
         window.draw(*towerStand);
+    window.draw(newWaveButton);
+    window.draw(forPauseButton);
+    window.draw(exitButton);
+    window.draw(continueButton);
+    window.draw(pauseButton);
 }
 
 void Level::readingLevelData(std::string &levelTxtFile)

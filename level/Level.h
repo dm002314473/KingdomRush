@@ -5,6 +5,7 @@
 #include "enemies/Enemy.h"
 #include "towers/Tower.h"
 #include "../mainMenu/MainMenu.h"
+#include "../commonFunctions/CommonFunctions.h"
 
 class Game;
 class MainMenu;
@@ -19,13 +20,18 @@ private:
     std::vector<sf::Sprite *> towerStands;
     std::vector<Tower *> towers;
     sf::Sprite newWaveButton;
-    sf::RectangleShape exitButton;
+    sf::Sprite pauseButton;
+    sf::Sprite exitButton;
+    sf::Sprite continueButton;
+    sf::Sprite forPauseButton;
     MainMenu &mainMenu;
 
     std::vector<std::vector<int>> waypoints;
     std::vector<std::vector<int>> towerStandsPositions;
     std::vector<int> heroStandPosition;
     int wave = 0;
+
+    bool isLevelPaused;
 
 public:
     Level(int levelIndex, MainMenu &mainMenu);
