@@ -26,4 +26,5 @@ public:
     void run();
     void changeState(GameState newState);
     void setLevel(Level *newLevel);
+    void handleExitLevel(bool &exitLevel);
 };
