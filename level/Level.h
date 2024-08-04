@@ -42,6 +42,7 @@ public:
     void update();
     void render(sf::RenderWindow &window);
     void readingLevelData(std::string &levelTxtFile);
+    void settingTowerStands();
 
     void startNewWave(int waveIndex);
 };

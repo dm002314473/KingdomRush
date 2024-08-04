@@ -41,6 +41,8 @@ Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu)
         button->setPosition(polje[i][0], polje[i][1]);
         buttons.push_back(button);
     }
+
+    settingTowerStands();
 }
 
 sf::Sprite Level::getSprite() { return levelBackground; }
@@ -156,7 +158,6 @@ void Level::readingLevelData(std::string &levelTxtFile)
                 heroStandPosition = position;
         }
     }
-
     file.close();
 }
 
@@ -166,5 +167,25 @@ void Level::startNewWave(int waveIndex)
     {
         Enemy *enemy = new Enemy(mainMenu, waypoints);
         enemies.push_back(enemy);
+    }
+}
+
+void Level::settingTowerStands(){
+    sf::Texture *towerStandTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 10000, 0);
+    for (auto stand : towerStands) {
+        delete stand;
+    }
+    towerStands.clear();
+    
+    for (size_t i = 0; i < towerStandsPositions.size(); i++) {
+        sf::Sprite *stand = new sf::Sprite();
+        spriteSetting(*stand, *towerStandTexture, 1.);
+        stand->setOrigin(250, 250);
+
+        int positionX = towerStandsPositions[i][0];
+        int positionY = towerStandsPositions[i][1];
+        stand->setPosition(positionX, positionY);
+
+        towerStands.push_back(stand);
     }
 }
