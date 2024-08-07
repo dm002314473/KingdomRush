@@ -50,6 +50,4 @@ public:
     int getBounty();
     int getAttackSpeed();
     sf::Sprite getSprite();
-
-    int generateRandomNumber(int min, int max);
 };

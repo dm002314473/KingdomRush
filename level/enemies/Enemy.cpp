@@ -1,5 +1,8 @@
 #include "Enemy.h"
 
+
+
+int generateRandomNumber(int min, int max);
 void stopMoving(sf::Sprite &sprite);
 void moveUp(sf::Sprite &sprite);
 void moveDown(sf::Sprite &sprite);
@@ -11,10 +14,10 @@ Enemy::Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints) : way
 
     sf::Texture *texture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 50000, 0);
     spriteSetting(sprite, *texture, .2);
-    int positionX = generateRandomNumber(waypoints[0][0] - 70, waypoints[0][0] + 70);
-    int positionY = generateRandomNumber(waypoints[0][1] - 70, waypoints[0][1] + 70);
+    sprite.setOrigin(50, 50);
+    int positionX = generateRandomNumber(waypoints[0][0] - 150, waypoints[0][0] + 10);
+    int positionY = generateRandomNumber(waypoints[0][1] - 150, waypoints[0][1] + 10);
     sprite.setPosition(positionX, positionY);
-
     currentWaypointIndex = 0;
 }
 
@@ -66,7 +69,7 @@ bool Enemy::shouldEnemyTurn()
     float dy = sprite.getPosition().y - waypoints[currentWaypointIndex + 1][1];
     float distance = std::sqrt(dx * dx + dy * dy);
 
-    if (distance < 100)
+    if (distance < 150)
         return true;
     return false;
 }
@@ -82,4 +85,4 @@ int Enemy::getAttackSpeed() { return attackSpeed; }
 
 sf::Sprite Enemy::getSprite() { return sprite; }
 
-int Enemy::generateRandomNumber(int min, int max) { return rand() % (max - min) + min; }
+int generateRandomNumber(int min, int max) { return rand() % (max - min) + min; }

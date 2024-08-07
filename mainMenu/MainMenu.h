@@ -20,6 +20,8 @@ class MainMenu
 {
 private:
     sf::Sprite backgroundSprite;
+    sf::Sprite exitButton;
+    sf::Texture exitButtonTexture;
     sf::Sprite levelFlagSprite;
     sf::Sprite levelFlagSprite2;
     sf::Sprite levelFlagSprite3;
@@ -49,6 +51,6 @@ public:
     std::vector<std::vector<int>> getTowerStatsMatrix();
     std::vector<Row> &getAllTexturesMatrix();
 
-    void handleEvent(sf::Vector2i &mousePos, Game &game);
+    void handleEvent(sf::Vector2i &mousePos, Game &game, sf::RenderWindow &window);
     void render(sf::RenderWindow &window);
 };

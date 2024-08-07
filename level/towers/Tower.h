@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "../../commonFunctions/CommonFunctions.h"
 #include "../enemies/Enemy.h"
 
 class Enemy;

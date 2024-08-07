@@ -1,5 +1,9 @@
 #include "Level.h"
 
+void handleMenuClickEvent(sf::Vector2i &mousePos, sf::Sprite &menuStand);
+bool isMenuStandClicked(sf::Vector2i &mousePos, sf::Sprite &menuStand);
+int whichTowerToCreate(sf::Vector2i &mousePos, sf::Sprite &menuStand);
+
 Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu)
 {
     isLevelPaused = false;
@@ -43,6 +47,11 @@ Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu)
     }
 
     settingTowerStands();
+
+    sf::Texture *menuStandTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 10001, 0);
+    spriteSetting(menuStand, *menuStandTexture, 1.);
+    menuStand.setOrigin(130, 130);
+    menuStand.setPosition(-1000, -1000);
 }
 
 sf::Sprite Level::getSprite() { return levelBackground; }
@@ -74,9 +83,7 @@ void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
         buttons[1]->setPosition(-500, -500);
     }
     if (buttons[3]->getGlobalBounds().contains((sf::Vector2f)mousePos))
-    {
         exitLevel = true;
-    }
     if (buttons[4]->getGlobalBounds().contains((sf::Vector2f)mousePos))
     {
         buttons[1]->setPosition(1800, 20);
@@ -85,23 +92,83 @@ void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
         buttons[2]->setPosition(-1000, -1000);
         isLevelPaused = false;
     }
+
+    if (isMenuStandOpen && !isMenuStandClicked(mousePos, menuStand))
+    {
+        isMenuStandOpen = false;
+        menuStand.setPosition(-1000, -1000);
+    }
+    if(!isMenuStandOpen){
+       for (auto stand : towerStands)
+            if (stand->getGlobalBounds().contains((sf::Vector2f)mousePos)){
+                menuStand.setPosition(stand->getPosition().x - 173, stand->getPosition().y - 193);
+                isMenuStandOpen = true;
+                break;
+            }
+    }
+    else if(isMenuStandOpen && isMenuStandClicked(mousePos, menuStand))
+        handleMenuClickEvent(mousePos, menuStand);
+}
+
+void handleMenuClickEvent(sf::Vector2i &mousePos, sf::Sprite &menuStand){
+    int towerMark = whichTowerToCreate(mousePos, menuStand);
+    switch (towerMark)
+    {
+    case 1:
+        std::cout << "wiz" << std::endl;
+        break;
+    case 2:
+        std::cout << "arc" << std::endl;
+        break;
+    case 3:
+        std::cout << "baraka" << std::endl;
+        break;
+    case 4:
+        std::cout << "bombar" << std::endl;
+        break;
+    
+    default:
+        std::cout << "error" << std::endl;
+        break;
+    }
+}
+
+int whichTowerToCreate(sf::Vector2i &mousePos, sf::Sprite &menuStand){
+    if(mousePos.y > menuStand.getPosition().y - 130 && mousePos.y < menuStand.getPosition().y - 50){
+        if(mousePos.x > menuStand.getPosition().x - 130 && mousePos.x < menuStand.getPosition().x - 50)
+            return 1;
+        return 2;
+    }
+    else if(mousePos.y < menuStand.getPosition().y + 130 && mousePos.y > menuStand.getPosition().y + 50){
+        if(mousePos.x < menuStand.getPosition().x + 130 && mousePos.x > menuStand.getPosition().x + 50)
+            return 3;
+        return 4;
+    }
+    return -1;
+}
+
+bool isMenuStandClicked(sf::Vector2i &mousePos, sf::Sprite &menuStand)
+{
+    if (menuStand.getGlobalBounds().contains((sf::Vector2f)mousePos))
+        return true;
+    return false;
 }
 
 void Level::update()
 {
-    if (!isLevelPaused)
+    if(isLevelPaused)
+        return;
+        
+    for (auto it = enemies.begin(); it != enemies.end();)
     {
-        for (auto it = enemies.begin(); it != enemies.end();)
+        (*it)->move();
+        if ((*it)->isOutOfMap())
         {
-            (*it)->move();
-            if ((*it)->isOutOfMap())
-            {
-                delete *it;
-                it = enemies.erase(it);
-            }
-            else
-                ++it;
+            delete *it;
+            it = enemies.erase(it);
         }
+        else
+            ++it;
     }
     // Implement logic for tower shooting
 }
@@ -109,12 +176,13 @@ void Level::update()
 void Level::render(sf::RenderWindow &window)
 {
     window.draw(levelBackground);
-    for (auto &enemy : enemies)
-        window.draw(enemy->getSprite());
-    for (auto &tower : towers)
-        window.draw(tower->getSprite());
     for (auto &towerStand : towerStands)
         window.draw(*towerStand);
+    for (auto &tower : towers)
+        window.draw(tower->getSprite());
+    for (auto &enemy : enemies)
+        window.draw(enemy->getSprite());
+    window.draw(menuStand);
     for (auto &button : buttons)
         window.draw(*button);
 }

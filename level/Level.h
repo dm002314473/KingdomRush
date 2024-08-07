@@ -16,6 +16,7 @@ class Level
 {
 private:
     sf::Sprite levelBackground;
+    sf::Sprite menuStand;
     std::vector<Enemy *> enemies;
     std::vector<sf::Sprite *> towerStands;
     std::vector<Tower *> towers;
@@ -33,6 +34,7 @@ private:
     int wave = 0;
 
     bool isLevelPaused;
+    bool isMenuStandOpen = false;
 
 public:
     Level(int levelIndex, MainMenu &mainMenu);

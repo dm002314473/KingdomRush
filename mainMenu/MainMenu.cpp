@@ -9,6 +9,20 @@ MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
     towerStatsReader(towerStatsMatrix);
     textureMatrixFiller(allTexturesMatrix);
 
+    sf::Sprite *newExitButton = new sf::Sprite();
+    exitButtonTexture = getTexture(allTexturesMatrix, 36, 0);
+    if (exitButtonTexture.getSize().x > 0 && exitButtonTexture.getSize().y > 0)
+    {
+        exitButton.setTexture(exitButtonTexture);
+        newExitButton = &exitButton;
+        exitButton.setScale(.3, .3);
+        exitButton.setPosition(1700, 20);
+    }
+    else
+    {
+        std::cerr << "Failed to get valid texture for id 9998, column 0." << std::endl;
+    }
+
     sf::Sprite *newFlag = new sf::Sprite();
     levelFlagTexture = getTexture(allTexturesMatrix, 9998, 0);
     if (levelFlagTexture.getSize().x > 0 && levelFlagTexture.getSize().y > 0)
@@ -57,6 +71,7 @@ MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
     newFlag3->setScale(0.2, 0.2);
     newFlag3->setPosition(600, 500);
     levelFlags.push_back(newFlag3);
+
 }
 
 void MainMenu::textureMatrixFiller(std::vector<Row> &allTexturesMatrix)
@@ -84,7 +99,7 @@ std::vector<std::vector<int>> MainMenu::getEnemyStatsMatrix() { return enemyStat
 std::vector<std::vector<int>> MainMenu::getTowerStatsMatrix() { return towerStatsMatrix; }
 std::vector<Row> &MainMenu::getAllTexturesMatrix() { return allTexturesMatrix; }
 
-void MainMenu::handleEvent(sf::Vector2i &mousePos, Game &game)
+void MainMenu::handleEvent(sf::Vector2i &mousePos, Game &game, sf::RenderWindow &window)
 {
     int levelIndex = 1;
     for (auto &flag : levelFlags)
@@ -99,6 +114,8 @@ void MainMenu::handleEvent(sf::Vector2i &mousePos, Game &game)
         }
         levelIndex++;
     }
+    if(exitButton.getGlobalBounds().contains((sf::Vector2f)mousePos))
+        window.close();
 }
 
 void MainMenu::render(sf::RenderWindow &window)
@@ -116,6 +133,8 @@ void MainMenu::render(sf::RenderWindow &window)
     }
     for (auto &flag : levelFlags)
         window.draw(*flag);
+        
+    window.draw(exitButton);
 }
 
 sf::Texture MainMenu::getTexture(std::vector<Row> &allTexturesMatrix, int code, int column)

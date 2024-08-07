@@ -12,6 +12,10 @@ GeneralRehearsal\images\exit.png
 GeneralRehearsal\images\pause.png
 38
 GeneralRehearsal\images\forPause.png
+39
+GeneralRehearsal\images\redHealthBar.png
+40
+GeneralRehearsal\images\greenHealthBar.png
 9999
 GeneralRehearsal\images\main_map.png
 9998

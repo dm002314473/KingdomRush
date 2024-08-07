@@ -77,7 +77,7 @@ void handlePoolEventMainMenu(sf::Event &event, sf::RenderWindow &window, MainMen
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
     {
         sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-        mainMenu->handleEvent(mousePos, game);
+        mainMenu->handleEvent(mousePos, game, window);
     }
 }
 
