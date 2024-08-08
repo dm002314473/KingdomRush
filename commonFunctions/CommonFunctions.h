@@ -1,5 +1,4 @@
-#ifndef COMMON_FUNCTIONS_H
-#define COMMON_FUNCTIONS_H
+#pragma once
 
 #define LVL1 1
 #define LVL2 2
@@ -29,5 +28,4 @@
 #include <SFML/Graphics.hpp>
 
 void spriteSetting(sf::Sprite &sprite, sf::Texture &spriteTexture, float scale);
-
-#endif
+bool isButtonClicked(sf::Sprite &button, sf::Vector2i &mousePos);

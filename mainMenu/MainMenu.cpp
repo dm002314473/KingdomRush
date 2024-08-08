@@ -39,7 +39,6 @@ MainMenu::MainMenu()
     spriteSetting(*backgroundSprite, *backgroundTexture, 1);
 }
 
-
 std::vector<std::vector<std::string>> MainMenu::getAllImagesMatrix() { return allImagesMatrix; }
 std::vector<std::vector<int>> MainMenu::getEnemyStatsMatrix() { return enemyStatsMatrix; }
 std::vector<std::vector<int>> MainMenu::getTowerStatsMatrix() { return towerStatsMatrix; }
@@ -50,7 +49,7 @@ void MainMenu::handleEvent(sf::Vector2i &mousePos, Game &game, sf::RenderWindow 
     int levelIndex = 1;
     for (auto &flag : levelFlagSprites)
     {
-        if (flag->getGlobalBounds().contains((sf::Vector2f)mousePos))
+        if (isButtonClicked(*flag, mousePos))
         {
             // start new level
             game.changeState(LEVEL);
@@ -60,7 +59,7 @@ void MainMenu::handleEvent(sf::Vector2i &mousePos, Game &game, sf::RenderWindow 
         }
         levelIndex++;
     }
-    if (exitButton->getGlobalBounds().contains((sf::Vector2f)mousePos))
+    if (isButtonClicked(*exitButton, mousePos))
         window.close();
 }
 

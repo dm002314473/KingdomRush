@@ -20,11 +20,7 @@ private:
     std::vector<Enemy *> enemies;
     std::vector<sf::Sprite *> towerStands;
     std::vector<Tower *> towers;
-    // sf::Sprite newWaveButton;
-    // sf::Sprite pauseButton;
-    // sf::Sprite exitButton;
-    // sf::Sprite continueButton;
-    // sf::Sprite forPauseButton;
+
     std::vector<sf::Sprite *> buttons;
     MainMenu &mainMenu;
 
