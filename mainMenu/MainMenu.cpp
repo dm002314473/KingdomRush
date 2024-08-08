@@ -13,9 +13,7 @@ MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
     exitButtonTexture = getTexture(allTexturesMatrix, 36, 0);
     if (exitButtonTexture.getSize().x > 0 && exitButtonTexture.getSize().y > 0)
     {
-        exitButton.setTexture(exitButtonTexture);
-        newExitButton = &exitButton;
-        exitButton.setScale(.3, .3);
+        spriteSetting(exitButton, exitButtonTexture, 0.3);
         exitButton.setPosition(1700, 20);
     }
     else

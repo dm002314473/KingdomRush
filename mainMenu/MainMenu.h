@@ -6,6 +6,7 @@
 #include <sstream>
 #include <fstream>
 #include "../Game.h"
+#include "../commonFunctions/CommonFunctions.h"
 
 struct Row
 {

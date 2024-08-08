@@ -101,7 +101,7 @@ void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
     if(!isMenuStandOpen){
        for (auto stand : towerStands)
             if (stand->getGlobalBounds().contains((sf::Vector2f)mousePos)){
-                menuStand.setPosition(stand->getPosition().x - 173, stand->getPosition().y - 193);
+                menuStand.setPosition(stand->getPosition().x - 178, stand->getPosition().y - 202);
                 isMenuStandOpen = true;
                 break;
             }
@@ -122,7 +122,7 @@ void handleMenuClickEvent(sf::Vector2i &mousePos, sf::Sprite &menuStand){
         break;
     case 3:
         std::cout << "baraka" << std::endl;
-        break;
+        break;  
     case 4:
         std::cout << "bombar" << std::endl;
         break;
@@ -141,8 +141,8 @@ int whichTowerToCreate(sf::Vector2i &mousePos, sf::Sprite &menuStand){
     }
     else if(mousePos.y < menuStand.getPosition().y + 130 && mousePos.y > menuStand.getPosition().y + 50){
         if(mousePos.x < menuStand.getPosition().x + 130 && mousePos.x > menuStand.getPosition().x + 50)
-            return 3;
-        return 4;
+            return 4;
+        return 3;
     }
     return -1;
 }
