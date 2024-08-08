@@ -20,17 +20,14 @@ class Game;
 class MainMenu
 {
 private:
-    sf::Sprite backgroundSprite;
-    sf::Sprite exitButton;
-    sf::Texture exitButtonTexture;
-    sf::Sprite levelFlagSprite;
-    sf::Sprite levelFlagSprite2;
-    sf::Sprite levelFlagSprite3;
-    sf::Texture backgroundTexture;
-    sf::Texture levelFlagTexture;
-    sf::Texture levelFlagTexture2;
-    sf::Texture levelFlagTexture3;
-    std::vector<sf::Sprite *> levelFlags;
+    sf::Texture *backgroundTexture;
+    sf::Sprite *backgroundSprite;
+
+    sf::Texture *exitButtonTexture;
+    sf::Sprite *exitButton;
+
+    sf::Texture *levelFlagTexture;
+    std::vector<sf::Sprite *> levelFlagSprites;
 
     std::vector<std::vector<std::string>> allImagesMatrix;
     std::vector<std::vector<int>> enemyStatsMatrix;
