@@ -1,7 +1,5 @@
 #include "MainMenu.h"
 
-
-// Check the paths
 MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
 {
     imagesReader(allImagesMatrix);
@@ -9,69 +7,37 @@ MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
     towerStatsReader(towerStatsMatrix);
     textureMatrixFiller(allTexturesMatrix);
 
-    sf::Sprite *newExitButton = new sf::Sprite();
-    exitButtonTexture = getTexture(allTexturesMatrix, 36, 0);
-    if (exitButtonTexture.getSize().x > 0 && exitButtonTexture.getSize().y > 0)
+    exitButton = new sf::Sprite();
+    exitButtonTexture = getTexturePtr(allTexturesMatrix, 36, 0);
+
+    if (exitButtonTexture->getSize().x > 0 && exitButtonTexture->getSize().y > 0)
     {
-        exitButton.setTexture(exitButtonTexture);
-        newExitButton = &exitButton;
-        exitButton.setScale(.3, .3);
-        exitButton.setPosition(1700, 20);
+        spriteSetting(*exitButton, *exitButtonTexture, 0.3);
+        exitButton->setPosition(1700, 20);
     }
     else
     {
         std::cerr << "Failed to get valid texture for id 9998, column 0." << std::endl;
     }
 
-    sf::Sprite *newFlag = new sf::Sprite();
-    levelFlagTexture = getTexture(allTexturesMatrix, 9998, 0);
-    if (levelFlagTexture.getSize().x > 0 && levelFlagTexture.getSize().y > 0)
+    levelFlagTexture = getTexturePtr(allTexturesMatrix, 9998, 0);
+    for (int i = 0; i < 3; i++)
     {
-        levelFlagSprite.setTexture(levelFlagTexture);
-        newFlag = &levelFlagSprite;
+        if (levelFlagTexture->getSize().x > 0 && levelFlagTexture->getSize().y > 0)
+        {
+            sf::Sprite *newFlag = new sf::Sprite();
+            spriteSetting(*newFlag, *levelFlagTexture, 0.2);
+            newFlag->setPosition(300 + i * 100, 300 + i * 100);
+            levelFlagSprites.push_back(newFlag);
+        }
+        else
+        {
+            std::cerr << "Failed to get valid texture for id 9998, column 0." << std::endl;
+        }
     }
-    else
-    {
-        std::cerr << "Failed to get valid texture for id 9998, column 0." << std::endl;
-    }
-    backgroundSprite.setTexture(getTexture(allTexturesMatrix, 9998, 0));
-    newFlag->setOrigin(0.5, 0.5);
-    newFlag->setScale(0.2, 0.2);
-    newFlag->setPosition(300, 300);
-    levelFlags.push_back(newFlag);
 
-    sf::Sprite *newFlag2 = new sf::Sprite();
-    levelFlagTexture2 = getTexture(allTexturesMatrix, 9998, 0);
-    if (levelFlagTexture2.getSize().x > 0 && levelFlagTexture2.getSize().y > 0)
-    {
-        levelFlagSprite2.setTexture(levelFlagTexture2);
-        newFlag2 = &levelFlagSprite2;
-    }
-    else
-    {
-        std::cerr << "Failed to get valid texture for id 9998, column 0." << std::endl;
-    }
-    newFlag2->setOrigin(0.5, 0.5);
-    newFlag2->setScale(0.2, 0.2);
-    newFlag2->setPosition(450, 400);
-    levelFlags.push_back(newFlag2);
-
-    sf::Sprite *newFlag3 = new sf::Sprite();
-    levelFlagTexture3 = getTexture(allTexturesMatrix, 9998, 0);
-    if (levelFlagTexture3.getSize().x > 0 && levelFlagTexture3.getSize().y > 0)
-    {
-        levelFlagSprite3.setTexture(levelFlagTexture3);
-        newFlag3 = &levelFlagSprite3;
-    }
-    else
-    {
-        std::cerr << "Failed to get valid texture for id 9998, column 0." << std::endl;
-    }
-    newFlag3->setOrigin(0.5, 0.5);
-    newFlag3->setScale(0.2, 0.2);
-    newFlag3->setPosition(600, 500);
-    levelFlags.push_back(newFlag3);
-
+    backgroundTexture = getTexturePtr(allTexturesMatrix, 9998, 0);
+    backgroundSprite->setTexture(*backgroundTexture);
 }
 
 void MainMenu::textureMatrixFiller(std::vector<Row> &allTexturesMatrix)
@@ -102,7 +68,7 @@ std::vector<Row> &MainMenu::getAllTexturesMatrix() { return allTexturesMatrix; }
 void MainMenu::handleEvent(sf::Vector2i &mousePos, Game &game, sf::RenderWindow &window)
 {
     int levelIndex = 1;
-    for (auto &flag : levelFlags)
+    for (auto &flag : levelFlagSprites)
     {
         if (flag->getGlobalBounds().contains((sf::Vector2f)mousePos))
         {
@@ -114,7 +80,7 @@ void MainMenu::handleEvent(sf::Vector2i &mousePos, Game &game, sf::RenderWindow 
         }
         levelIndex++;
     }
-    if(exitButton.getGlobalBounds().contains((sf::Vector2f)mousePos))
+    if (exitButton->getGlobalBounds().contains((sf::Vector2f)mousePos))
         window.close();
 }
 
@@ -131,10 +97,10 @@ void MainMenu::render(sf::RenderWindow &window)
     {
         std::cerr << "Failed to get valid texture for id 9999, column 0." << std::endl;
     }
-    for (auto &flag : levelFlags)
+    for (auto &flag : levelFlagSprites)
         window.draw(*flag);
-        
-    window.draw(exitButton);
+
+    window.draw(*exitButton);
 }
 
 sf::Texture MainMenu::getTexture(std::vector<Row> &allTexturesMatrix, int code, int column)
