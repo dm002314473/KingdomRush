@@ -16,9 +16,7 @@ MainMenu::MainMenu()
         exitButton->setPosition(1700, 20);
     }
     else
-    {
         std::cerr << "Failed to get valid texture for id 9998, column 0." << std::endl;
-    }
 
     levelFlagTexture = getTexturePtr(allTexturesMatrix, FLAG_FOR_LVL, 0);
     for (int i = 0; i < 3; i++)
@@ -36,29 +34,11 @@ MainMenu::MainMenu()
         }
     }
 
-    backgroundTexture = getTexturePtr(allTexturesMatrix, FLAG_FOR_LVL, 0);
-    backgroundSprite->setTexture(*backgroundTexture);
+    backgroundSprite = new sf::Sprite();
+    backgroundTexture = getTexturePtr(allTexturesMatrix, MAIN_MAP, 0);
+    spriteSetting(*backgroundSprite, *backgroundTexture, 1);
 }
 
-void MainMenu::textureMatrixFiller(std::vector<Row> &allTexturesMatrix)
-{
-    allTexturesMatrix.resize(allImagesMatrix.size());
-
-    for (size_t i = 0; i < allImagesMatrix.size(); ++i)
-    {
-        allTexturesMatrix[i].id = std::stoi(allImagesMatrix[i][0]); // Assuming the first element is the id as string
-        allTexturesMatrix[i].textures.resize(allImagesMatrix[i].size() - 1);
-        allTexturesMatrix[i].texturePaths.resize(allImagesMatrix[i].size() - 1);
-
-        for (size_t j = 1; j < allImagesMatrix[i].size(); ++j)
-        {
-            if (!allTexturesMatrix[i].textures[j - 1].loadFromFile(allImagesMatrix[i][j]))
-                std::cerr << "Failed to load " << allImagesMatrix[i][j] << std::endl;
-            else
-                allTexturesMatrix[i].texturePaths[j - 1] = allImagesMatrix[i][j];
-        }
-    }
-}
 
 std::vector<std::vector<std::string>> MainMenu::getAllImagesMatrix() { return allImagesMatrix; }
 std::vector<std::vector<int>> MainMenu::getEnemyStatsMatrix() { return enemyStatsMatrix; }
@@ -86,43 +66,12 @@ void MainMenu::handleEvent(sf::Vector2i &mousePos, Game &game, sf::RenderWindow 
 
 void MainMenu::render(sf::RenderWindow &window)
 {
-    sf::Texture texture = getTexture(allTexturesMatrix, MAIN_MAP, 0);
-    if (texture.getSize().x > 0 && texture.getSize().y > 0)
-    {
-        sf::Sprite newSprite;
-        newSprite.setTexture(texture);
-        window.draw(newSprite);
-    }
-    else
-    {
-        std::cerr << "Failed to get valid texture for id MAIN_MAP, column 0." << std::endl;
-    }
+    window.draw(*backgroundSprite);
+
     for (auto &flag : levelFlagSprites)
         window.draw(*flag);
 
     window.draw(*exitButton);
-}
-
-sf::Texture MainMenu::getTexture(std::vector<Row> &allTexturesMatrix, int code, int column)
-{
-    for (const auto &row : allTexturesMatrix)
-    {
-        if (row.id == code)
-        {
-            if (column >= 0 && column < (int)(row.textures.size()))
-            {
-                return row.textures[column];
-            }
-            else
-            {
-                std::cerr << "Column index out of bounds." << std::endl;
-                return sf::Texture();
-            }
-        }
-    }
-
-    std::cerr << "Row with id " << code << " not found." << std::endl;
-    return sf::Texture();
 }
 
 sf::Texture *MainMenu::getTexturePtr(std::vector<Row> &allTexturesMatrix, int code, int column)
@@ -133,6 +82,26 @@ sf::Texture *MainMenu::getTexturePtr(std::vector<Row> &allTexturesMatrix, int co
             return &row.textures[column];
     }
     return nullptr;
+}
+
+void MainMenu::textureMatrixFiller(std::vector<Row> &allTexturesMatrix)
+{
+    allTexturesMatrix.resize(allImagesMatrix.size());
+
+    for (size_t i = 0; i < allImagesMatrix.size(); ++i)
+    {
+        allTexturesMatrix[i].id = std::stoi(allImagesMatrix[i][0]); // Assuming the first element is the id as string
+        allTexturesMatrix[i].textures.resize(allImagesMatrix[i].size() - 1);
+        allTexturesMatrix[i].texturePaths.resize(allImagesMatrix[i].size() - 1);
+
+        for (size_t j = 1; j < allImagesMatrix[i].size(); ++j)
+        {
+            if (!allTexturesMatrix[i].textures[j - 1].loadFromFile(allImagesMatrix[i][j]))
+                std::cerr << "Failed to load " << allImagesMatrix[i][j] << std::endl;
+            else
+                allTexturesMatrix[i].texturePaths[j - 1] = allImagesMatrix[i][j];
+        }
+    }
 }
 
 void MainMenu::imagesReader(std::vector<std::vector<std::string>> &allImagesMatrix)
