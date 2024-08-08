@@ -1,6 +1,6 @@
 #include "MainMenu.h"
 
-MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
+MainMenu::MainMenu()
 {
     imagesReader(allImagesMatrix);
     enemyStatsReader(enemyStatsMatrix);
@@ -8,7 +8,7 @@ MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
     textureMatrixFiller(allTexturesMatrix);
 
     exitButton = new sf::Sprite();
-    exitButtonTexture = getTexturePtr(allTexturesMatrix, 36, 0);
+    exitButtonTexture = getTexturePtr(allTexturesMatrix, EXIT, 0);
 
     if (exitButtonTexture->getSize().x > 0 && exitButtonTexture->getSize().y > 0)
     {
@@ -20,7 +20,7 @@ MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
         std::cerr << "Failed to get valid texture for id 9998, column 0." << std::endl;
     }
 
-    levelFlagTexture = getTexturePtr(allTexturesMatrix, 9998, 0);
+    levelFlagTexture = getTexturePtr(allTexturesMatrix, FLAG_FOR_LVL, 0);
     for (int i = 0; i < 3; i++)
     {
         if (levelFlagTexture->getSize().x > 0 && levelFlagTexture->getSize().y > 0)
@@ -32,11 +32,11 @@ MainMenu::MainMenu(/*Here paths for .txt files may be accepted if needed*/)
         }
         else
         {
-            std::cerr << "Failed to get valid texture for id 9998, column 0." << std::endl;
+            std::cerr << "Failed to get valid texture for id FLAG_FOR_LVL, column 0." << std::endl;
         }
     }
 
-    backgroundTexture = getTexturePtr(allTexturesMatrix, 9998, 0);
+    backgroundTexture = getTexturePtr(allTexturesMatrix, FLAG_FOR_LVL, 0);
     backgroundSprite->setTexture(*backgroundTexture);
 }
 
@@ -86,7 +86,7 @@ void MainMenu::handleEvent(sf::Vector2i &mousePos, Game &game, sf::RenderWindow 
 
 void MainMenu::render(sf::RenderWindow &window)
 {
-    sf::Texture texture = getTexture(allTexturesMatrix, 9999, 0);
+    sf::Texture texture = getTexture(allTexturesMatrix, MAIN_MAP, 0);
     if (texture.getSize().x > 0 && texture.getSize().y > 0)
     {
         sf::Sprite newSprite;
@@ -95,7 +95,7 @@ void MainMenu::render(sf::RenderWindow &window)
     }
     else
     {
-        std::cerr << "Failed to get valid texture for id 9999, column 0." << std::endl;
+        std::cerr << "Failed to get valid texture for id MAIN_MAP, column 0." << std::endl;
     }
     for (auto &flag : levelFlagSprites)
         window.draw(*flag);

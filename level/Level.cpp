@@ -15,26 +15,6 @@ Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu)
     else
         std::cerr << "Failed to get valid texture." << std::endl;
 
-    // sf::Texture *newWaveButtonTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 5000, 0);
-    // spriteSetting(newWaveButton, *newWaveButtonTexture, 0.2);
-    // newWaveButton.setPosition(20, 20);
-
-    // sf::Texture *pauseButtonTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 37, 0);
-    // spriteSetting(pauseButton, *pauseButtonTexture, 0.2);
-    // pauseButton.setPosition(1800, 20);
-
-    // sf::Texture *forPauseButtonTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 38, 0);
-    // spriteSetting(forPauseButton, *forPauseButtonTexture, 0.7);
-    // forPauseButton.setPosition(-1000, -1000);
-
-    // sf::Texture *exitButtonTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 36, 0);
-    // spriteSetting(exitButton, *exitButtonTexture, 0.2);
-    // exitButton.setPosition(-500, -500);
-
-    // sf::Texture *continueButtonTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 35, 0);
-    // spriteSetting(continueButton, *continueButtonTexture, 0.2);
-    // continueButton.setPosition(-500, -500);
-
     int polje[5][2] = {{20, 20}, {1800, 20}, {-1000, -1000}, {-500, -500}, {-500, 500}};
     int sifre[5] = {5000, 37, 38, 36, 35};
     for (int i = 0; i < 5; i++)
@@ -48,7 +28,7 @@ Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu)
 
     settingTowerStands();
 
-    sf::Texture *menuStandTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 10001, 0);
+    sf::Texture *menuStandTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), TOWER_MENU, 0);
     spriteSetting(menuStand, *menuStandTexture, 1.);
     menuStand.setOrigin(130, 130);
     menuStand.setPosition(-1000, -1000);
@@ -116,15 +96,19 @@ void handleMenuClickEvent(sf::Vector2i &mousePos, sf::Sprite &menuStand){
     {
     case 1:
         std::cout << "wiz" << std::endl;
+        menuStand.setPosition(-1000, -1000);
         break;
     case 2:
         std::cout << "arc" << std::endl;
+        menuStand.setPosition(-1000, -1000);
         break;
     case 3:
         std::cout << "baraka" << std::endl;
+        menuStand.setPosition(-1000, -1000);
         break;  
     case 4:
         std::cout << "bombar" << std::endl;
+        menuStand.setPosition(-1000, -1000);
         break;
     
     default:
@@ -137,12 +121,14 @@ int whichTowerToCreate(sf::Vector2i &mousePos, sf::Sprite &menuStand){
     if(mousePos.y > menuStand.getPosition().y - 130 && mousePos.y < menuStand.getPosition().y - 50){
         if(mousePos.x > menuStand.getPosition().x - 130 && mousePos.x < menuStand.getPosition().x - 50)
             return 1;
-        return 2;
+        else if(mousePos.x < menuStand.getPosition().x + 130 && mousePos.x > menuStand.getPosition().x + 50)
+            return 2;
     }
     else if(mousePos.y < menuStand.getPosition().y + 130 && mousePos.y > menuStand.getPosition().y + 50){
         if(mousePos.x < menuStand.getPosition().x + 130 && mousePos.x > menuStand.getPosition().x + 50)
             return 4;
-        return 3;
+        else if(mousePos.x > menuStand.getPosition().x - 130 && mousePos.x < menuStand.getPosition().x - 50)
+            return 3;
     }
     return -1;
 }
@@ -239,7 +225,7 @@ void Level::startNewWave(int waveIndex)
 }
 
 void Level::settingTowerStands(){
-    sf::Texture *towerStandTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 10000, 0);
+    sf::Texture *towerStandTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), TOWER_STAND, 0);
     for (auto stand : towerStands) {
         delete stand;
     }
