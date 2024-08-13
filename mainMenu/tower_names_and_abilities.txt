@@ -1,0 +1,136 @@
+BARRACKS
+lvl1(Militia Quarters) 
+	saying: "We stand ready for battle!"
+	description: "Basic training ground for recruits. Ready to deploy a small but effective force."
+lvl2(Soldier's Garrison)  
+	saying: "Our strength grows!"
+	description: "Upgraded to a full-fledged garrison, providing improved troops and defensive capabilities."
+lvl3(Guardhouse) 
+	saying: "Guardhous is beacon of protection!"
+	description: "A fortified stronghold that serves as a central defense point, greatly enhancing protection and troop effectiveness."
+lvl4:
+v1(Nightblade Barracks) 
+	saying: "The shadows are our allies!"
+	description: "Elite training grounds for the Nightblade order. Masters of stealth and precision, these warriors strike from the shadows."
+abilities:
+1: Blade Rain(throwing shurikens)
+	saying: "The skies are filled with our blades!"
+	description: "Unleashes a flurry of shurikens, dealing damage to multiple enemies from a distance."
+2: Silent Death(insta kill) 
+	saying: "Strike of a shadow!"
+	description: "Delivers a precise and lethal strike, instantly taking down a single enemy."
+3: Thief's Touch(looting enemy while attacking) 
+	saying: "We take what is ours!"
+	description: "Stealthily plunders gold from enemies as they are defeated, increasing your resources with each attack."
+v2(Sovereign's Keep) 
+	saying: "Behold the Sovereign s Keep!"
+	description: "The pinnacle of military fortification. The Sovereign s elite guard stands ready to defend with unmatched strength and discipline."
+abilities:
+1: Ironclad(soldiers gains heavy armor) 
+	saying: "We are the kingdom s shield!"
+	description: "Imbues soldiers with heavy armor, significantly increasing their defense and resistance to damage."
+2: Crushing Strike(soldiers deals area damage) 
+	saying: "Shake the earth beneath!"
+	description: "Empowers soldiers to deliver powerful area attacks, damaging multiple enemies at once."
+3: Last Stand(soldiers dodge next enemy attack) 
+	saying: "Evading the next blow!"
+	description: "Grants soldiers the ability to evade the next incoming attack, providing a critical moment of defense."
+
+WIZARD 
+lvl1(Wizard's Enclave)
+	saying: "Our magical defense begins here!"
+	description: "A humble base of operations for novice wizards. Provides basic magical attacks to fend off the initial waves of enemies."
+lvl2(Mystic Sanctum)
+	saying: "The arcane power within grows stronger!"
+	description: "An enhanced magical tower that channels more powerful spells. The Mystic Sanctum improves your wizard s ability to deal with increasingly formidable foes."
+lvl3(Sorcery Bastion)
+	saying: "Our bastion stands firm!"
+	description: "A formidable tower of advanced wizardry that commands powerful spells and enchantments. The Sorcery Bastion fortifies your magical defenses with superior power and versatility."
+lvl4:
+v1(Glacial Keep)
+	saying: "A fortress of frost!"
+	description: "The Glacial Keep channel's the full might of snow and ice, unleashing powerful frost spells that can devastate large groups of enemies with chilling force."
+abilities:
+1: Frostbound Sentinel(spawn ice golem)
+	saying: "Unleash the power of the Frozen Colossus!"
+	description: "Summons a powerful Ice Golem to the battlefield. This towering construct deals heavy damage and absorbs enemy attacks with its frosty defenses."
+2: Frostbite Trail(freezes ground making enemy go slower and have slower attack rate)
+	saying: "The path is now a frozen trap!"
+	description: "Creates a chilling barrier that slows down enemy movement and attack speed. Enemies caught in the freezing path will struggle to advance and fight back effectively."
+
+v2(Verdant Citadel)
+	saying: "The forest s might is now at our command!"
+	description: "A powerful tower that channels the full strength of nature to cast potent spells and provide enhanced defenses."
+abilities:
+1: Earth s Devour(opens hole that eats single enemy)
+	saying: "Let the ground swallow your foe!"
+	description: "Summons a voracious pit that devours an enemy whole, eliminating them with swift, natural force."
+2: Nature s Blessing(giving allies in range health boost)
+	saying: "Nature s gift strengthens our allies!"
+	description: "Channels nature s restorative power to boost the health of all allies within range, enhancing their durability in battle."
+
+ARCHER
+lvl1(Bowman's Tower)
+	saying: "Archers take your positions!"
+	description: "A basic defensive tower manned by skilled bowmen. Provides reliable ranged attacks against enemy forces."
+lvl2(Ranger's Outpost)
+	saying: "The Rangers are ready to defend!"
+	description: "An upgraded outpost with improved archers. Offers enhanced accuracy and range to target and repel enemies more effectively."
+lvl3(Marksman s Keep)
+	saying: "The keep of unmatched accuracy!"
+	description: "The Marksman s Keep is equipped with highly skilled archers who provide exceptional range and damage, making it a formidable defense against advancing foes."
+lvl4:
+v1(Imperial Bowguard)
+	saying: "Our precision will defend our realm!"
+	description: "Highly trained archers in service of the king, armed with superior equipment to deliver devastating long-range attacks."
+abilities:
+1: Sharpened Arrows(increases archer damage)
+	saying: "Lethal shots!"
+	description: "Upgrades the arrows to deal additional damage, making each shot more lethal to enemies."
+2: Fire Rain(shots a flamed arrow that deals damage to group of enemies for next few seconds)
+	saying: "Unleashing a storm of burning arrows!"
+	description: "Fires a flaming arrow that ignites the target area, dealing continuous fire damage to enemies over several seconds."
+
+v2(Eagle Eye Watch)
+	saying: "Eagle-eyed warrior take your stand!"
+	description: "Elite marksmen with keen eyes and powerful muskets, ready to strike down enemies with both accuracy and force."
+abilities:
+1: Eagle Eye Shot(insta-kill sniper shot)
+	saying: "I will claim my prey!"
+	description: "A devastating shot that targets and neutralizes an enemy with lethal precision."
+2: Eagle Eyes(increasing tower range)
+	saying: "Eyes of an eagle!"
+	description: "Enhances the range of archers within the Eagle Eye Watch, allowing them to strike enemies from much greater distances."
+
+BOMBER
+lvl1(Grenadier's Post)
+	saying: "Grenadiers are ready for action!"
+	description: "A basic post for grenadiers, equipped with standard explosive devices. Provides initial firepower to deal with incoming enemies."
+lvl2(Explosion Spire)
+	saying: "Our power is enhanced!"
+	description: "An upgraded spire that improves the effectiveness and range of explosive attacks, dealing more damage to enemies in a larger area."
+lvl3(Bombardment Bastion)
+	saying: "Prepare for heavy firepower!"
+	description: "A stronghold for advanced bombardment, capable of inflicting substantial damage over a broad area."
+lvl4:
+v1(Inferno Launcher)
+	saying: "Unleash the flames to scorch our enemies!"
+	description: "Fires incendiary bombs that cause massive explosions of fire, incinerating enemies within a broad radius."
+abilities:
+1: Volcanic Eruption(create a fire explosion at targeted location)
+	saying: "Ignite a volcanic eruption!"
+	description: "Detonates a massive incendiary bomb at a targeted location, causing a powerful explosion that incinerates everything in the vicinity."
+2: Firestorm Cascade(sequential explosive fireballs)
+	saying:  Prepare for an inferno storm! 
+	description: "Launches a series of fireballs that explode in succession, creating a cascading effect of fiery destruction over a targeted area."
+
+v2(Venom Bombard)
+	saying: "Unleash the venom!"
+	description: "Launches bombs made of poisonous gas, causing great damage and mayhem on battlefiled."
+abilities:
+1: Toxic Surge(release a cloud of poisonous gas trough all range)
+	saying: "Noxious cloud!"
+	description: "Deploys a toxic cloud that inflicts ongoing poison damage to all enemies caught in the gas."
+2:Venomous Trap(set a poisonous trap on the ground)
+	saying: "Now we wait!"
+	description: "Deploys a hidden trap that releases venomous gas when triggered, immobilizing enemies and dealing poison damage over time."

@@ -43,4 +43,8 @@ public:
     void settingTowerStands();
 
     void startNewWave(int waveIndex);
+
+    void handleMenuClickEvent(sf::Vector2i &mousePos, sf::Sprite &menuStand);
+
+    void createTower(int code);
 };
