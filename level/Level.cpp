@@ -3,17 +3,15 @@
 bool isMenuStandClicked(sf::Vector2i &mousePos, sf::Sprite &menuStand);
 int whichTowerToCreate(sf::Vector2i &mousePos, sf::Sprite &menuStand);
 bool isThereTowerAlready(std::vector<Tower *> &towers, sf::Sprite stand);
+void pauseLevel(std::vector<sf::Sprite *> buttons, bool &isLevelPaused);
+void continueLevel(std::vector<sf::Sprite *> buttons, bool &isLevelPaused);
 
-Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu)
+Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu), isLevelPaused(false)
 {
-    isLevelPaused = false;
     std::string levelFile = "GeneralRehearsal\\level\\lvl" + std::to_string(levelIndex) + ".txt";
     readingLevelData(levelFile);
     sf::Texture *backgroundTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), levelIndex, 0);
-    if (backgroundTexture && backgroundTexture->getSize().x > 0 && backgroundTexture->getSize().y > 0)
-        levelBackground.setTexture(*backgroundTexture);
-    else
-        std::cerr << "Failed to get valid texture." << std::endl;
+    levelBackground.setTexture(*backgroundTexture);
 
     int polje[5][2] = {{20, 20}, {1800, 20}, {-1000, -1000}, {-500, -500}, {-500, 500}};
     int sifre[5] = {WAVE_SIGN, PAUSE, FORPAUSE, EXIT, CONTINUE};
@@ -42,24 +40,15 @@ void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
     if (buttons[1]->getGlobalBounds().contains((sf::Vector2f)mousePos))
     {
         if (isLevelPaused == true)
-        {
-            buttons[4]->setPosition(-500, -500);
-            buttons[3]->setPosition(-500, -500);
-            buttons[2]->setPosition(-1000, -1000);
-            isLevelPaused = false;
-        }
+            pauseLevel(buttons, isLevelPaused);
         else
-        {
-            buttons[2]->setPosition(960, 540);
-            buttons[3]->setPosition(1060, 540);
-            buttons[4]->setPosition(860, 540);
-            isLevelPaused = true;
-        }
+            continueLevel(buttons, isLevelPaused);
         buttons[1]->setPosition(-500, -500);
     }
-    if (buttons[3]->getGlobalBounds().contains((sf::Vector2f)mousePos))
+
+    if (isButtonClicked(*buttons[3], mousePos))
         exitLevel = true;
-    if (buttons[4]->getGlobalBounds().contains((sf::Vector2f)mousePos))
+    if (isButtonClicked(*buttons[4], mousePos))
     {
         buttons[1]->setPosition(1800, 20);
         buttons[4]->setPosition(-500, -500);
@@ -67,32 +56,34 @@ void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
         buttons[2]->setPosition(-1000, -1000);
         isLevelPaused = false;
     }
-    if(buttons[2]->getPosition().x == -1000){
-        if (buttons[0]->getGlobalBounds().contains((sf::Vector2f)mousePos))
-        {
-            wave++;
-            startNewWave(wave);
-        }
-        if (isMenuStandOpen && !isMenuStandClicked(mousePos, menuStand))
-        {
-            isMenuStandOpen = false;
-            menuStand.setPosition(-1000, -1000);
-        }
-        if(!isMenuStandOpen){
-        for (auto stand : towerStands)
-            if (stand->getGlobalBounds().contains((sf::Vector2f)mousePos) && !isThereTowerAlready(towers, *stand))
-            {
+if (!isLevelPaused) {
+    if (buttons[0]->getGlobalBounds().contains((sf::Vector2f)mousePos)) {
+        wave++;
+        startNewWave(wave);
+    }
+
+    if (isMenuStandOpen && !isMenuStandClicked(mousePos, menuStand)) {
+        isMenuStandOpen = false;
+        menuStand.setPosition(-1000, -1000);
+    }
+
+    if (!isMenuStandOpen) {
+        for (auto stand : towerStands) {
+            if (stand->getGlobalBounds().contains((sf::Vector2f)mousePos) && !isThereTowerAlready(towers, *stand)) {
                 menuStand.setPosition(stand->getPosition().x - 178, stand->getPosition().y - 202);
                 isMenuStandOpen = true;
                 break;
             }
         }
-        else if(isMenuStandOpen && isMenuStandClicked(mousePos, menuStand))
-            handleMenuClickEvent(mousePos, menuStand);
+    } 
+    else if (isMenuStandOpen && isMenuStandClicked(mousePos, menuStand)) {
+        handleMenuClickEvent(mousePos, menuStand);
     }
 }
+}
 
-bool isThereTowerAlready(std::vector<Tower *> &towers, sf::Sprite stand){
+bool isThereTowerAlready(std::vector<Tower *> &towers, sf::Sprite stand)
+{
     for(auto tower : towers)
         if(tower->getPosition().x + 253 == stand.getPosition().x && tower->getPosition().y + 352 == stand.getPosition().y)
             return true;
@@ -100,8 +91,25 @@ bool isThereTowerAlready(std::vector<Tower *> &towers, sf::Sprite stand){
     return false;
 }
 
+void pauseLevel(std::vector<sf::Sprite *> buttons, bool &isLevelPaused)
+{
+    buttons[4]->setPosition(-500, -500);
+    buttons[3]->setPosition(-500, -500);
+    buttons[2]->setPosition(-1000, -1000);
+    isLevelPaused = false;
+}
 
-void Level::handleMenuClickEvent(sf::Vector2i &mousePos, sf::Sprite &menuStand){
+void continueLevel(std::vector<sf::Sprite *> buttons, bool &isLevelPaused)
+{
+    buttons[2]->setPosition(960, 540);
+    buttons[3]->setPosition(1060, 540);
+    buttons[4]->setPosition(860, 540);
+    isLevelPaused = true;
+}
+
+void Level::handleMenuClickEvent(sf::Vector2i &mousePos, sf::Sprite &menuStand)
+{
+    std::cout << "handle" << std::endl;
     int towerMark = whichTowerToCreate(mousePos, menuStand);
     switch (towerMark)
     {
@@ -117,29 +125,31 @@ void Level::handleMenuClickEvent(sf::Vector2i &mousePos, sf::Sprite &menuStand){
     case 3:
         std::cout << "baraka" << std::endl;
         menuStand.setPosition(-1000, -1000);
-        break;  
+        break;
     case 4:
         std::cout << "bombar" << std::endl;
         menuStand.setPosition(-1000, -1000);
         break;
-    
     default:
         std::cout << "error" << std::endl;
         break;
     }
 }
 
-int whichTowerToCreate(sf::Vector2i &mousePos, sf::Sprite &menuStand){
-    if(mousePos.y > menuStand.getPosition().y - 130 && mousePos.y < menuStand.getPosition().y - 50){
-        if(mousePos.x > menuStand.getPosition().x - 130 && mousePos.x < menuStand.getPosition().x - 50)
+int whichTowerToCreate(sf::Vector2i &mousePos, sf::Sprite &menuStand)
+{
+    if (mousePos.y > menuStand.getPosition().y - 130 && mousePos.y < menuStand.getPosition().y - 50)
+    {
+        if (mousePos.x > menuStand.getPosition().x - 130 && mousePos.x < menuStand.getPosition().x - 50)
             return 1;
-        else if(mousePos.x < menuStand.getPosition().x + 130 && mousePos.x > menuStand.getPosition().x + 50)
+        else if (mousePos.x < menuStand.getPosition().x + 130 && mousePos.x > menuStand.getPosition().x + 50)
             return 2;
     }
-    else if(mousePos.y < menuStand.getPosition().y + 130 && mousePos.y > menuStand.getPosition().y + 50){
-        if(mousePos.x < menuStand.getPosition().x + 130 && mousePos.x > menuStand.getPosition().x + 50)
+    else if (mousePos.y < menuStand.getPosition().y + 130 && mousePos.y > menuStand.getPosition().y + 50)
+    {
+        if (mousePos.x < menuStand.getPosition().x + 130 && mousePos.x > menuStand.getPosition().x + 50)
             return 4;
-        else if(mousePos.x > menuStand.getPosition().x - 130 && mousePos.x < menuStand.getPosition().x - 50)
+        else if (mousePos.x > menuStand.getPosition().x - 130 && mousePos.x < menuStand.getPosition().x - 50)
             return 3;
     }
     return -1;
@@ -147,16 +157,17 @@ int whichTowerToCreate(sf::Vector2i &mousePos, sf::Sprite &menuStand){
 
 bool isMenuStandClicked(sf::Vector2i &mousePos, sf::Sprite &menuStand)
 {
-    if (menuStand.getGlobalBounds().contains((sf::Vector2f)mousePos))
+    // menuStand.getGlobalBounds().contains((sf::Vector2f)mousePos)
+    if (isButtonClicked(menuStand, mousePos))
         return true;
     return false;
 }
 
 void Level::update()
 {
-    if(isLevelPaused)
+    if (isLevelPaused)
         return;
-        
+
     for (auto it = enemies.begin(); it != enemies.end();)
     {
         (*it)->move();
@@ -236,14 +247,15 @@ void Level::startNewWave(int waveIndex)
     }
 }
 
-void Level::settingTowerStands(){
+void Level::settingTowerStands()
+{
     sf::Texture *towerStandTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), TOWER_STAND, 0);
-    for (auto stand : towerStands) {
+    for (auto stand : towerStands)
         delete stand;
-    }
     towerStands.clear();
-    
-    for (size_t i = 0; i < towerStandsPositions.size(); i++) {
+
+    for (size_t i = 0; i < towerStandsPositions.size(); i++)
+    {
         sf::Sprite *stand = new sf::Sprite();
         spriteSetting(*stand, *towerStandTexture, 1.);
         stand->setOrigin(250, 250);
@@ -255,7 +267,6 @@ void Level::settingTowerStands(){
         towerStands.push_back(stand);
     }
 }
-
 
 void Level::createTower(int code){
     Tower *tower = new Tower(mainMenu, code);

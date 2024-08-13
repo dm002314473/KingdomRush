@@ -20,6 +20,7 @@ private:
     std::vector<Enemy *> enemies;
     std::vector<sf::Sprite *> towerStands;
     std::vector<Tower *> towers;
+
     std::vector<sf::Sprite *> buttons;
     MainMenu &mainMenu;
 
