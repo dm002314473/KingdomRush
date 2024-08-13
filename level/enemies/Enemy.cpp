@@ -12,7 +12,7 @@ void moveRight(sf::Sprite &sprite);
 Enemy::Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints) : waypoints(waypoints)
 {
 
-    sf::Texture *texture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), 50000, 0);
+    sf::Texture *texture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), GIANT, 0);
     spriteSetting(sprite, *texture, .2);
     sprite.setOrigin(50, 50);
     int positionX = generateRandomNumber(waypoints[0][0] - 150, waypoints[0][0] + 10);

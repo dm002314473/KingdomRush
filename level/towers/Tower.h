@@ -3,8 +3,11 @@
 #include <SFML/Graphics.hpp>
 #include "../../commonFunctions/CommonFunctions.h"
 #include "../enemies/Enemy.h"
+#include "../../mainMenu/MainMenu.h"
 
 class Enemy;
+
+class MainMenu;
 
 class Tower
 {
@@ -13,17 +16,28 @@ class Tower
 private:
     sf::Sprite sprite;
     int cost;
-    int damage;
+    int damage[2];
     int shootSpeed;
     int range;
 
 public:
-    Tower(/*accepts all needed values from storage in Level class */);
+    Tower(MainMenu &mainMenu, int code);
     sf::Sprite getSprite();
     int getCost();
     int getDamage();
     int getShootSpeed();
     int getRange();
+
+    void setValues(std::vector<std::vector<int>> allStats, int code);
+
+    void setSprite(sf::Sprite newSprite);
+    void setCost(int newSost);
+    void setDamage(int newDamageMin, int newDamageMax);
+    void setShootSpeed(int newShootSpeed);
+    void setRange(int newRange);
+
+    void setPosition(int x, int y);
+    sf::Vector2f getPosition();
 
     bool isEnemyInRange(Enemy *enemy);
     void shoot(Enemy *enemy);

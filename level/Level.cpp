@@ -1,8 +1,8 @@
 #include "Level.h"
 
-void handleMenuClickEvent(sf::Vector2i &mousePos, sf::Sprite &menuStand);
 bool isMenuStandClicked(sf::Vector2i &mousePos, sf::Sprite &menuStand);
 int whichTowerToCreate(sf::Vector2i &mousePos, sf::Sprite &menuStand);
+bool isThereTowerAlready(std::vector<Tower *> &towers, sf::Sprite stand);
 
 Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu)
 {
@@ -16,7 +16,7 @@ Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu)
         std::cerr << "Failed to get valid texture." << std::endl;
 
     int polje[5][2] = {{20, 20}, {1800, 20}, {-1000, -1000}, {-500, -500}, {-500, 500}};
-    int sifre[5] = {5000, 37, 38, 36, 35};
+    int sifre[5] = {WAVE_SIGN, PAUSE, FORPAUSE, EXIT, CONTINUE};
     for (int i = 0; i < 5; i++)
     {
         sf::Texture *buttonTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), sifre[i], 0);
@@ -39,11 +39,6 @@ sf::Sprite Level::getSprite() { return levelBackground; }
 void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
 {
     // Handle creating towers, and starting new waves
-    if (buttons[0]->getGlobalBounds().contains((sf::Vector2f)mousePos))
-    {
-        wave++;
-        startNewWave(wave);
-    }
     if (buttons[1]->getGlobalBounds().contains((sf::Vector2f)mousePos))
     {
         if (isLevelPaused == true)
@@ -72,30 +67,47 @@ void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
         buttons[2]->setPosition(-1000, -1000);
         isLevelPaused = false;
     }
-
-    if (isMenuStandOpen && !isMenuStandClicked(mousePos, menuStand))
-    {
-        isMenuStandOpen = false;
-        menuStand.setPosition(-1000, -1000);
-    }
-    if(!isMenuStandOpen){
-       for (auto stand : towerStands)
-            if (stand->getGlobalBounds().contains((sf::Vector2f)mousePos)){
+    if(buttons[2]->getPosition().x == -1000){
+        if (buttons[0]->getGlobalBounds().contains((sf::Vector2f)mousePos))
+        {
+            wave++;
+            startNewWave(wave);
+        }
+        if (isMenuStandOpen && !isMenuStandClicked(mousePos, menuStand))
+        {
+            isMenuStandOpen = false;
+            menuStand.setPosition(-1000, -1000);
+        }
+        if(!isMenuStandOpen){
+        for (auto stand : towerStands)
+            if (stand->getGlobalBounds().contains((sf::Vector2f)mousePos) && !isThereTowerAlready(towers, *stand))
+            {
                 menuStand.setPosition(stand->getPosition().x - 178, stand->getPosition().y - 202);
                 isMenuStandOpen = true;
                 break;
             }
+        }
+        else if(isMenuStandOpen && isMenuStandClicked(mousePos, menuStand))
+            handleMenuClickEvent(mousePos, menuStand);
     }
-    else if(isMenuStandOpen && isMenuStandClicked(mousePos, menuStand))
-        handleMenuClickEvent(mousePos, menuStand);
 }
 
-void handleMenuClickEvent(sf::Vector2i &mousePos, sf::Sprite &menuStand){
+bool isThereTowerAlready(std::vector<Tower *> &towers, sf::Sprite stand){
+    for(auto tower : towers)
+        if(tower->getPosition().x + 253 == stand.getPosition().x && tower->getPosition().y + 352 == stand.getPosition().y)
+            return true;
+
+    return false;
+}
+
+
+void Level::handleMenuClickEvent(sf::Vector2i &mousePos, sf::Sprite &menuStand){
     int towerMark = whichTowerToCreate(mousePos, menuStand);
     switch (towerMark)
     {
     case 1:
         std::cout << "wiz" << std::endl;
+        createTower(WIZ_LVL1);
         menuStand.setPosition(-1000, -1000);
         break;
     case 2:
@@ -156,7 +168,7 @@ void Level::update()
         else
             ++it;
     }
-    // Implement logic for tower shooting
+    // Implement logic for tower shooting, tower.getdamage should be updated here so its random on every shoot
 }
 
 void Level::render(sf::RenderWindow &window)
@@ -242,4 +254,15 @@ void Level::settingTowerStands(){
 
         towerStands.push_back(stand);
     }
+}
+
+
+void Level::createTower(int code){
+    Tower *tower = new Tower(mainMenu, code);
+    towers.push_back(tower);
+    tower->setPosition(menuStand.getPosition().x - 75, menuStand.getPosition().y - 150);
+    std::cout << "cost :" << tower->getCost() << std::endl;
+    std::cout << "rand dmg izmedu min i maksa:" << tower->getDamage() << std::endl;
+    std::cout << "shoot speed :" << tower->getShootSpeed() << std::endl;
+    std::cout << "range :" << tower->getRange() << std::endl;
 }
