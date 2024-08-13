@@ -146,7 +146,6 @@ int whichTowerToCreate(sf::Vector2i &mousePos, sf::Sprite &menuStand)
 
 bool isMenuStandClicked(sf::Vector2i &mousePos, sf::Sprite &menuStand)
 {
-    // menuStand.getGlobalBounds().contains((sf::Vector2f)mousePos)
     if (isButtonClicked(menuStand, mousePos))
         return true;
     return false;
@@ -227,13 +226,58 @@ void Level::readingLevelData(std::string &levelTxtFile)
     file.close();
 }
 
+////////////////////////
+//////////SVE U OVOJ FUNKCIJI TESTNO
+////////////////////////
 void Level::startNewWave(int waveIndex)
 {
-    for (int i = 0; i < 5; i++)
-    {
-        Enemy *enemy = new Enemy(mainMenu, waypoints);
-        enemies.push_back(enemy);
-    }
+    // Treba vec imati ucitane waves.txt u neki vector<vector>
+
+    // Enemy *enemy = new Enemy(mainMenu, waypoints);
+    // enemies.push_back(enemy);
+
+    // std::vector<std::vector<std::pair<int, int>>> waves(4);
+    // waves[0].emplace_back(1, 4);
+    // waves[0].emplace_back(2, 0);
+    // waves[0].emplace_back(3, 0);
+
+    // waves[1].emplace_back(1, 4);
+    // waves[1].emplace_back(2, 2);
+    // waves[1].emplace_back(3, 0);
+
+    // waves[2].emplace_back(1, 8);
+    // waves[2].emplace_back(2, 4);
+    // waves[2].emplace_back(3, 0);
+
+    // waves[3].emplace_back(1, 10);
+    // waves[3].emplace_back(2, 5);
+    // waves[3].emplace_back(3, 1);
+
+    // for (int i = 0; i < waves[waveIndex].size(); i++)
+    // {
+    //     std::cout << "NEW WAVE" << std::endl;
+    //     for (int j = 0; j < waves[waveIndex][i].second; j++)
+    //     {
+    //         if (waves[waveIndex][j].first == 1)
+    //         {
+    //             Enemy *enemy = new Enemy(mainMenu, waypoints);
+    //             enemies.push_back(enemy);
+    //             std::cout << "Goblin spawned" << std::endl;
+    //         }
+    //         if (waves[waveIndex][j].first == 2)
+    //         {
+    //             Enemy *enemy = new Enemy(mainMenu, waypoints);
+    //             enemies.push_back(enemy);
+    //             std::cout << "Ogre spawned" << std::endl;
+    //         }
+    //         if (waves[waveIndex][j].first == 3)
+    //         {
+    //             Enemy *enemy = new Enemy(mainMenu, waypoints);
+    //             enemies.push_back(enemy);
+    //             std::cout << "Gnome spawned" << std::endl;
+    //         }
+    //     }
+    // }
 }
 
 void Level::settingTowerStands()
