@@ -5,5 +5,5 @@ menu.txt
 code image_paths
 
 tower_stats.txt
-code_for_lvl1 cost damage_min damage_max magic physical fire_rate[ms] range
-code_for_lvl2 cost damage_min damage_max magic physical fire_rate[ms] range
+code_for_lvl1 cost damage_min damage_max magic physical fire_rate[ms] range next_lvl_price
+code_for_lvl2 cost damage_min damage_max magic physical fire_rate[ms] range next_lvl_price

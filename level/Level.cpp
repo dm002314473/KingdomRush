@@ -30,7 +30,18 @@ Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu), isLevelPa
     spriteSetting(menuStand, *menuStandTexture, 1.);
     menuStand.setOrigin(130, 130);
     menuStand.setPosition(-1000, -1000);
+
+    setMoney(1000);
+    if (!font.loadFromFile("GeneralRehearsal/Open_Sans/OpenSans-VariableFont_wdth,wght.ttf")) {
+        return ;
+    }
+    setTextBox(moneyText, font, moneyBox);
+    ss << getMoney();
+    moneyText.setString(ss.str());
 }
+
+void Level::setMoney(int newMoney) { money = newMoney; }
+int Level::getMoney() { return money; }
 
 sf::Sprite Level::getSprite() { return levelBackground; }
 
@@ -79,6 +90,32 @@ if (!isLevelPaused) {
     else if (isMenuStandOpen && isMenuStandClicked(mousePos, menuStand)) {
         handleMenuClickEvent(mousePos, menuStand);
     }
+     for (auto tower : towers) {
+            if (tower->isClicked(mousePos)) {
+                if(tower->getCode() % 10000 == 0 || tower->getCode() % 10000 == 1){
+                    sf::Texture *towerUpgradeMenuTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), TOWER_UPGRADE, 0);
+                    spriteSetting(towerUpgrade, *towerUpgradeMenuTexture, 1.);
+                    towerUpgrade.setPosition(tower->getPosition().x - 60, tower->getPosition().y - 20);
+                    handleUpgradeTowerClickEvent(mousePos, towerUpgrade, tower);
+                    break;
+                }
+                else if(tower->getCode() % 10000 == 2){
+                    sf::Texture *towerUpgradeSplitMenuTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), TOWER_UPGRADE_SPLIT, 0);
+                    spriteSetting(towerUpgradeSplit, *towerUpgradeSplitMenuTexture, 1.);
+                    towerUpgradeSplit.setPosition(tower->getPosition().x - 60, tower->getPosition().y - 20);
+                    handleUpgradeSplitTowerClickEvent(mousePos, towerUpgradeSplit, tower);
+                    break;
+                }
+                else{
+                    //upgrade abilities
+                    sf::Texture *towerUpgradeMenuTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), TOWER_UPGRADE, 0);
+                    spriteSetting(towerUpgrade, *towerUpgradeMenuTexture, 1.);
+                    towerUpgrade.setPosition(tower->getPosition().x - 60, tower->getPosition().y - 20);
+                    handleUpgradeTowerClickEvent(mousePos, towerUpgrade, tower);
+                    break;
+                }
+            }
+        }
 }
 }
 
@@ -109,26 +146,40 @@ void continueLevel(std::vector<sf::Sprite *> buttons, bool &isLevelPaused)
 
 void Level::handleMenuClickEvent(sf::Vector2i &mousePos, sf::Sprite &menuStand)
 {
-    std::cout << "handle" << std::endl;
     int towerMark = whichTowerToCreate(mousePos, menuStand);
     switch (towerMark)
     {
     case 1:
-        std::cout << "wiz" << std::endl;
-        createTower(WIZ_LVL1);
-        menuStand.setPosition(-1000, -1000);
+        if (getMoney() >= 100)
+        {
+            createTower(WIZ_LVL1, menuStand);
+            menuStand.setPosition(-1000, -1000);
+            updateMoney(100);
+        }
         break;
     case 2:
-        std::cout << "arc" << std::endl;
-        menuStand.setPosition(-1000, -1000);
+        if (getMoney() >= 70)
+        {
+            createTower(ARC_LVL1, menuStand);
+            menuStand.setPosition(-1000, -1000);
+            updateMoney(70);
+        }
         break;
     case 3:
-        std::cout << "baraka" << std::endl;
-        menuStand.setPosition(-1000, -1000);
+        if (getMoney() >= 70)
+        {
+            createTower(BARRACKS_LVL1, menuStand);
+            menuStand.setPosition(-1000, -1000);
+            updateMoney(70);
+        }
         break;
     case 4:
-        std::cout << "bombar" << std::endl;
-        menuStand.setPosition(-1000, -1000);
+        if (getMoney() >= 120)
+        {
+            createTower(BOMBARD_LVL1, menuStand);    
+            menuStand.setPosition(-1000, -1000);
+            updateMoney(120);
+        }
         break;
     default:
         std::cout << "error" << std::endl;
@@ -157,7 +208,6 @@ int whichTowerToCreate(sf::Vector2i &mousePos, sf::Sprite &menuStand)
 
 bool isMenuStandClicked(sf::Vector2i &mousePos, sf::Sprite &menuStand)
 {
-    // menuStand.getGlobalBounds().contains((sf::Vector2f)mousePos)
     if (isButtonClicked(menuStand, mousePos))
         return true;
     return false;
@@ -192,6 +242,10 @@ void Level::render(sf::RenderWindow &window)
     for (auto &enemy : enemies)
         window.draw(enemy->getSprite());
     window.draw(menuStand);
+    window.draw(towerUpgrade);
+    window.draw(towerUpgradeSplit);
+    window.draw(moneyBox);
+    window.draw(moneyText);
     for (auto &button : buttons)
         window.draw(*button);
 }
@@ -268,12 +322,77 @@ void Level::settingTowerStands()
     }
 }
 
-void Level::createTower(int code){
+void Level::createTower(int code, sf::Sprite &stand){
     Tower *tower = new Tower(mainMenu, code);
     towers.push_back(tower);
-    tower->setPosition(menuStand.getPosition().x - 75, menuStand.getPosition().y - 150);
-    std::cout << "cost :" << tower->getCost() << std::endl;
-    std::cout << "rand dmg izmedu min i maksa:" << tower->getDamage() << std::endl;
-    std::cout << "shoot speed :" << tower->getShootSpeed() << std::endl;
-    std::cout << "range :" << tower->getRange() << std::endl;
+    tower->setPosition(stand.getPosition().x - 75, stand.getPosition().y - 150);
+    stand.setPosition(-1000, -1000);
+}
+
+void Level::handleUpgradeTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerUpgrade, Tower* tower) {
+    if(mousePos.x >= towerUpgrade.getPosition().x + 98 && mousePos.x <= towerUpgrade.getPosition().x + 163){
+        if(mousePos.y <= towerUpgrade.getPosition().y + 73 && mousePos.y >= towerUpgrade.getPosition().y)
+            if(getMoney() >= tower->getNextLevelCost()){
+                upgradeTower(tower, tower->getCode() + 1);
+                towerUpgrade.setPosition(-1000, -1000);
+                tower->setApsoluteCost(tower->getApsoluteCost() + tower->getCost());
+            }
+        if(mousePos.y >= towerUpgrade.getPosition().y + 180 && mousePos.y <= towerUpgrade.getPosition().y + 250){
+            updateMoney(-(int)(tower->getApsoluteCost() * .7));
+            deleteTower();
+            towerUpgrade.setPosition(-1000, -1000);
+        }
+    }
+}
+
+void Level::deleteTower(){
+    for (auto it = towers.begin(); it != towers.end();)
+    {
+        if ((*it)->getPosition().x - 60 == towerUpgrade.getPosition().x && (*it)->getPosition().y - 20 == towerUpgrade.getPosition().y)
+        {
+            delete *it;
+            it = towers.erase(it);
+        }
+        else
+            ++it;
+    }
+}
+
+
+void Level::upgradeTower(Tower* tower, int code){
+    sf::Texture *texture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), code, 0);
+    spriteSetting(tower->getSprite(), *texture, .3);
+    tower->setValues(mainMenu.getTowerStatsMatrix(), code);
+    tower->setCode(code);
+    updateMoney(tower->getCost());
+}
+
+void Level::handleUpgradeSplitTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerUpgradeSplit, Tower* tower){
+    if(mousePos.y >= towerUpgradeSplit.getPosition().y + 0 && mousePos.y <= towerUpgradeSplit.getPosition().y + 70){
+        if(mousePos.x >= towerUpgradeSplit.getPosition().x + 24 && mousePos.x <= towerUpgradeSplit.getPosition().x + 89)
+            if(getMoney() >= tower->getNextLevelCost()){
+                upgradeTower(tower, tower->getCode() + 1);
+                towerUpgradeSplit.setPosition(-1000, -1000);
+                tower->setApsoluteCost(tower->getApsoluteCost() + tower->getCost());
+            }
+        else if(mousePos.x >= towerUpgradeSplit.getPosition().x + 170 && mousePos.x <= towerUpgradeSplit.getPosition().x + 235)
+            if(getMoney() >= tower->getNextLevelCost()){
+                upgradeTower(tower, tower->getCode() + 2);
+                towerUpgradeSplit.setPosition(-1000, -1000);
+                tower->setApsoluteCost(tower->getApsoluteCost() + tower->getCost());
+            }
+    }
+    else if(mousePos.y >= towerUpgradeSplit.getPosition().y + 184 && mousePos.y <= towerUpgradeSplit.getPosition().y + 261)       
+        if(mousePos.x >= towerUpgradeSplit.getPosition().x + 98 && mousePos.x <= towerUpgrade.getPosition().x + 163){
+            updateMoney(-(int)(tower->getApsoluteCost() * .7));
+            deleteTower();
+            towerUpgrade.setPosition(-1000, -1000);
+        }
+}
+
+void Level::updateMoney(int price){
+    setMoney(getMoney() - price);
+    ss.str("");
+    ss << getMoney();
+    moneyText.setString(ss.str());
 }
