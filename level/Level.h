@@ -7,6 +7,7 @@
 #include "enemies/Enemy.h"
 #include "towers/Tower.h"
 #include "heroes/Hero.h"
+#include "waves/Wave.h"
 #include "../mainMenu/MainMenu.h"
 #include "../commonFunctions/CommonFunctions.h"
 
@@ -15,6 +16,7 @@ class MainMenu;
 class Enemy;
 class Tower;
 class Hero;
+class Wave;
 
 class Level
 {
@@ -63,6 +65,7 @@ private:
     sf::Time timeSinceLastEnemyAttack = sf::Time::Zero;
     Enemy *fightingEnemy = nullptr;
     int t = 0;
+    std::vector<Wave> levelWaves;
 
 public:
     Level(int levelIndex, MainMenu &mainMenu);

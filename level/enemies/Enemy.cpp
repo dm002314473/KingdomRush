@@ -9,18 +9,18 @@ void moveDown(sf::Sprite &sprite);
 void moveLeft(sf::Sprite &sprite);
 void moveRight(sf::Sprite &sprite);
 
-Enemy::Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints) : waypoints(waypoints)
+Enemy::Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints, std::pair<int, int> pair) : waypoints(waypoints)
 {
-    sf::Texture *texture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), GIANT, 0);
+    sf::Texture *texture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), pair.first, 0);
     spriteSetting(sprite, *texture, .2);
     sprite.setOrigin(50, 50);
-    int positionX = generateRandomNumber(waypoints[0][0] - 150, waypoints[0][0] + 10);
+    int positionX = generateRandomNumber(waypoints[0][0] - 150, waypoints[0][0] + 10) - pair.second;
     int positionY = generateRandomNumber(waypoints[0][1] - 150, waypoints[0][1] + 10);
     sprite.setPosition(positionX, positionY);
     currentWaypointIndex = 0;
-    setValues(mainMenu.getEnemyStatsMatrix(), GIANT);
-    loadEnemyTextures(mainMenu, GIANT_ATTACK1, attackTextures);
-    loadEnemyTextures(mainMenu, GIANT_WALK1, walkingTextures);
+    setValues(mainMenu.getEnemyStatsMatrix(), pair.first);
+    loadEnemyTextures(mainMenu, pair.first, attackTextures);
+    loadEnemyTextures(mainMenu, pair.first + 1, walkingTextures);
 }
 
 void Enemy::setValues(std::vector<std::vector<int>> allStats, int code){

@@ -99,8 +99,9 @@ void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
         }
 
         if (buttons[0]->getGlobalBounds().contains((sf::Vector2f)mousePos)) {
-            wave++;
+            buttons[0]->setPosition(-1000, -1000);
             startNewWave(wave);
+            wave++;
         }
 
         if (isMenuStandOpen && !isSpriteClicked(mousePos, menuStand)) {
@@ -276,6 +277,8 @@ void Level::update()
     if (isLevelPaused)
         return;
 
+    int startNewWaveFlag = 1;
+
     for (auto it = enemies.begin(); it != enemies.end();)
     {
         if(hero->isEnemyInHeroesRange(*it) && !hero->getIsHeroFighting()){
@@ -289,6 +292,9 @@ void Level::update()
             (*it)->performAnimation((*it)->getWalkTexture(), sf::milliseconds(1000));
         }
 
+        if((*it)->getSprite().getPosition().x < 0)
+            startNewWaveFlag = -1;
+
         if ((*it)->isOutOfMap()) {
             delete *it;
             it = enemies.erase(it);
@@ -297,6 +303,9 @@ void Level::update()
             ++it;
 
     }
+
+    if(startNewWaveFlag == 1)
+        buttons[0]->setPosition(20, 20);
 
     if (fightingEnemy != nullptr && !fightingEnemy->getIsEnemyAlive())
         fightingEnemy = nullptr;
@@ -354,12 +363,14 @@ void Level::readingLevelData(std::string &levelTxtFile)
     }
     std::string line;
     std::string currentState;
+    Wave newWave;
+    int prevLevelIndex = 1;
     while (std::getline(file, line))
     {
         std::istringstream iss(line);
         std::string word;
         iss >> word;
-        if (word == "waypoints" || word == "tower" || word == "hero")
+        if (word == "waypoints" || word == "tower" || word == "hero" || word.find("wave") != std::string::npos)
             currentState = word;
         else
         {
@@ -379,19 +390,29 @@ void Level::readingLevelData(std::string &levelTxtFile)
                 waypoints.push_back(position);
             else if (currentState == "tower")
                 towerStandsPositions.push_back(position);
-            else
+            else if(currentState == "hero")
                 heroStandPosition = position;
+            else if(currentState.find("wave") != std::string::npos){
+                int levelIndex = currentState[4] - '0';
+                if (levelIndex != prevLevelIndex) {
+                    levelWaves.push_back(newWave);
+                    newWave.erase();
+                    prevLevelIndex++;
+                }
+                newWave.pushEnemyToWave(x, y);
+            }
         }
     }
     file.close();
+
+    levelWaves.push_back(newWave);
 }
 
-void Level::startNewWave(int waveIndex)
-{
-    for (int i = 0; i < 5; i++)
-    {
-        Enemy *enemy = new Enemy(mainMenu, waypoints);
-        enemies.push_back(enemy);
+void Level::startNewWave(int waveIndex){
+    levelWaves[waveIndex];
+    for (int i = 0; i < levelWaves[waveIndex].getSize(); i++){
+        Enemy *enemy1 = new Enemy(mainMenu, waypoints, levelWaves[waveIndex].getEnemy(i));   
+        enemies.push_back(enemy1);
     }
 }
 

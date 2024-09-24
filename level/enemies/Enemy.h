@@ -39,7 +39,7 @@ private:
     sf::Time animationDuration = sf::milliseconds(1500);
 public:
     // moveAnimation
-    Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints);
+    Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints, std::pair<int, int> pair);
     void setValues(std::vector<std::vector<int>> allStats, int code);
     void setHealth(int newHealth);
     void setDamage(int newDamage1, int newDamage2);
