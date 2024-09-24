@@ -9,7 +9,8 @@ void spriteSetting(sf::Sprite &sprite, sf::Texture &spriteTexture, float scale)
 bool isButtonClicked(sf::Sprite &button, sf::Vector2i &mousePos)
 {
     if (button.getGlobalBounds().contains((sf::Vector2f)mousePos))
-        return true;
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            return true;
     return false;
 }
 

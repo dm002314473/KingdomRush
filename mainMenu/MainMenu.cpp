@@ -89,7 +89,7 @@ void MainMenu::textureMatrixFiller(std::vector<Row> &allTexturesMatrix)
 
     for (size_t i = 0; i < allImagesMatrix.size(); ++i)
     {
-        allTexturesMatrix[i].id = std::stoi(allImagesMatrix[i][0]); // Assuming the first element is the id as string
+        allTexturesMatrix[i].id = std::stoi(allImagesMatrix[i][0]);
         allTexturesMatrix[i].textures.resize(allImagesMatrix[i].size() - 1);
         allTexturesMatrix[i].texturePaths.resize(allImagesMatrix[i].size() - 1);
 
@@ -113,40 +113,28 @@ void MainMenu::imagesReader(std::vector<std::vector<std::string>> &allImagesMatr
     }
     std::vector<std::string> currentRow;
     std::string line;
-    while (std::getline(file, line))
-    {
-        if (isNumber(line))
-        {
-            if (!currentRow.empty())
-            {
+    
+    while (std::getline(file, line)) {
+        if (isNumber(line)) {
+            if (!currentRow.empty()) {
                 allImagesMatrix.push_back(currentRow);
                 currentRow.clear();
             }
             currentRow.push_back(line);
-        }
-        else
-        {
+        } else {
             currentRow.push_back(line);
         }
     }
-    if (!currentRow.empty())
-    {
+    
+    if (!currentRow.empty()) {
         allImagesMatrix.push_back(currentRow);
     }
 
     file.close();
 }
 
-bool MainMenu::isNumber(std::string &line)
-{
-    for (char c : line)
-    {
-        if (!isdigit(c))
-        {
-            return false;
-        }
-    }
-    return true;
+bool MainMenu::isNumber(std::string& str) {
+    return !str.empty() && std::all_of(str.begin(), str.end(), ::isdigit);
 }
 
 void MainMenu::enemyStatsReader(std::vector<std::vector<int>> &enemyStatsMatrix)
@@ -159,29 +147,23 @@ void MainMenu::enemyStatsReader(std::vector<std::vector<int>> &enemyStatsMatrix)
     }
 
     std::string line;
-    while (std::getline(file, line))
-    {
+    while (std::getline(file, line)) {
         std::istringstream iss(line);
-        std::vector<int> currentRow;
-        std::string value;
-        while (iss >> value)
-        {
-            if (isNumber(value))
-            {
-                currentRow.push_back(std::stoi(value));
-            }
-            else
-            {
-                std::cerr << "Invalid number: " << value << std::endl;
-                return;
-            }
+        std::vector<int> row;
+        int num;
+        int count = 0;
+        while (iss >> num) {
+            row.push_back(num);
+            count++;
         }
-        if (!currentRow.empty())
-        {
-            enemyStatsMatrix.push_back(currentRow);
+        if (count != 11) {
+            std::cerr << "Line does not contain exactly 11 numbers: " << line << std::endl;
+            continue;
         }
-    }
 
+        enemyStatsMatrix.push_back(row);
+    }
+    
     file.close();
 }
 
@@ -195,28 +177,22 @@ void MainMenu::towerStatsReader(std::vector<std::vector<int>> &towerStatsMatrix)
     }
 
     std::string line;
-    while (std::getline(file, line))
-    {
+    while (std::getline(file, line)) {
         std::istringstream iss(line);
-        std::vector<int> currentRow;
-        std::string value;
-        while (iss >> value)
-        {
-            if (isNumber(value))
-            {
-                currentRow.push_back(std::stoi(value));
-            }
-            else
-            {
-                std::cerr << "Invalid number: " << value << std::endl;
-                return;
-            }
+        std::vector<int> row;
+        int num;
+        int count = 0;
+        while (iss >> num) {
+            row.push_back(num);
+            count++;
         }
-        if (!currentRow.empty())
-        {
-            towerStatsMatrix.push_back(currentRow);
+        if (count != 7) {
+            std::cerr << "Line does not contain exactly 7 numbers: " << line << std::endl;
+            continue; 
         }
-    }
 
+        towerStatsMatrix.push_back(row);
+    }
+    
     file.close();
 }

@@ -1,5 +1,5 @@
-stats.txt
-code damage health magic_armor physical_armor speedX speedY hearth_cost bounty attack_speed
+enemy_stats.txt
+code damage_min damage_max health magic_armor physical_armor speedX speedY hearth_cost bounty attack_speed
 
 menu.txt
 code image_paths

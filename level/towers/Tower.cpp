@@ -65,11 +65,10 @@ bool Tower::isClicked(sf::Vector2i &mousePos){
     return bounds.contains(mousePos.x, mousePos.y);
 }
 
-// sf::Sprite Tower::openUpgradeMenu(MainMenu &mainMenu){
-//     std::cout << "ide upgrade" << std::endl;
-//     sf::Texture *towerUpgradeMenuTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), WIZ_TOWER_UPGRADE, 0);
-//     spriteSetting(towerUpgradeMenu, *towerUpgradeMenuTexture, 1.);
-//     towerUpgradeMenu.setOrigin(130, 130);
-//     towerUpgradeMenu.setPosition(sprite.getPosition());
-//     return towerUpgradeMenu;
-// }
+sf::CircleShape& Tower::getShootRadius() { return shootRadius; }
+void Tower::setShootingRadius(float radius, sf::Vector2f radiusPosition, float transparency) {
+    shootRadius.setRadius(radius);
+    shootRadius.setOrigin(radius, radius);
+    shootRadius.setFillColor(sf::Color(255, 255, 255, transparency));
+    shootRadius.setPosition(radiusPosition);
+}

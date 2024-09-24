@@ -23,6 +23,7 @@ private:
     int code;
     int nextLevelCost;
     int apsoluteCost;
+    sf::CircleShape shootRadius;
 
 public:
     Tower(MainMenu &mainMenu, int code);
@@ -54,5 +55,7 @@ public:
 
     bool isClicked(sf::Vector2i &mousePos);
     void handleClick(MainMenu &mainMenu, sf::Vector2i &mousePos);
-    //sf::Sprite openUpgradeMenu(MainMenu &mainMenu);
+
+    sf::CircleShape &getShootRadius();
+    void setShootingRadius(float radius, sf::Vector2f radiusPosition, float transparency);
 };
