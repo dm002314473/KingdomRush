@@ -1,13 +1,12 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+// #include "../enemies/Enemy.h"
 #include "../../commonFunctions/CommonFunctions.h"
-#include "../enemies/Enemy.h"
 #include "../../mainMenu/MainMenu.h"
 
-class Enemy;
-
 class MainMenu;
+class Enemy;
 
 class Tower
 {

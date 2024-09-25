@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
-#include "../../mainMenu/MainMenu.h"
+// #include "../../mainMenu/MainMenu.h"
 #include "../../commonFunctions/CommonFunctions.h"
 
 class MainMenu;
@@ -19,15 +19,16 @@ private:
     int physicalArmor;
     int bounty;
     int attackSpeed;
-    sf::Sprite sprite;
+    bool outOfMap = false;
 
+protected:
+    sf::Sprite sprite;
     std::vector<std::vector<int>> &waypoints;
     int currentWaypointIndex;
-    bool outOfMap = false;
 
 public:
     // moveAnimation
-    Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints);
+    Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints, int textureCode);
     void setHealth(int newHealth);
     void setDamage(int newDamage);
     void setSpeedX(int newSpeedX);

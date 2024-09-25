@@ -56,36 +56,43 @@ void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
         buttons[2]->setPosition(-1000, -1000);
         isLevelPaused = false;
     }
-if (!isLevelPaused) {
-    if (buttons[0]->getGlobalBounds().contains((sf::Vector2f)mousePos)) {
-        wave++;
-        startNewWave(wave);
-    }
+    if (!isLevelPaused)
+    {
+        if (buttons[0]->getGlobalBounds().contains((sf::Vector2f)mousePos))
+        {
+            wave++;
+            startNewWave(wave);
+        }
 
-    if (isMenuStandOpen && !isMenuStandClicked(mousePos, menuStand)) {
-        isMenuStandOpen = false;
-        menuStand.setPosition(-1000, -1000);
-    }
+        if (isMenuStandOpen && !isMenuStandClicked(mousePos, menuStand))
+        {
+            isMenuStandOpen = false;
+            menuStand.setPosition(-1000, -1000);
+        }
 
-    if (!isMenuStandOpen) {
-        for (auto stand : towerStands) {
-            if (stand->getGlobalBounds().contains((sf::Vector2f)mousePos) && !isThereTowerAlready(towers, *stand)) {
-                menuStand.setPosition(stand->getPosition().x - 178, stand->getPosition().y - 202);
-                isMenuStandOpen = true;
-                break;
+        if (!isMenuStandOpen)
+        {
+            for (auto stand : towerStands)
+            {
+                if (stand->getGlobalBounds().contains((sf::Vector2f)mousePos) && !isThereTowerAlready(towers, *stand))
+                {
+                    menuStand.setPosition(stand->getPosition().x - 178, stand->getPosition().y - 202);
+                    isMenuStandOpen = true;
+                    break;
+                }
             }
         }
-    } 
-    else if (isMenuStandOpen && isMenuStandClicked(mousePos, menuStand)) {
-        handleMenuClickEvent(mousePos, menuStand);
+        else if (isMenuStandOpen && isMenuStandClicked(mousePos, menuStand))
+        {
+            handleMenuClickEvent(mousePos, menuStand);
+        }
     }
-}
 }
 
 bool isThereTowerAlready(std::vector<Tower *> &towers, sf::Sprite stand)
 {
-    for(auto tower : towers)
-        if(tower->getPosition().x + 253 == stand.getPosition().x && tower->getPosition().y + 352 == stand.getPosition().y)
+    for (auto tower : towers)
+        if (tower->getPosition().x + 253 == stand.getPosition().x && tower->getPosition().y + 352 == stand.getPosition().y)
             return true;
 
     return false;
@@ -237,58 +244,15 @@ void Level::readingLevelData(std::string &levelTxtFile)
     file.close();
 }
 
-////////////////////////
-//////////SVE U OVOJ FUNKCIJI TESTNO
-////////////////////////
 void Level::startNewWave(int waveIndex)
 {
-    // Treba vec imati ucitane waves.txt u neki vector<vector>
+    EnemyFactory factory;
 
-    // Enemy *enemy = new Enemy(mainMenu, waypoints);
-    // enemies.push_back(enemy);
+    Enemy *goblin = factory.createEnemy("goblin", mainMenu, waypoints);
+    enemies.push_back(goblin);
 
-    // std::vector<std::vector<std::pair<int, int>>> waves(4);
-    // waves[0].emplace_back(1, 4);
-    // waves[0].emplace_back(2, 0);
-    // waves[0].emplace_back(3, 0);
-
-    // waves[1].emplace_back(1, 4);
-    // waves[1].emplace_back(2, 2);
-    // waves[1].emplace_back(3, 0);
-
-    // waves[2].emplace_back(1, 8);
-    // waves[2].emplace_back(2, 4);
-    // waves[2].emplace_back(3, 0);
-
-    // waves[3].emplace_back(1, 10);
-    // waves[3].emplace_back(2, 5);
-    // waves[3].emplace_back(3, 1);
-
-    // for (int i = 0; i < waves[waveIndex].size(); i++)
-    // {
-    //     std::cout << "NEW WAVE" << std::endl;
-    //     for (int j = 0; j < waves[waveIndex][i].second; j++)
-    //     {
-    //         if (waves[waveIndex][j].first == 1)
-    //         {
-    //             Enemy *enemy = new Enemy(mainMenu, waypoints);
-    //             enemies.push_back(enemy);
-    //             std::cout << "Goblin spawned" << std::endl;
-    //         }
-    //         if (waves[waveIndex][j].first == 2)
-    //         {
-    //             Enemy *enemy = new Enemy(mainMenu, waypoints);
-    //             enemies.push_back(enemy);
-    //             std::cout << "Ogre spawned" << std::endl;
-    //         }
-    //         if (waves[waveIndex][j].first == 3)
-    //         {
-    //             Enemy *enemy = new Enemy(mainMenu, waypoints);
-    //             enemies.push_back(enemy);
-    //             std::cout << "Gnome spawned" << std::endl;
-    //         }
-    //     }
-    // }
+    Enemy *giant = factory.createEnemy("giant", mainMenu, waypoints);
+    enemies.push_back(giant);
 }
 
 void Level::settingTowerStands()
@@ -312,7 +276,8 @@ void Level::settingTowerStands()
     }
 }
 
-void Level::createTower(int code){
+void Level::createTower(int code)
+{
     Tower *tower = new Tower(mainMenu, code);
     towers.push_back(tower);
     tower->setPosition(menuStand.getPosition().x - 75, menuStand.getPosition().y - 150);

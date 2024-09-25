@@ -1,6 +1,5 @@
 #include "Enemy.h"
-
-
+#include "../../mainMenu/MainMenu.h"
 
 int generateRandomNumber(int min, int max);
 void stopMoving(sf::Sprite &sprite);
@@ -9,16 +8,15 @@ void moveDown(sf::Sprite &sprite);
 void moveLeft(sf::Sprite &sprite);
 void moveRight(sf::Sprite &sprite);
 
-Enemy::Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints) : waypoints(waypoints)
+Enemy::Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints, int textureCode) : waypoints(waypoints), currentWaypointIndex(0)
 {
-
-    sf::Texture *texture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), GIANT, 0);
+    std::cout << "ENEMY KONST" << std::endl;
+    sf::Texture *texture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), textureCode, 0);
     spriteSetting(sprite, *texture, .2);
     sprite.setOrigin(50, 50);
     int positionX = generateRandomNumber(waypoints[0][0] - 150, waypoints[0][0] + 10);
     int positionY = generateRandomNumber(waypoints[0][1] - 150, waypoints[0][1] + 10);
     sprite.setPosition(positionX, positionY);
-    currentWaypointIndex = 0;
 }
 
 void Enemy::setHealth(int newHealth) { health = newHealth; }

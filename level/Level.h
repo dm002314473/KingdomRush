@@ -6,6 +6,7 @@
 #include "towers/Tower.h"
 #include "../mainMenu/MainMenu.h"
 #include "../commonFunctions/CommonFunctions.h"
+#include "EnemyFactory.h"
 
 class Game;
 class MainMenu;
