@@ -1,9 +1,13 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <string>
+#include <algorithm>
 #include "../Game.h"
 #include "enemies/Enemy.h"
 #include "towers/Tower.h"
+#include "heroes/Hero.h"
+#include "waves/Wave.h"
 #include "../mainMenu/MainMenu.h"
 #include "../commonFunctions/CommonFunctions.h"
 #include "EnemyFactory.h"
@@ -12,15 +16,22 @@ class Game;
 class MainMenu;
 class Enemy;
 class Tower;
+class Hero;
+class Wave;
 
 class Level
 {
 private:
+    sf::Texture *levelBackgroundTexture;
     sf::Sprite levelBackground;
     sf::Sprite menuStand;
+    sf::Sprite towerUpgrade;
+    sf::Sprite towerUpgradeSplit;
+    sf::Sprite towerAbilityUpgrade;
     std::vector<Enemy *> enemies;
     std::vector<sf::Sprite *> towerStands;
     std::vector<Tower *> towers;
+    Hero *hero;
 
     std::vector<sf::Sprite *> buttons;
     MainMenu &mainMenu;
@@ -29,9 +40,33 @@ private:
     std::vector<std::vector<int>> towerStandsPositions;
     std::vector<int> heroStandPosition;
     int wave = 0;
+    int money = 0;
 
     bool isLevelPaused;
     bool isMenuStandOpen = false;
+    bool isTowerUpgradeOpen = false;
+    bool isTowerUpgradeSplitOpen = false;
+    bool isAbilityUpgradeOpen = false;
+    sf::Text moneyText;
+    sf::RectangleShape moneyBox;
+    sf::Font font;
+    std::stringstream ss;
+
+    sf::CircleShape radius;
+    bool isRadiusVisible;
+    Tower* selectedTower = nullptr;
+
+    bool isHeroSelected = false;
+    bool isHeroMoving = false;
+    sf::Vector2i targetPos;
+    sf::Clock clock;
+    sf::Time heroAttackInterval;
+    sf::Time enemyAttackInterval;
+    sf::Time timeSinceLastHeroAttack = sf::Time::Zero;
+    sf::Time timeSinceLastEnemyAttack = sf::Time::Zero;
+    Enemy *fightingEnemy = nullptr;
+    int t = 0;
+    std::vector<Wave> levelWaves;
 
 public:
     Level(int levelIndex, MainMenu &mainMenu);
@@ -46,6 +81,26 @@ public:
     void startNewWave(int waveIndex);
 
     void handleMenuClickEvent(sf::Vector2i &mousePos, sf::Sprite &menuStand);
+    void handleUpgradeTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerUpgrade, Tower* tower);
+    void handleUpgradeSplitTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerUpgradeSplit, Tower* tower);
+    void handleAbilityUpgradeTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerAbilityUpgrade, Tower* tower);
 
-    void createTower(int code);
+    void createTower(int code, sf::Sprite &stand);
+    void upgradeTower(Tower* tower, int code);
+    void deleteTower(Tower* towerToDelete);
+
+    void createHero(int code);
+
+    void setMoney(int newMoney);
+    int getMoney();
+    void updateMoney(int price);
+
+    sf::Vector2f getHeroStandPosition();
+
+    void closeAllUpgradeMenus();
+    void openTowerUpgradeMenu(Tower *tower);
+    void openTowerUpgradeSplitMenu(Tower *tower);
+    void openAbilityUpgradeMenu(Tower *tower);
+
+    void performBattle(Hero *&hero, Enemy *&fightingEnemy, std::vector<Enemy *> &enemies);
 };
