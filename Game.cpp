@@ -17,7 +17,6 @@ void Game::run()
             if (event.type == sf::Event::Closed)
                 window.close();
 
-            // Handling click events
             switch (currentState)
             {
             case MAIN_MENU:
@@ -36,7 +35,6 @@ void Game::run()
             continue;
         }
 
-        // Updating level frame
         switch (currentState)
         {
         case LEVEL:
@@ -46,7 +44,6 @@ void Game::run()
             break;
         }
 
-        // Rendering
         window.clear();
         switch (currentState)
         {

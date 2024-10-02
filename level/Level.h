@@ -55,7 +55,7 @@ private:
 
     sf::CircleShape radius;
     bool isRadiusVisible;
-    Tower* selectedTower = nullptr;
+    Tower *selectedTower = nullptr;
 
     bool isHeroSelected = false;
     bool isHeroMoving = false;
@@ -67,6 +67,10 @@ private:
     sf::Time timeSinceLastHeroAttack = sf::Time::Zero;
     sf::Time timeSinceLastEnemyAttack = sf::Time::Zero;
     sf::Time timeSinceLastHolyLandHeal = sf::Time::Zero;
+
+    sf::Time timeSinceLastTowerAttack = sf::Time::Zero;
+
+    sf::Time towerAttackInterval;
     Enemy *fightingEnemy = nullptr;
     int t = 0;
     std::vector<Wave> levelWaves;
@@ -88,13 +92,13 @@ public:
     void startNewWave(int waveIndex);
 
     void handleMenuClickEvent(sf::Vector2i &mousePos, sf::Sprite &menuStand);
-    void handleUpgradeTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerUpgrade, Tower* tower);
-    void handleUpgradeSplitTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerUpgradeSplit, Tower* tower);
-    void handleAbilityUpgradeTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerAbilityUpgrade, Tower* tower);
+    void handleUpgradeTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerUpgrade, Tower *tower);
+    void handleUpgradeSplitTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerUpgradeSplit, Tower *tower);
+    void handleAbilityUpgradeTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerAbilityUpgrade, Tower *tower);
 
     void createTower(int code, sf::Sprite &stand);
-    void upgradeTower(Tower* tower, int code);
-    void deleteTower(Tower* towerToDelete);
+    void upgradeTower(Tower *tower, int code);
+    void deleteTower(Tower *towerToDelete);
 
     void createHero(int code);
 

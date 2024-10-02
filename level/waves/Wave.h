@@ -4,8 +4,8 @@
 #include "../../mainMenu/MainMenu.h"
 #include "../../commonFunctions/CommonFunctions.h"
 
-
-class Wave{
+class Wave
+{
 private:
     std::vector<std::pair<int, int>> wave;
 

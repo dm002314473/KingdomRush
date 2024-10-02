@@ -3,7 +3,8 @@
 int generateRandomNumber(int min, int max);
 bool isPointInCircle(sf::Vector2f point, sf::Vector2f circleCenter, float radius);
 
-Hero::Hero(MainMenu &mainMenu, Level &level, int code){
+Hero::Hero(MainMenu &mainMenu, Level &level, int code)
+{
     sf::Texture *texture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), HERO1, 0);
     spriteSetting(heroSprite, *texture, .2);
     setValues(mainMenu.getEnemyStatsMatrix(), code);
@@ -22,10 +23,14 @@ Hero::Hero(MainMenu &mainMenu, Level &level, int code){
     fullHealth = health;
 }
 
-void Hero::setValues(std::vector<std::vector<int>> allStats, int code){
-    for (int i = 0; i < allStats.size(); i++){
-        for (int j = 0; j < allStats[i].size(); j++){
-            if(allStats[i][0] == code){
+void Hero::setValues(std::vector<std::vector<int>> allStats, int code)
+{
+    for (int i = 0; i < allStats.size(); i++)
+    {
+        for (int j = 0; j < allStats[i].size(); j++)
+        {
+            if (allStats[i][0] == code)
+            {
                 setDamage(allStats[i][1], allStats[i][2]);
                 setHealth(allStats[i][3]);
                 setMagicArmor(allStats[i][4]);
@@ -38,11 +43,11 @@ void Hero::setValues(std::vector<std::vector<int>> allStats, int code){
     }
 }
 
-
 void Hero::setHealth(int newHealth) { health = newHealth; }
-void Hero::setDamage(int newDamage1, int newDamage2){
-     damage[0] = newDamage1; 
-     damage[1] = newDamage2; 
+void Hero::setDamage(int newDamage1, int newDamage2)
+{
+    damage[0] = newDamage1;
+    damage[1] = newDamage2;
 }
 void Hero::setSpeedX(int newSpeedX) { speedX = newSpeedX; }
 void Hero::setSpeedY(int newSpeedY) { speedY = newSpeedY; }
@@ -58,9 +63,10 @@ int Hero::getSpeedY() { return speedY; }
 int Hero::getMagicArmor() { return magicArmor; }
 int Hero::getPhysicalArmor() { return physicalArmor; }
 int Hero::getAttackSpeed() { return attackSpeed; }
-sf::Sprite& Hero::getSprite() { return heroSprite; }
+sf::Sprite &Hero::getSprite() { return heroSprite; }
 
-bool Hero::heroMoving(sf::Sprite &sprite, sf::Vector2i &mousePos) {
+bool Hero::heroMoving(sf::Sprite &sprite, sf::Vector2i &mousePos)
+{
     int moveX = 0, moveY = 0;
     sf::Vector2f currentPos = sprite.getPosition();
     if (currentPos.x < mousePos.x)
@@ -83,36 +89,41 @@ bool Hero::heroMoving(sf::Sprite &sprite, sf::Vector2i &mousePos) {
 void Hero::setIsHeroFighting(bool newIsHeroFighting) { isHeroFighting = newIsHeroFighting; }
 bool Hero::getIsHeroFighting() { return isHeroFighting; }
 
-bool Hero::isEnemyInHeroesRange(Enemy *enemy){
-    if(isPointInCircle(enemy->getSprite().getPosition(), heroSprite.getPosition(), 150))
+bool Hero::isEnemyInHeroesRange(Enemy *enemy)
+{
+    if (isPointInCircle(enemy->getSprite().getPosition(), heroSprite.getPosition(), 150))
         return true;
     return false;
 }
 
-bool isPointInCircle(sf::Vector2f point, sf::Vector2f circleCenter, float radius) {
+bool isPointInCircle(sf::Vector2f point, sf::Vector2f circleCenter, float radius)
+{
     float distance = std::sqrt(std::pow(point.x - circleCenter.x, 2) + std::pow(point.y - circleCenter.y, 2));
     return distance <= radius;
 }
 
 void Hero::setIsHeroAlive(bool condition) { isHeroAlive = condition; }
-bool Hero::getIsHeroAlive() {
-    if(health > 0)
+bool Hero::getIsHeroAlive()
+{
+    if (health > 0)
         isHeroAlive = true;
     else
         isHeroAlive = false;
     return isHeroAlive;
 }
 
-void Hero::fighting(Enemy *enemy){
-    enemy->setHealth(enemy->getHealth() - getDamage());
-}
+void Hero::fighting(Enemy *enemy) { enemy->setHealth(enemy->getHealth() - getDamage()); }
 
-void Hero::loadHeroTextures(MainMenu &mainMenu, int code, std::vector<sf::Texture>& textures){
+void Hero::loadHeroTextures(MainMenu &mainMenu, int code, std::vector<sf::Texture> &textures)
+{
     bool rowFound = false;
-    for (auto& row : mainMenu.getAllTexturesMatrix()) {
-        if (row.id == code) {
+    for (auto &row : mainMenu.getAllTexturesMatrix())
+    {
+        if (row.id == code)
+        {
             rowFound = true;
-            for (size_t i = 0; i < row.textures.size() - 1; ++i) {
+            for (size_t i = 0; i < row.textures.size() - 1; ++i)
+            {
                 sf::Texture texture;
                 if (texture.loadFromFile(row.texturePaths[i]))
                     textures.push_back(texture);
@@ -123,24 +134,27 @@ void Hero::loadHeroTextures(MainMenu &mainMenu, int code, std::vector<sf::Textur
         }
     }
 
-    if (!rowFound) {
+    if (!rowFound)
         std::cerr << "No textures found for the code: " << code << std::endl;
-    }
 }
 
-
-void Hero::performAnimation(std::vector<sf::Texture>& textures, sf::Time animationDuration) {
-    if (!isAnimating) {
+void Hero::performAnimation(std::vector<sf::Texture> &textures, sf::Time animationDuration)
+{
+    if (!isAnimating)
+    {
         isAnimating = true;
         currentFrame = 0;
         animationClock.restart();
     }
 
-    if (isAnimating) {
+    if (isAnimating)
+    {
         sf::Time elapsedTime = animationClock.getElapsedTime();
-        if (elapsedTime >= frameDuration) {
+        if (elapsedTime >= frameDuration)
+        {
             currentFrame++;
-            if (currentFrame >= textures.size() || elapsedTime >= animationDuration) {
+            if (currentFrame >= textures.size() || elapsedTime >= animationDuration)
+            {
                 isAnimating = false;
                 currentFrame = 0;
                 heroSprite.setTexture(textures[0]);
@@ -154,28 +168,3 @@ void Hero::performAnimation(std::vector<sf::Texture>& textures, sf::Time animati
 
 std::vector<sf::Texture>& Hero::getAttackTexture() { return attackTextures; }
 std::vector<sf::Texture>& Hero::getWalkTexture() { return walkTextures; }
-
-void Hero::draw(sf::RenderWindow &window) {
-    updateHealthBarsPosition();
-    window.draw(heroSprite);
-    window.draw(redHealthBarSprite);
-    window.draw(greenHealthBarSprite);
-}
-
-void Hero::updateHealthBarsPosition() {
-    redHealthBarSprite.setPosition(heroSprite.getPosition().x - 40, heroSprite.getPosition().y  - 70);
-    greenHealthBarSprite.setPosition(redHealthBarSprite.getPosition().x -10, redHealthBarSprite.getPosition().y - 2);
-}
-
-void Hero::updateHealthBar(int currentHealth){
-    greenHealthBarSprite.setScale(.2 - .2 * (1 - currentHealth * 1. / fullHealth), .2);
-}
-
-bool Hero::isHeroPositionIsOnPath(std::vector<sf::Color> colors, sf::Color pixelColor){
-    for (int i = 0; i < colors.size(); i++)
-        if(colors[i] == pixelColor)
-            return true;
-    return false;
-}
-
-int Hero::getFullHealth() { return fullHealth; }

@@ -33,7 +33,7 @@ private:
     bool outOfMap = false;
     bool isEnemyFighting = false;
     bool isEnemyAlive = true;
-    
+
     sf::Clock animationClock;
     int currentFrame = 0;
     bool isAnimating = false;
@@ -77,9 +77,9 @@ public:
     void setIsEnemyAlive(bool condition);
     bool getIsEnemyAlive();
     void fighting(Hero *hero);
-    
+
     void performAttackAnimation();
-    void loadEnemyTextures(MainMenu &mainMenu, int code, std::vector<sf::Texture>& textures);
+    void loadEnemyTextures(MainMenu &mainMenu, int code, std::vector<sf::Texture> &textures);
 
     void performAnimation(std::vector<sf::Texture> &textures, sf::Time animationDuration);
     std::vector<sf::Texture>& getAttackTexture();

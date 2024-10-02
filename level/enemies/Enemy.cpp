@@ -1,7 +1,5 @@
 #include "Enemy.h"
 
-
-
 int generateRandomNumber(int min, int max);
 void stopMoving(sf::Sprite &sprite);
 void moveUp(sf::Sprite &sprite);
@@ -31,10 +29,14 @@ Enemy::Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints, std::
     fullHealth = health;
 }
 
-void Enemy::setValues(std::vector<std::vector<int>> allStats, int code){
-    for (int i = 0; i < allStats.size(); i++){
-        for (int j = 0; j < allStats[i].size(); j++){
-            if(allStats[i][0] == code){
+void Enemy::setValues(std::vector<std::vector<int>> allStats, int code)
+{
+    for (int i = 0; i < allStats.size(); i++)
+    {
+        for (int j = 0; j < allStats[i].size(); j++)
+        {
+            if (allStats[i][0] == code)
+            {
                 setDamage(allStats[i][1], allStats[i][2]);
                 setHealth(allStats[i][3]);
                 setMagicArmor(allStats[i][4]);
@@ -50,7 +52,8 @@ void Enemy::setValues(std::vector<std::vector<int>> allStats, int code){
 }
 
 void Enemy::setHealth(int newHealth) { health = newHealth; }
-void Enemy::setDamage(int newDamage1, int newDamage2) {
+void Enemy::setDamage(int newDamage1, int newDamage2)
+{
     damage[0] = newDamage1;
     damage[1] = newDamage2;
 }
@@ -88,8 +91,9 @@ void Enemy::move()
     }
 }
 
-void Enemy::stop() { 
-     sprite.setPosition(sprite.getPosition());
+void Enemy::stop()
+{
+    sprite.setPosition(sprite.getPosition());
 }
 
 void stopMoving(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y); }
@@ -126,8 +130,9 @@ bool Enemy::getIsEnemyFighting() { return isEnemyFighting; }
 int generateRandomNumber(int min, int max) { return rand() % (max - min) + min; }
 
 void Enemy::setIsEnemyAlive(bool condition) { isEnemyAlive = condition; }
-bool Enemy::getIsEnemyAlive() {
-    if(health > 0)
+bool Enemy::getIsEnemyAlive()
+{
+    if (health > 0)
         return true;
     else
         return false;
@@ -136,16 +141,21 @@ bool Enemy::getIsEnemyAlive() {
 void Enemy::setLiveTaking(int newLiveTaking) { liveTaking = newLiveTaking; }
 int Enemy::getLiveTaking() { return liveTaking; }
 
-void Enemy::fighting(Hero *hero){
+void Enemy::fighting(Hero *hero)
+{
     hero->setHealth(hero->getHealth() - getDamage());
 }
 
-void Enemy::loadEnemyTextures(MainMenu &mainMenu, int code, std::vector<sf::Texture>& textures){
+void Enemy::loadEnemyTextures(MainMenu &mainMenu, int code, std::vector<sf::Texture> &textures)
+{
     bool rowFound = false;
-    for (auto& row : mainMenu.getAllTexturesMatrix()) {
-        if (row.id == code) {
+    for (auto &row : mainMenu.getAllTexturesMatrix())
+    {
+        if (row.id == code)
+        {
             rowFound = true;
-            for (size_t i = 0; i < row.textures.size(); ++i) {
+            for (size_t i = 0; i < row.textures.size(); ++i)
+            {
                 sf::Texture texture;
                 if (texture.loadFromFile(row.texturePaths[i]))
                     textures.push_back(texture);
@@ -156,24 +166,30 @@ void Enemy::loadEnemyTextures(MainMenu &mainMenu, int code, std::vector<sf::Text
         }
     }
 
-    if (!rowFound) {
+    if (!rowFound)
+    {
         std::cerr << "No textures found for the code: " << code << std::endl;
     }
 }
 
-void Enemy::performAttackAnimation(){
-     if (!isAnimating) {
-            isAnimating = true;
-            currentFrame = 0;
-            animationClock.restart();
-        }
-    if (isAnimating) {
+void Enemy::performAttackAnimation()
+{
+    if (!isAnimating)
+    {
+        isAnimating = true;
+        currentFrame = 0;
+        animationClock.restart();
+    }
+    if (isAnimating)
+    {
         sf::Time elapsedTime = animationClock.getElapsedTime();
-        if (elapsedTime >= frameDuration) {
+        if (elapsedTime >= frameDuration)
+        {
             currentFrame++;
-            if (currentFrame >= attackTextures.size() || elapsedTime >= animationDuration) {
-                isAnimating = false;  
-                currentFrame = 0;    
+            if (currentFrame >= attackTextures.size() || elapsedTime >= animationDuration)
+            {
+                isAnimating = false;
+                currentFrame = 0;
                 sprite.setTexture(attackTextures[0]);
                 return;
             }
@@ -183,18 +199,23 @@ void Enemy::performAttackAnimation(){
     }
 }
 
-void Enemy::performAnimation(std::vector<sf::Texture>& textures, sf::Time animationDuration) {
-    if (!isAnimating) {
+void Enemy::performAnimation(std::vector<sf::Texture> &textures, sf::Time animationDuration)
+{
+    if (!isAnimating)
+    {
         isAnimating = true;
         currentFrame = 0;
         animationClock.restart();
     }
 
-    if (isAnimating) {
+    if (isAnimating)
+    {
         sf::Time elapsedTime = animationClock.getElapsedTime();
-        if (elapsedTime >= frameDuration) {
+        if (elapsedTime >= frameDuration)
+        {
             currentFrame++;
-            if (currentFrame >= textures.size() || elapsedTime >= animationDuration) {
+            if (currentFrame >= textures.size() || elapsedTime >= animationDuration)
+            {
                 isAnimating = false;
                 currentFrame = 0;
                 sprite.setTexture(textures[0]);
@@ -224,3 +245,5 @@ void Enemy::updateHealthBarsPosition() {
 void Enemy::updateHealthBar(int currentHealth){
     greenHealthBarSprite.setScale(.2 - .2 * (1 - currentHealth * 1. / fullHealth), .2);
 }
+std::vector<sf::Texture> &Enemy::getAttackTexture() { return attackTextures; }
+std::vector<sf::Texture> &Enemy::getWalkTexture() { return walkingTextures; }

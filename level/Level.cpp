@@ -50,8 +50,9 @@ Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu), isLevelPa
     isAbilityUpgradeOpen = false;
 
     setMoney(1000);
-    if (!font.loadFromFile("GeneralRehearsal/Open_Sans/OpenSans-VariableFont_wdth,wght.ttf")) {
-        return ;
+    if (!font.loadFromFile("GeneralRehearsal/Open_Sans/OpenSans-VariableFont_wdth,wght.ttf"))
+    {
+        return;
     }
     setTextBox(moneyText, font, moneyBox);
     ss << getMoney();
@@ -82,7 +83,7 @@ void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
     // Handle creating towers, and starting new waves
     if (buttons[1]->getGlobalBounds().contains((sf::Vector2f)mousePos))
     {
-        if (isLevelPaused == true) 
+        if (isLevelPaused == true)
             pauseLevel(buttons, isLevelPaused);
         else
             continueLevel(buttons, isLevelPaused);
@@ -99,7 +100,8 @@ void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
         buttons[2]->setPosition(-1000, -1000);
         isLevelPaused = false;
     }
-    if (!isLevelPaused) {
+    if (!isLevelPaused)
+    {
         sf::Image image = levelBackgroundTexture->copyToImage();
         sf::Color pixelColor = image.getPixel(mousePos.x, mousePos.y);
         if (isSpriteClicked(mousePos, hero->getSprite()))
@@ -110,86 +112,98 @@ void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
             isHeroMoving = true;
         }
 
-        if (buttons[0]->getGlobalBounds().contains((sf::Vector2f)mousePos)) {
+        if (buttons[0]->getGlobalBounds().contains((sf::Vector2f)mousePos))
+        {
             buttons[0]->setPosition(-1000, -1000);
             startNewWave(wave);
             wave++;
         }
 
-        if (isMenuStandOpen && !isSpriteClicked(mousePos, menuStand)) {
+        if (isMenuStandOpen && !isSpriteClicked(mousePos, menuStand))
+        {
             isMenuStandOpen = false;
             menuStand.setPosition(-1000, -1000);
         }
 
-        if (!isMenuStandOpen) {
-            for (auto stand : towerStands) {
-                if (stand->getGlobalBounds().contains((sf::Vector2f)mousePos) && !isThereTowerAlready(towers, *stand)) {
+        if (!isMenuStandOpen)
+        {
+            for (auto stand : towerStands)
+            {
+                if (stand->getGlobalBounds().contains((sf::Vector2f)mousePos) && !isThereTowerAlready(towers, *stand))
+                {
                     menuStand.setPosition(stand->getPosition().x - 178, stand->getPosition().y - 202);
                     isMenuStandOpen = true;
                     break;
                 }
             }
-        } 
-        else if (isMenuStandOpen && isSpriteClicked(mousePos, menuStand)) {
+        }
+        else if (isMenuStandOpen && isSpriteClicked(mousePos, menuStand))
+        {
             handleMenuClickEvent(mousePos, menuStand);
         }
 
-        for (auto tower : towers) {
-            if (tower->isClicked(mousePos)) {
+        for (auto tower : towers)
+        {
+            if (tower->isClicked(mousePos))
+            {
                 selectedTower = tower;
-                if (tower->getCode() % 10000 == 0 || tower->getCode() % 10000 == 1) {
+                if (tower->getCode() % 10000 == 0 || tower->getCode() % 10000 == 1)
+                {
                     openTowerUpgradeMenu(tower);
                     break;
                 }
-                else if (tower->getCode() % 10000 == 2) {
+                else if (tower->getCode() % 10000 == 2)
+                {
                     openTowerUpgradeSplitMenu(tower);
                     break;
                 }
-                else {
+                else
+                {
                     openAbilityUpgradeMenu(tower);
                     break;
                 }
             }
         }
 
-        if (isTowerUpgradeOpen) {
+        if (isTowerUpgradeOpen)
+        {
             if (!isSpriteClicked(mousePos, towerUpgrade))
                 closeAllUpgradeMenus();
-            else
-                if (selectedTower != nullptr){
-                    isRadiusVisible = true;
-                    handleUpgradeTowerClickEvent(mousePos, towerUpgrade, selectedTower);
-                }
+            else if (selectedTower != nullptr)
+            {
+                isRadiusVisible = true;
+                handleUpgradeTowerClickEvent(mousePos, towerUpgrade, selectedTower);
+            }
         }
 
-        if (isTowerUpgradeSplitOpen) {
+        if (isTowerUpgradeSplitOpen)
+        {
             if (!isSpriteClicked(mousePos, towerUpgradeSplit))
                 closeAllUpgradeMenus();
-            else
-                if (selectedTower != nullptr){
-                    isRadiusVisible = true;
-                    handleUpgradeSplitTowerClickEvent(mousePos, towerUpgradeSplit, selectedTower);
-                }
+            else if (selectedTower != nullptr)
+            {
+                isRadiusVisible = true;
+                handleUpgradeSplitTowerClickEvent(mousePos, towerUpgradeSplit, selectedTower);
+            }
         }
 
-        if (isAbilityUpgradeOpen) {
+        if (isAbilityUpgradeOpen)
+        {
             if (!isSpriteClicked(mousePos, towerAbilityUpgrade))
                 closeAllUpgradeMenus();
-            else
-                if (selectedTower != nullptr){
-                    isRadiusVisible = true;
-                    handleAbilityUpgradeTowerClickEvent(mousePos, towerAbilityUpgrade, selectedTower);
-                }
+            else if (selectedTower != nullptr)
+            {
+                isRadiusVisible = true;
+                handleAbilityUpgradeTowerClickEvent(mousePos, towerAbilityUpgrade, selectedTower);
+            }
         }
-
     }
 }
 
-
 bool isThereTowerAlready(std::vector<Tower *> &towers, sf::Sprite stand)
 {
-    for(auto tower : towers)
-        if(tower->getPosition().x + 253 == stand.getPosition().x && tower->getPosition().y + 352 == stand.getPosition().y)
+    for (auto tower : towers)
+        if (tower->getPosition().x + 253 == stand.getPosition().x && tower->getPosition().y + 352 == stand.getPosition().y)
             return true;
 
     return false;
@@ -246,7 +260,7 @@ void Level::handleMenuClickEvent(sf::Vector2i &mousePos, sf::Sprite &menuStand)
     case 4:
         if (getMoney() >= 120)
         {
-            createTower(BOMBARD_LVL1, menuStand);    
+            createTower(BOMBARD_LVL1, menuStand);
             menuStand.setPosition(-1000, -1000);
             isMenuStandOpen = false;
             updateMoney(120);
@@ -291,32 +305,73 @@ void Level::update()
 
     int startNewWaveFlag = 1;
 
+    sf::Time deltaTime = clock.restart();
+    for (auto towerIt = towers.begin(); towerIt != towers.end(); towerIt++)
+    {
+        if (!(*towerIt)->getHasTarget() || !(*towerIt)->getCurrentEnemy() ||
+            !(*towerIt)->isEnemyInRange((*towerIt)->getCurrentEnemy()) ||
+            !(*towerIt)->getCurrentEnemy()->getIsEnemyAlive())
+        {
+            (*towerIt)->setHasTarget(false);
+            (*towerIt)->setCurrentEnemy(nullptr);
+
+            for (auto enemyIt = enemies.begin(); enemyIt != enemies.end(); ++enemyIt)
+            {
+                if ((*towerIt)->isEnemyInRange(*enemyIt))
+                {
+                    (*towerIt)->setCurrentEnemy(*enemyIt);
+                    (*towerIt)->setHasTarget(true);
+                    break;
+                }
+            }
+        }
+
+        if ((*towerIt)->getHasTarget() && (*towerIt)->getCurrentEnemy())
+        {
+            (*towerIt)->shoot(enemies, deltaTime);
+
+            if (!(*towerIt)->getCurrentEnemy()->getIsEnemyAlive())
+            {
+                if (fightingEnemy == (*towerIt)->getCurrentEnemy())
+                    fightingEnemy = nullptr;
+
+                updateMoney(-(*towerIt)->getCurrentEnemy()->getBounty());
+                delete (*towerIt)->getCurrentEnemy();
+                enemies.erase(std::remove(enemies.begin(), enemies.end(), (*towerIt)->getCurrentEnemy()), enemies.end());
+                (*towerIt)->setCurrentEnemy(nullptr);
+                (*towerIt)->setHasTarget(false);
+            }
+        }
+    }
+
     for (auto it = enemies.begin(); it != enemies.end();)
     {
-        if(hero->isEnemyInHeroesRange(*it) && !hero->getIsHeroFighting()){
+        if (hero->isEnemyInHeroesRange(*it) && !hero->getIsHeroFighting())
+        {
             (*it)->setIsEnemyFighting(true);
             fightingEnemy = *it;
             hero->setIsHeroFighting(true);
         }
 
-        if(!(*it)->getIsEnemyFighting()){
+        if (!(*it)->getIsEnemyFighting())
+        {
             (*it)->move();
             (*it)->performAnimation((*it)->getWalkTexture(), sf::milliseconds(1000));
         }
 
-        if((*it)->getSprite().getPosition().x < 0)
+        if ((*it)->getSprite().getPosition().x < 0)
             startNewWaveFlag = -1;
 
-        if ((*it)->isOutOfMap()) {
+        if ((*it)->isOutOfMap())
+        {
             delete *it;
             it = enemies.erase(it);
         }
         else
             ++it;
-
     }
 
-    if(startNewWaveFlag == 1)
+    if (startNewWaveFlag == 1)
         buttons[0]->setPosition(20, 20);
 
     if (fightingEnemy != nullptr && !fightingEnemy->getIsEnemyAlive())
@@ -330,14 +385,16 @@ void Level::update()
     heroAttackInterval = sf::milliseconds(hero->getAttackSpeed());
     holyLandHealInterval = sf::milliseconds(1000);
 
-    if (isHeroMoving) {
+    if (isHeroMoving)
+    {
         hero->setIsHeroFighting(false);
         hero->performAnimation(hero->getWalkTexture(), sf::milliseconds(1000));
-        if (hero->heroMoving(hero->getSprite(), targetPos)) {
+        if (hero->heroMoving(hero->getSprite(), targetPos))
+        {
             isHeroMoving = false;
         }
     }
-    if(fightingEnemy != nullptr)
+    if (fightingEnemy != nullptr)
         performBattle(hero, fightingEnemy, enemies);
     for (int i = 0; i < holyLandPoints.size(); i++){
         if(heroIsInHolyLandRadius(hero, holyLandPoints[i]) && hero->getHealth() == hero->getFullHealth())
@@ -350,8 +407,6 @@ void Level::update()
 
 
     clock.restart();
-
-    // Implement logic for tower shooting, tower.getdamage should be updated here so its random on every shoot
 }
 
 void Level::render(sf::RenderWindow &window)
@@ -415,13 +470,14 @@ void Level::readingLevelData(std::string &levelTxtFile)
                 waypoints.push_back(position);
             else if (currentState == "tower")
                 towerStandsPositions.push_back(position);
-            else if(currentState == "hero")
+            else if (currentState == "hero")
                 heroStandPosition = position;
             else if(currentState == "holy")
                 holyLandPoints.push_back(position);
             else if(currentState.find("wave") != std::string::npos){
                 int levelIndex = currentState[4] - '0';
-                if (levelIndex != prevLevelIndex) {
+                if (levelIndex != prevLevelIndex)
+                {
                     levelWaves.push_back(newWave);
                     newWave.erase();
                     prevLevelIndex++;
@@ -435,10 +491,12 @@ void Level::readingLevelData(std::string &levelTxtFile)
     levelWaves.push_back(newWave);
 }
 
-void Level::startNewWave(int waveIndex){
+void Level::startNewWave(int waveIndex)
+{
     levelWaves[waveIndex];
-    for (int i = 0; i < levelWaves[waveIndex].getSize(); i++){
-        Enemy *enemy1 = new Enemy(mainMenu, waypoints, levelWaves[waveIndex].getEnemy(i));   
+    for (int i = 0; i < levelWaves[waveIndex].getSize(); i++)
+    {
+        Enemy *enemy1 = new Enemy(mainMenu, waypoints, levelWaves[waveIndex].getEnemy(i));
         enemies.push_back(enemy1);
     }
 }
@@ -464,15 +522,18 @@ void Level::settingTowerStands()
     }
 }
 
-void Level::deleteTower(Tower* towerToDelete){
+void Level::deleteTower(Tower *towerToDelete)
+{
     auto it = std::find(towers.begin(), towers.end(), towerToDelete);
-    if (it != towers.end()) {
+    if (it != towers.end())
+    {
         delete *it;
         towers.erase(it);
     }
 }
 
-void Level::createTower(int code, sf::Sprite &stand){
+void Level::createTower(int code, sf::Sprite &stand)
+{
     Tower *tower = new Tower(mainMenu, code);
     towers.push_back(tower);
     tower->setPosition(stand.getPosition().x - 75, stand.getPosition().y - 150);
@@ -481,12 +542,10 @@ void Level::createTower(int code, sf::Sprite &stand){
     tower->setShootingRadius(tower->getRange(), center, 50);
 }
 
-void Level::createHero(int code){
-    hero = new Hero(mainMenu, *this, code);
-}
+void Level::createHero(int code) { hero = new Hero(mainMenu, *this, code); }
 
-
-void Level::upgradeTower(Tower* tower, int code){
+void Level::upgradeTower(Tower *tower, int code)
+{
     sf::Texture *texture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), code, 0);
     spriteSetting(tower->getSprite(), *texture, .3);
     tower->setValues(mainMenu.getTowerStatsMatrix(), code);
@@ -496,16 +555,20 @@ void Level::upgradeTower(Tower* tower, int code){
     updateMoney(tower->getCost());
 }
 
-void Level::handleUpgradeTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerUpgrade, Tower* tower) {
-    if(mousePos.x >= towerUpgrade.getPosition().x + 98 && mousePos.x <= towerUpgrade.getPosition().x + 163){
-        if(mousePos.y <= towerUpgrade.getPosition().y + 73 && mousePos.y >= towerUpgrade.getPosition().y)
-            if(getMoney() >= tower->getNextLevelCost()){
+void Level::handleUpgradeTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerUpgrade, Tower *tower)
+{
+    if (mousePos.x >= towerUpgrade.getPosition().x + 98 && mousePos.x <= towerUpgrade.getPosition().x + 163)
+    {
+        if (mousePos.y <= towerUpgrade.getPosition().y + 73 && mousePos.y >= towerUpgrade.getPosition().y)
+            if (getMoney() >= tower->getNextLevelCost())
+            {
                 upgradeTower(tower, tower->getCode() + 1);
                 closeAllUpgradeMenus();
                 tower->setApsoluteCost(tower->getApsoluteCost() + tower->getCost());
                 isRadiusVisible = false;
             }
-        if(mousePos.y >= towerUpgrade.getPosition().y + 180 && mousePos.y <= towerUpgrade.getPosition().y + 250){
+        if (mousePos.y >= towerUpgrade.getPosition().y + 180 && mousePos.y <= towerUpgrade.getPosition().y + 250)
+        {
             updateMoney(-(int)(tower->getApsoluteCost() * .7));
             deleteTower(tower);
             closeAllUpgradeMenus();
@@ -514,26 +577,30 @@ void Level::handleUpgradeTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &tow
     }
 }
 
-
-void Level::handleUpgradeSplitTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerUpgradeSplit, Tower* tower){
-    if(mousePos.y >= towerUpgradeSplit.getPosition().y + 0 && mousePos.y <= towerUpgradeSplit.getPosition().y + 100){
-        if(mousePos.x >= towerUpgradeSplit.getPosition().x + 0 && mousePos.x <= towerUpgradeSplit.getPosition().x + 100)
-            if(getMoney() >= tower->getNextLevelCost()){
+void Level::handleUpgradeSplitTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerUpgradeSplit, Tower *tower)
+{
+    if (mousePos.y >= towerUpgradeSplit.getPosition().y + 0 && mousePos.y <= towerUpgradeSplit.getPosition().y + 100)
+    {
+        if (mousePos.x >= towerUpgradeSplit.getPosition().x + 0 && mousePos.x <= towerUpgradeSplit.getPosition().x + 100)
+            if (getMoney() >= tower->getNextLevelCost())
+            {
                 upgradeTower(tower, tower->getCode() + 1);
                 towerUpgradeSplit.setPosition(-1000, -1000);
                 tower->setApsoluteCost(tower->getApsoluteCost() + tower->getCost());
                 isRadiusVisible = false;
             }
-        if(mousePos.x >= towerUpgradeSplit.getPosition().x + 150 && mousePos.x <= towerUpgradeSplit.getPosition().x + 235)
-            if(getMoney() >= tower->getNextLevelCost()){
+        if (mousePos.x >= towerUpgradeSplit.getPosition().x + 150 && mousePos.x <= towerUpgradeSplit.getPosition().x + 235)
+            if (getMoney() >= tower->getNextLevelCost())
+            {
                 upgradeTower(tower, tower->getCode() + 2);
                 towerUpgradeSplit.setPosition(-1000, -1000);
                 tower->setApsoluteCost(tower->getApsoluteCost() + tower->getCost());
                 isRadiusVisible = false;
             }
     }
-    else if(mousePos.y >= towerUpgradeSplit.getPosition().y + 184 && mousePos.y <= towerUpgradeSplit.getPosition().y + 261)       
-        if(mousePos.x >= towerUpgradeSplit.getPosition().x + 98 && mousePos.x <= towerUpgradeSplit.getPosition().x + 163){
+    else if (mousePos.y >= towerUpgradeSplit.getPosition().y + 184 && mousePos.y <= towerUpgradeSplit.getPosition().y + 261)
+        if (mousePos.x >= towerUpgradeSplit.getPosition().x + 98 && mousePos.x <= towerUpgradeSplit.getPosition().x + 163)
+        {
             updateMoney(-(int)(tower->getApsoluteCost() * .7));
             deleteTower(tower);
             towerUpgradeSplit.setPosition(-1000, -1000);
@@ -541,26 +608,30 @@ void Level::handleUpgradeSplitTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite
         }
 }
 
-
-void Level::handleAbilityUpgradeTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerAbilityUpgrade, Tower* tower){
-    if(mousePos.y >= towerAbilityUpgrade.getPosition().y + 0 && mousePos.y <= towerAbilityUpgrade.getPosition().y + 70){
-        if(mousePos.x >= towerAbilityUpgrade.getPosition().x + 24 && mousePos.x <= towerAbilityUpgrade.getPosition().x + 89)
-            if(getMoney() >= tower->getNextLevelCost()){
+void Level::handleAbilityUpgradeTowerClickEvent(sf::Vector2i &mousePos, sf::Sprite &towerAbilityUpgrade, Tower *tower)
+{
+    if (mousePos.y >= towerAbilityUpgrade.getPosition().y + 0 && mousePos.y <= towerAbilityUpgrade.getPosition().y + 70)
+    {
+        if (mousePos.x >= towerAbilityUpgrade.getPosition().x + 24 && mousePos.x <= towerAbilityUpgrade.getPosition().x + 89)
+            if (getMoney() >= tower->getNextLevelCost())
+            {
                 upgradeTower(tower, tower->getCode() + 1);
                 towerAbilityUpgrade.setPosition(-1000, -1000);
                 tower->setApsoluteCost(tower->getApsoluteCost() + tower->getCost());
                 isRadiusVisible = false;
             }
-        if(mousePos.x >= towerAbilityUpgrade.getPosition().x + 170 && mousePos.x <= towerAbilityUpgrade.getPosition().x + 235)
-            if(getMoney() >= tower->getNextLevelCost()){
+        if (mousePos.x >= towerAbilityUpgrade.getPosition().x + 170 && mousePos.x <= towerAbilityUpgrade.getPosition().x + 235)
+            if (getMoney() >= tower->getNextLevelCost())
+            {
                 upgradeTower(tower, tower->getCode() + 2);
                 towerAbilityUpgrade.setPosition(-1000, -1000);
                 tower->setApsoluteCost(tower->getApsoluteCost() + tower->getCost());
                 isRadiusVisible = false;
             }
     }
-    else if(mousePos.y >= towerAbilityUpgrade.getPosition().y + 184 && mousePos.y <= towerAbilityUpgrade.getPosition().y + 261)       
-        if(mousePos.x >= towerAbilityUpgrade.getPosition().x + 98 && mousePos.x <= towerAbilityUpgrade.getPosition().x + 163){
+    else if (mousePos.y >= towerAbilityUpgrade.getPosition().y + 184 && mousePos.y <= towerAbilityUpgrade.getPosition().y + 261)
+        if (mousePos.x >= towerAbilityUpgrade.getPosition().x + 98 && mousePos.x <= towerAbilityUpgrade.getPosition().x + 163)
+        {
             updateMoney(-(int)(tower->getApsoluteCost() * .7));
             deleteTower(tower);
             towerAbilityUpgrade.setPosition(-1000, -1000);
@@ -568,21 +639,24 @@ void Level::handleAbilityUpgradeTowerClickEvent(sf::Vector2i &mousePos, sf::Spri
         }
 }
 
-void Level::updateMoney(int price){
+void Level::updateMoney(int price)
+{
     setMoney(getMoney() - price);
     ss.str("");
     ss << getMoney();
     moneyText.setString(ss.str());
 }
 
-sf::Vector2f getCenter(sf::Sprite sprite){
+sf::Vector2f getCenter(sf::Sprite sprite)
+{
     sf::Vector2f temp;
     temp.x = sprite.getPosition().x + sprite.getLocalBounds().width * .3 / 2.;
     temp.y = sprite.getPosition().y + sprite.getLocalBounds().height * .3 / 2.;
     return temp;
 }
 
-void Level::closeAllUpgradeMenus() {
+void Level::closeAllUpgradeMenus()
+{
     towerUpgrade.setPosition(-1000, -1000);
     towerUpgradeSplit.setPosition(-1000, -1000);
     towerAbilityUpgrade.setPosition(-1000, -1000);
@@ -592,8 +666,9 @@ void Level::closeAllUpgradeMenus() {
     isRadiusVisible = false;
 }
 
-void Level::openTowerUpgradeMenu(Tower* tower) {
-    closeAllUpgradeMenus(); 
+void Level::openTowerUpgradeMenu(Tower *tower)
+{
+    closeAllUpgradeMenus();
     towerUpgrade.setPosition(tower->getPosition().x - 60, tower->getPosition().y - 20);
     radius = tower->getShootRadius();
     isTowerUpgradeOpen = true;
@@ -601,7 +676,8 @@ void Level::openTowerUpgradeMenu(Tower* tower) {
     isRadiusVisible = true;
 }
 
-void Level::openTowerUpgradeSplitMenu(Tower* tower) {
+void Level::openTowerUpgradeSplitMenu(Tower *tower)
+{
     closeAllUpgradeMenus();
     towerUpgradeSplit.setPosition(tower->getPosition().x - 60, tower->getPosition().y - 20);
     radius = tower->getShootRadius();
@@ -610,7 +686,8 @@ void Level::openTowerUpgradeSplitMenu(Tower* tower) {
     isRadiusVisible = true;
 }
 
-void Level::openAbilityUpgradeMenu(Tower* tower) {
+void Level::openAbilityUpgradeMenu(Tower *tower)
+{
     closeAllUpgradeMenus();
     towerAbilityUpgrade.setPosition(tower->getPosition().x - 60, tower->getPosition().y - 20);
     radius = tower->getShootRadius();
@@ -619,19 +696,23 @@ void Level::openAbilityUpgradeMenu(Tower* tower) {
     isRadiusVisible = true;
 }
 
-sf::Vector2f Level::getHeroStandPosition(){
+sf::Vector2f Level::getHeroStandPosition()
+{
     sf::Vector2f newHeroStandPosition;
     newHeroStandPosition.x = heroStandPosition[0];
     newHeroStandPosition.y = heroStandPosition[1];
     return newHeroStandPosition;
 }
 
-void Level::performBattle(Hero*& hero, Enemy*& fightingEnemy, std::vector<Enemy*>& enemies) {
+void Level::performBattle(Hero *&hero, Enemy *&fightingEnemy, std::vector<Enemy *> &enemies)
+{
     sf::Time elapsedTime = clock.getElapsedTime();
-    if (hero->getIsHeroFighting()) {
+    if (hero->getIsHeroFighting())
+    {
         hero->performAnimation(hero->getAttackTexture(), sf::milliseconds(hero->getAttackSpeed()));
         fightingEnemy->performAnimation(fightingEnemy->getAttackTexture(), sf::milliseconds(fightingEnemy->getAttackSpeed()));
-        if (timeSinceLastHeroAttack >= heroAttackInterval) {
+        if (timeSinceLastHeroAttack >= heroAttackInterval)
+        {
             hero->fighting(fightingEnemy);
             fightingEnemy->updateHealthBar(fightingEnemy->getHealth());
             timeSinceLastHeroAttack = sf::Time::Zero;
@@ -643,17 +724,20 @@ void Level::performBattle(Hero*& hero, Enemy*& fightingEnemy, std::vector<Enemy*
         }
         timeSinceLastHeroAttack += elapsedTime;
         timeSinceLastEnemyAttack += elapsedTime;
-        if (!hero->getIsHeroAlive()) {
+        if (!hero->getIsHeroAlive())
+        {
             hero->getSprite().setPosition(-1000, -1000);
             fightingEnemy->setIsEnemyFighting(false);
             hero->setIsHeroFighting(false);
             fightingEnemy->move();
         }
-        if (!fightingEnemy->getIsEnemyAlive()) {
+        if (!fightingEnemy->getIsEnemyAlive())
+        {
             auto it = std::find(enemies.begin(), enemies.end(), fightingEnemy);
-            if (it != enemies.end()) {
+            if (it != enemies.end())
+            {
                 updateMoney(-(*it)->getBounty());
-                fightingEnemy = nullptr;     
+                fightingEnemy = nullptr;
                 hero->setIsHeroFighting(false);
                 delete *it;
                 enemies.erase(it);
