@@ -34,6 +34,8 @@ private:
     int attackSpeed;
     bool isHeroFighting = false;
     bool isHeroAlive = true;
+    int fullHealth;
+    
 public:
     Hero(MainMenu &mainMenu, Level &level, int code);
     void setHealth(int newHealth);
@@ -73,4 +75,11 @@ public:
     void performAnimation(std::vector<sf::Texture> &textures, sf::Time animationDuration);
     std::vector<sf::Texture>& getAttackTexture();
     std::vector<sf::Texture>& getWalkTexture();
+    
+    void draw(sf::RenderWindow &window);
+    void updateHealthBarsPosition();
+    void updateHealthBar(int currentHealth);
+
+    bool isHeroPositionIsOnPath(std::vector<sf::Color> colors, sf::Color pixelColor);
+    int getFullHealth();
 };

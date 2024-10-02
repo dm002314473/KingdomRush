@@ -245,5 +245,3 @@ void Enemy::updateHealthBarsPosition() {
 void Enemy::updateHealthBar(int currentHealth){
     greenHealthBarSprite.setScale(.2 - .2 * (1 - currentHealth * 1. / fullHealth), .2);
 }
-std::vector<sf::Texture> &Enemy::getAttackTexture() { return attackTextures; }
-std::vector<sf::Texture> &Enemy::getWalkTexture() { return walkingTextures; }

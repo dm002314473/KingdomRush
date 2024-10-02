@@ -168,3 +168,28 @@ void Hero::performAnimation(std::vector<sf::Texture> &textures, sf::Time animati
 
 std::vector<sf::Texture>& Hero::getAttackTexture() { return attackTextures; }
 std::vector<sf::Texture>& Hero::getWalkTexture() { return walkTextures; }
+
+void Hero::draw(sf::RenderWindow &window) {
+    updateHealthBarsPosition();
+    window.draw(heroSprite);
+    window.draw(redHealthBarSprite);
+    window.draw(greenHealthBarSprite);
+}
+
+void Hero::updateHealthBarsPosition() {
+    redHealthBarSprite.setPosition(heroSprite.getPosition().x - 40, heroSprite.getPosition().y  - 70);
+    greenHealthBarSprite.setPosition(redHealthBarSprite.getPosition().x -10, redHealthBarSprite.getPosition().y - 2);
+}
+
+void Hero::updateHealthBar(int currentHealth){
+    greenHealthBarSprite.setScale(.2 - .2 * (1 - currentHealth * 1. / fullHealth), .2);
+}
+
+bool Hero::isHeroPositionIsOnPath(std::vector<sf::Color> colors, sf::Color pixelColor){
+    for (int i = 0; i < colors.size(); i++)
+        if(colors[i] == pixelColor)
+            return true;
+    return false;
+}
+
+int Hero::getFullHealth() { return fullHealth; }

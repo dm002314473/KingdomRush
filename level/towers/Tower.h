@@ -1,13 +1,15 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
+#include <cmath>
+// #include "../enemies/Enemy.h"
 #include "../../commonFunctions/CommonFunctions.h"
-#include "../enemies/Enemy.h"
 #include "../../mainMenu/MainMenu.h"
-
-class Enemy;
+#include "../Level.h"
 
 class MainMenu;
+class Enemy;
 
 class Tower
 {
@@ -25,9 +27,14 @@ private:
     int apsoluteCost;
     sf::CircleShape shootRadius;
 
+    float attackCooldown;
+    sf::Time timeSinceLastShot = sf::Time::Zero;
+    Enemy *currentTarget;
+    bool hasTarget;
+
 public:
     Tower(MainMenu &mainMenu, int code);
-    sf::Sprite& getSprite();
+    sf::Sprite &getSprite();
     int getCost();
     int getDamage();
     int getShootSpeed();
@@ -35,6 +42,12 @@ public:
     int getCode();
     int getNextLevelCost();
     int getApsoluteCost();
+
+    sf::Time getElapsedTime();
+    void setElapsedTime(sf::Time time);
+
+    sf::Time getTimeSinceLastTowerAttack();
+    void setTimeSinceLastTowerAttack(sf::Time time);
 
     void setValues(std::vector<std::vector<int>> allStats, int code);
 
@@ -51,11 +64,17 @@ public:
     sf::Vector2f getPosition();
 
     bool isEnemyInRange(Enemy *enemy);
-    void shoot(Enemy *enemy);
+    double calculateDistance(Enemy *enemy, Tower *tower);
+    void shoot(std::vector<Enemy *> &enemies, sf::Time deltaTime);
 
     bool isClicked(sf::Vector2i &mousePos);
     void handleClick(MainMenu &mainMenu, sf::Vector2i &mousePos);
 
     sf::CircleShape &getShootRadius();
     void setShootingRadius(float radius, sf::Vector2f radiusPosition, float transparency);
+
+    bool getHasTarget();
+    void setHasTarget(bool set);
+    Enemy *getCurrentEnemy();
+    void setCurrentEnemy(Enemy *enemy);
 };

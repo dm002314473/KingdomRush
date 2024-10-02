@@ -716,11 +716,13 @@ void Level::performBattle(Hero *&hero, Enemy *&fightingEnemy, std::vector<Enemy 
             hero->fighting(fightingEnemy);
             fightingEnemy->updateHealthBar(fightingEnemy->getHealth());
             timeSinceLastHeroAttack = sf::Time::Zero;
+            std::cout << "enemy health " << fightingEnemy->getHealth() << std::endl;
         }
         if (timeSinceLastEnemyAttack >= enemyAttackInterval) {
             fightingEnemy->fighting(hero); 
             hero->updateHealthBar(hero->getHealth());
             timeSinceLastEnemyAttack = sf::Time::Zero;
+            std::cout << "hero health " << hero->getHealth() << std::endl;
         }
         timeSinceLastHeroAttack += elapsedTime;
         timeSinceLastEnemyAttack += elapsedTime;
