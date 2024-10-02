@@ -305,7 +305,7 @@ void Level::update()
 
     int startNewWaveFlag = 1;
 
-    sf::Time deltaTime = clock.restart();
+    sf::Time deltaTime = clockTowerShoot.restart();
     for (auto towerIt = towers.begin(); towerIt != towers.end(); towerIt++)
     {
         if (!(*towerIt)->getHasTarget() || !(*towerIt)->getCurrentEnemy() ||
@@ -329,6 +329,7 @@ void Level::update()
         if ((*towerIt)->getHasTarget() && (*towerIt)->getCurrentEnemy())
         {
             (*towerIt)->shoot(enemies, deltaTime);
+            (*towerIt)->getCurrentEnemy()->updateHealthBar((*towerIt)->getCurrentEnemy()->getHealth());
 
             if (!(*towerIt)->getCurrentEnemy()->getIsEnemyAlive())
             {

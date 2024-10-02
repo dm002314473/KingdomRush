@@ -61,6 +61,7 @@ private:
     bool isHeroMoving = false;
     sf::Vector2i targetPos;
     sf::Clock clock;
+    sf::Clock clockTowerShoot;
     sf::Time heroAttackInterval;
     sf::Time enemyAttackInterval;
     sf::Time holyLandHealInterval;
