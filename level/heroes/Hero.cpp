@@ -12,6 +12,14 @@ Hero::Hero(MainMenu &mainMenu, Level &level, int code){
     heroSprite.setOrigin(150, 150);
     loadHeroTextures(mainMenu, 90015, attackTextures);
     loadHeroTextures(mainMenu, 90016, walkTextures);
+    sf::Texture *redBarTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), REDHEALTHBAR, 0);
+    spriteSetting(redHealthBarSprite, *redBarTexture, .2);
+    sf::Texture *greenBarTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), GREENHEALTHBAR, 0);
+    spriteSetting(greenHealthBarSprite, *greenBarTexture, .2);
+    redHealthBarSprite.setOrigin(50, 10);
+    redHealthBarSprite.setPosition(heroSprite.getPosition().x, heroSprite.getPosition().y - 10);
+    greenHealthBarSprite.setPosition(redHealthBarSprite.getPosition());
+    fullHealth = health;
 }
 
 void Hero::setValues(std::vector<std::vector<int>> allStats, int code){
@@ -146,3 +154,28 @@ void Hero::performAnimation(std::vector<sf::Texture>& textures, sf::Time animati
 
 std::vector<sf::Texture>& Hero::getAttackTexture() { return attackTextures; }
 std::vector<sf::Texture>& Hero::getWalkTexture() { return walkTextures; }
+
+void Hero::draw(sf::RenderWindow &window) {
+    updateHealthBarsPosition();
+    window.draw(heroSprite);
+    window.draw(redHealthBarSprite);
+    window.draw(greenHealthBarSprite);
+}
+
+void Hero::updateHealthBarsPosition() {
+    redHealthBarSprite.setPosition(heroSprite.getPosition().x - 40, heroSprite.getPosition().y  - 70);
+    greenHealthBarSprite.setPosition(redHealthBarSprite.getPosition().x -10, redHealthBarSprite.getPosition().y - 2);
+}
+
+void Hero::updateHealthBar(int currentHealth){
+    greenHealthBarSprite.setScale(.2 - .2 * (1 - currentHealth * 1. / fullHealth), .2);
+}
+
+bool Hero::isHeroPositionIsOnPath(std::vector<sf::Color> colors, sf::Color pixelColor){
+    for (int i = 0; i < colors.size(); i++)
+        if(colors[i] == pixelColor)
+            return true;
+    return false;
+}
+
+int Hero::getFullHealth() { return fullHealth; }

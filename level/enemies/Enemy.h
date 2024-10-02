@@ -23,6 +23,8 @@ private:
     int attackSpeed;
     int liveTaking;
     sf::Sprite sprite;
+    sf::Sprite redHealthBarSprite;
+    sf::Sprite greenHealthBarSprite;
     std::vector<sf::Texture> attackTextures;
     std::vector<sf::Texture> walkingTextures;
 
@@ -37,6 +39,8 @@ private:
     bool isAnimating = false;
     sf::Time frameDuration = sf::milliseconds(1500 / 6.);
     sf::Time animationDuration = sf::milliseconds(1500);
+    int fullHealth;
+
 public:
     // moveAnimation
     Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints, std::pair<int, int> pair);
@@ -80,4 +84,8 @@ public:
     void performAnimation(std::vector<sf::Texture> &textures, sf::Time animationDuration);
     std::vector<sf::Texture>& getAttackTexture();
     std::vector<sf::Texture>& getWalkTexture();
+
+    void draw(sf::RenderWindow &window);
+    void updateHealthBarsPosition();
+    void updateHealthBar(int currentHealth);
 };

@@ -31,11 +31,13 @@ private:
     std::vector<sf::Sprite *> towerStands;
     std::vector<Tower *> towers;
     Hero *hero;
+    std::vector<sf::Shape *> holyLands;
 
     std::vector<sf::Sprite *> buttons;
     MainMenu &mainMenu;
 
     std::vector<std::vector<int>> waypoints;
+    std::vector<std::vector<int>> holyLandPoints;
     std::vector<std::vector<int>> towerStandsPositions;
     std::vector<int> heroStandPosition;
     int wave = 0;
@@ -61,11 +63,17 @@ private:
     sf::Clock clock;
     sf::Time heroAttackInterval;
     sf::Time enemyAttackInterval;
+    sf::Time holyLandHealInterval;
     sf::Time timeSinceLastHeroAttack = sf::Time::Zero;
     sf::Time timeSinceLastEnemyAttack = sf::Time::Zero;
+    sf::Time timeSinceLastHolyLandHeal = sf::Time::Zero;
     Enemy *fightingEnemy = nullptr;
     int t = 0;
     std::vector<Wave> levelWaves;
+
+    sf::Image image;
+    std::vector<sf::Color> colors;
+    sf::Vector2u imageSize; 
 
 public:
     Level(int levelIndex, MainMenu &mainMenu);
@@ -102,4 +110,7 @@ public:
     void openAbilityUpgradeMenu(Tower *tower);
 
     void performBattle(Hero *&hero, Enemy *&fightingEnemy, std::vector<Enemy *> &enemies);
+
+    void holyLandHeal(Hero *&hero);
+    void settingHolyLand();
 };

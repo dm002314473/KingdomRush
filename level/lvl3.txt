@@ -12,6 +12,8 @@ tower stands
 1180, 1220
 hero stand
 1700, 350
+holy land
+775, 550
 wave1
 50100, 500
 50100, 1000

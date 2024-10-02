@@ -57,6 +57,10 @@ GeneralRehearsal\images\gnome_attack1.png
 GeneralRehearsal\images\gnome_attack2.png
 GeneralRehearsal\images\gnome_attack3.png
 GeneralRehearsal\images\gnome_attack4.png
+50201
+GeneralRehearsal\images\gnome_walk1.png
+GeneralRehearsal\images\gnome_walk2.png
+GeneralRehearsal\images\gnome_walk3.png
 69997
 GeneralRehearsal\images\abilityUpgradeMenu.png
 69998
@@ -114,4 +118,6 @@ GeneralRehearsal\images\hero1_attacking5.png
 GeneralRehearsal\images\hero1_walk1.png
 GeneralRehearsal\images\hero1_walk2.png
 GeneralRehearsal\images\hero1_walk3.png
+99999
+GeneralRehearsal\images\ground_colors.png
 

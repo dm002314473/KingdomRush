@@ -13,14 +13,22 @@ Enemy::Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints, std::
 {
     sf::Texture *texture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), pair.first, 0);
     spriteSetting(sprite, *texture, .2);
-    sprite.setOrigin(50, 50);
+    sf::Texture *redBarTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), REDHEALTHBAR, 0);
+    spriteSetting(redHealthBarSprite, *redBarTexture, .2);
+    sf::Texture *greenBarTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), GREENHEALTHBAR, 0);
+    spriteSetting(greenHealthBarSprite, *greenBarTexture, .2);
+    sprite.setOrigin(sprite.getLocalBounds().width / 2, sprite.getLocalBounds().height / 2);
+    redHealthBarSprite.setOrigin(50, 10);
     int positionX = generateRandomNumber(waypoints[0][0] - 150, waypoints[0][0] + 10) - pair.second;
     int positionY = generateRandomNumber(waypoints[0][1] - 150, waypoints[0][1] + 10);
     sprite.setPosition(positionX, positionY);
+    redHealthBarSprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - 10);
+    greenHealthBarSprite.setPosition(redHealthBarSprite.getPosition());
     currentWaypointIndex = 0;
     setValues(mainMenu.getEnemyStatsMatrix(), pair.first);
     loadEnemyTextures(mainMenu, pair.first, attackTextures);
     loadEnemyTextures(mainMenu, pair.first + 1, walkingTextures);
+    fullHealth = health;
 }
 
 void Enemy::setValues(std::vector<std::vector<int>> allStats, int code){
@@ -200,3 +208,19 @@ void Enemy::performAnimation(std::vector<sf::Texture>& textures, sf::Time animat
 
 std::vector<sf::Texture>& Enemy::getAttackTexture() { return attackTextures; }
 std::vector<sf::Texture>& Enemy::getWalkTexture() { return walkingTextures; }
+
+void Enemy::draw(sf::RenderWindow &window) {
+    updateHealthBarsPosition();
+    window.draw(sprite);
+    window.draw(redHealthBarSprite);
+    window.draw(greenHealthBarSprite);
+}
+
+void Enemy::updateHealthBarsPosition() {
+    redHealthBarSprite.setPosition(sprite.getPosition().x - 40, sprite.getPosition().y  - 70);
+    greenHealthBarSprite.setPosition(redHealthBarSprite.getPosition().x -10, redHealthBarSprite.getPosition().y - 2);
+}
+
+void Enemy::updateHealthBar(int currentHealth){
+    greenHealthBarSprite.setScale(.2 - .2 * (1 - currentHealth * 1. / fullHealth), .2);
+}

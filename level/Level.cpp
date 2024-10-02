@@ -6,6 +6,7 @@ bool isThereTowerAlready(std::vector<Tower *> &towers, sf::Sprite stand);
 void pauseLevel(std::vector<sf::Sprite *> buttons, bool &isLevelPaused);
 void continueLevel(std::vector<sf::Sprite *> buttons, bool &isLevelPaused);
 sf::Vector2f getCenter(sf::Sprite sprite);
+bool heroIsInHolyLandRadius(Hero *hero, std::vector<int> center);
 
 Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu), isLevelPaused(false)
 {
@@ -57,6 +58,18 @@ Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu), isLevelPa
     moneyText.setString(ss.str());
 
     createHero(HERO1);
+
+    image = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), GROUND_COLORS, 0)->copyToImage();
+    imageSize = image.getSize();
+
+    for (int y = 0; y < imageSize.y; ++y) {
+        for (int x = 0; x < imageSize.x; ++x) {
+            sf::Color pixelColor = image.getPixel(x, y);
+            colors.push_back(pixelColor);
+        }
+    }
+
+    settingHolyLand();
 }
 
 void Level::setMoney(int newMoney) { money = newMoney; }
@@ -89,10 +102,9 @@ void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
     if (!isLevelPaused) {
         sf::Image image = levelBackgroundTexture->copyToImage();
         sf::Color pixelColor = image.getPixel(mousePos.x, mousePos.y);
-        sf::Color colorToCheck(105, 176, 37);
         if (isSpriteClicked(mousePos, hero->getSprite()))
             isHeroSelected = true;
-        else if (isHeroSelected && pixelColor != colorToCheck) {
+        else if (isHeroSelected && hero->isHeroPositionIsOnPath(colors, pixelColor)) {
             targetPos = mousePos;
             isHeroSelected = false;
             isHeroMoving = true;
@@ -312,9 +324,11 @@ void Level::update()
 
     sf::Time timeSinceLastHeroAttack = sf::Time::Zero;
     sf::Time timeSinceLastEnemyAttack = sf::Time::Zero;
+    sf::Time timeSinceLastHolyLandHeal = sf::Time::Zero;
     if(fightingEnemy != nullptr)
         enemyAttackInterval = sf::milliseconds(fightingEnemy->getAttackSpeed());
     heroAttackInterval = sf::milliseconds(hero->getAttackSpeed());
+    holyLandHealInterval = sf::milliseconds(1000);
 
     if (isHeroMoving) {
         hero->setIsHeroFighting(false);
@@ -325,6 +339,15 @@ void Level::update()
     }
     if(fightingEnemy != nullptr)
         performBattle(hero, fightingEnemy, enemies);
+    for (int i = 0; i < holyLandPoints.size(); i++){
+        if(heroIsInHolyLandRadius(hero, holyLandPoints[i]) && hero->getHealth() == hero->getFullHealth())
+            break;
+        if(heroIsInHolyLandRadius(hero, holyLandPoints[i]) && hero->getHealth() <= hero->getFullHealth() - 5)
+            holyLandHeal(hero);
+        else if(heroIsInHolyLandRadius(hero, holyLandPoints[i]) && hero->getHealth() < hero->getFullHealth())
+            hero->setHealth(hero->getFullHealth());
+    }
+
 
     clock.restart();
 
@@ -334,19 +357,21 @@ void Level::update()
 void Level::render(sf::RenderWindow &window)
 {
     window.draw(levelBackground);
+    for (auto &holyLand : holyLands)
+        window.draw(*holyLand);
     for (auto &towerStand : towerStands)
         window.draw(*towerStand);
     for (auto &tower : towers)
         window.draw(tower->getSprite());
     for (auto &enemy : enemies)
-        window.draw(enemy->getSprite());
+        enemy->draw(window);
     window.draw(menuStand);
     window.draw(towerUpgrade);
     window.draw(towerUpgradeSplit);
     window.draw(towerAbilityUpgrade);
     window.draw(moneyBox);
     window.draw(moneyText);
-    window.draw(hero->getSprite());
+    hero->draw(window);
     if(isRadiusVisible)
         window.draw(radius);
     for (auto &button : buttons)
@@ -370,7 +395,7 @@ void Level::readingLevelData(std::string &levelTxtFile)
         std::istringstream iss(line);
         std::string word;
         iss >> word;
-        if (word == "waypoints" || word == "tower" || word == "hero" || word.find("wave") != std::string::npos)
+        if (word == "waypoints" || word == "tower" || word == "hero" || word.find("wave") != std::string::npos || word == "holy")
             currentState = word;
         else
         {
@@ -392,6 +417,8 @@ void Level::readingLevelData(std::string &levelTxtFile)
                 towerStandsPositions.push_back(position);
             else if(currentState == "hero")
                 heroStandPosition = position;
+            else if(currentState == "holy")
+                holyLandPoints.push_back(position);
             else if(currentState.find("wave") != std::string::npos){
                 int levelIndex = currentState[4] - '0';
                 if (levelIndex != prevLevelIndex) {
@@ -606,12 +633,12 @@ void Level::performBattle(Hero*& hero, Enemy*& fightingEnemy, std::vector<Enemy*
         fightingEnemy->performAnimation(fightingEnemy->getAttackTexture(), sf::milliseconds(fightingEnemy->getAttackSpeed()));
         if (timeSinceLastHeroAttack >= heroAttackInterval) {
             hero->fighting(fightingEnemy);
-            //std::cout << "Hero attacks! Enemy health: " << fightingEnemy->getHealth() << std::endl;
+            fightingEnemy->updateHealthBar(fightingEnemy->getHealth());
             timeSinceLastHeroAttack = sf::Time::Zero;
         }
         if (timeSinceLastEnemyAttack >= enemyAttackInterval) {
             fightingEnemy->fighting(hero); 
-            //std::cout << "Enemy attacks! Hero health: " << hero->getHealth() << std::endl;
+            hero->updateHealthBar(hero->getHealth());
             timeSinceLastEnemyAttack = sf::Time::Zero;
         }
         timeSinceLastHeroAttack += elapsedTime;
@@ -636,4 +663,32 @@ void Level::performBattle(Hero*& hero, Enemy*& fightingEnemy, std::vector<Enemy*
     else
         if(fightingEnemy != nullptr)
             fightingEnemy->move();
+}
+
+void Level::settingHolyLand(){
+    for (int i = 0; i < holyLandPoints.size(); i++){
+        sf::CircleShape* circle1 = new sf::CircleShape(100);
+        circle1->setFillColor(sf::Color(255, 215, 0, 128));
+        circle1->setOrigin(100, 100);
+        int positionX = holyLandPoints[i][0];
+        int positionY = holyLandPoints[i][1];
+        circle1->setPosition(positionX, positionY);
+        holyLands.push_back(circle1);
+    }
+}
+
+void Level::holyLandHeal(Hero *&hero){
+    sf::Time elapsedTime = clock.getElapsedTime();
+    if (timeSinceLastHolyLandHeal >= holyLandHealInterval){
+        hero->setHealth(hero->getHealth() + 5);
+        hero->updateHealthBar(hero->getHealth());
+        timeSinceLastHolyLandHeal = sf::Time::Zero;
+    }
+    timeSinceLastHolyLandHeal += elapsedTime;
+}
+
+bool heroIsInHolyLandRadius(Hero *hero, std::vector<int> center){
+    if(sqrt((center[0] - hero->getSprite().getPosition().x) * (center[0] - hero->getSprite().getPosition().x) + (center[1] - hero->getSprite().getPosition().y) * (center[1] - hero->getSprite().getPosition().y)) <= 100)
+        return true;
+    return false;
 }
