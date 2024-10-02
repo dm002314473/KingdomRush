@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
-// #include "../../mainMenu/MainMenu.h"
+#include "../../mainMenu/MainMenu.h"
 #include "../../commonFunctions/CommonFunctions.h"
 
 class MainMenu;
@@ -26,8 +26,6 @@ private:
     std::vector<sf::Texture> attackTextures;
     std::vector<sf::Texture> walkingTextures;
 
-protected:
-    sf::Sprite sprite;
     std::vector<std::vector<int>> &waypoints;
     int currentWaypointIndex;
     bool outOfMap = false;

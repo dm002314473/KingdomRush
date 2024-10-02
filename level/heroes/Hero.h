@@ -32,6 +32,7 @@ private:
     int attackSpeed;
     bool isHeroFighting = false;
     bool isHeroAlive = true;
+
 public:
     Hero(MainMenu &mainMenu, Level &level, int code);
     void setHealth(int newHealth);
@@ -50,7 +51,7 @@ public:
     int getMagicArmor();
     int getPhysicalArmor();
     int getAttackSpeed();
-    sf::Sprite& getSprite();
+    sf::Sprite &getSprite();
 
     void setValues(std::vector<std::vector<int>> allStats, int code);
 
@@ -61,14 +62,14 @@ public:
 
     bool isEnemyInHeroesRange(Enemy *enemy);
     void fighting(Enemy *enemy);
-    
+
     void setIsHeroAlive(bool condition);
     bool getIsHeroAlive();
 
     void performAttackAnimation();
-    void loadHeroTextures(MainMenu &mainMenu, int code, std::vector<sf::Texture>& textures);
+    void loadHeroTextures(MainMenu &mainMenu, int code, std::vector<sf::Texture> &textures);
 
     void performAnimation(std::vector<sf::Texture> &textures, sf::Time animationDuration);
-    std::vector<sf::Texture>& getAttackTexture();
-    std::vector<sf::Texture>& getWalkTexture();
+    std::vector<sf::Texture> &getAttackTexture();
+    std::vector<sf::Texture> &getWalkTexture();
 };

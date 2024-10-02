@@ -294,6 +294,45 @@ void Level::update()
 
     int startNewWaveFlag = 1;
 
+    sf::Time deltaTime = clock.restart();
+    for (auto towerIt = towers.begin(); towerIt != towers.end(); towerIt++)
+    {
+        if (!(*towerIt)->getHasTarget() || !(*towerIt)->getCurrentEnemy() ||
+            !(*towerIt)->isEnemyInRange((*towerIt)->getCurrentEnemy()) ||
+            !(*towerIt)->getCurrentEnemy()->getIsEnemyAlive())
+        {
+            (*towerIt)->setHasTarget(false);
+            (*towerIt)->setCurrentEnemy(nullptr);
+
+            for (auto enemyIt = enemies.begin(); enemyIt != enemies.end(); ++enemyIt)
+            {
+                if ((*towerIt)->isEnemyInRange(*enemyIt))
+                {
+                    (*towerIt)->setCurrentEnemy(*enemyIt);
+                    (*towerIt)->setHasTarget(true);
+                    break;
+                }
+            }
+        }
+
+        if ((*towerIt)->getHasTarget() && (*towerIt)->getCurrentEnemy())
+        {
+            (*towerIt)->shoot(enemies, deltaTime);
+
+            if (!(*towerIt)->getCurrentEnemy()->getIsEnemyAlive())
+            {
+                if (fightingEnemy == (*towerIt)->getCurrentEnemy())
+                    fightingEnemy = nullptr;
+
+                updateMoney(-(*towerIt)->getCurrentEnemy()->getBounty());
+                delete (*towerIt)->getCurrentEnemy();
+                enemies.erase(std::remove(enemies.begin(), enemies.end(), (*towerIt)->getCurrentEnemy()), enemies.end());
+                (*towerIt)->setCurrentEnemy(nullptr);
+                (*towerIt)->setHasTarget(false);
+            }
+        }
+    }
+
     for (auto it = enemies.begin(); it != enemies.end();)
     {
         if (hero->isEnemyInHeroesRange(*it) && !hero->getIsHeroFighting())
@@ -346,8 +385,6 @@ void Level::update()
         performBattle(hero, fightingEnemy, enemies);
 
     clock.restart();
-
-    // Implement logic for tower shooting, tower.getdamage should be updated here so its random on every shoot
 }
 
 void Level::render(sf::RenderWindow &window)
@@ -480,10 +517,7 @@ void Level::createTower(int code, sf::Sprite &stand)
     tower->setShootingRadius(tower->getRange(), center, 50);
 }
 
-void Level::createHero(int code)
-{
-    hero = new Hero(mainMenu, *this, code);
-}
+void Level::createHero(int code) { hero = new Hero(mainMenu, *this, code); }
 
 void Level::upgradeTower(Tower *tower, int code)
 {

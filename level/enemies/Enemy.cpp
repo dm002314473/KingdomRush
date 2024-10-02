@@ -1,5 +1,4 @@
 #include "Enemy.h"
-#include "../../mainMenu/MainMenu.h"
 
 int generateRandomNumber(int min, int max);
 void stopMoving(sf::Sprite &sprite);
