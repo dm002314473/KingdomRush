@@ -410,6 +410,15 @@ void Level::update()
     heroAttackInterval = sf::milliseconds(hero->getAttackSpeed());
     holyLandHealInterval = sf::milliseconds(1000);
 
+    if (isHeroMoving)
+    {
+        hero->setIsHeroFighting(false);
+        hero->performAnimation(hero->getWalkTexture(), sf::milliseconds(1000));
+        if (hero->heroMoving(hero->getSprite(), targetPos))
+        {
+            isHeroMoving = false;
+        }
+    }
     if (fightingEnemy != nullptr)
         performBattle(hero, fightingEnemy, enemies, dtm);
 
@@ -799,9 +808,9 @@ bool heroIsInHolyLandRadius(Hero *hero, std::vector<int> center){
 }
 
 void Level::heroHeal(){
-    if(hero->getHealth() != hero->getFullHealth() && !hero->getIsHeroFighting()){
+    if (hero->getHealth() != hero->getFullHealth() && !hero->getIsHeroFighting()) {
         sf::Time elapsedTime = clockHeal.getElapsedTime();
-        if (elapsedTime >= heroHealInterval){
+        if (elapsedTime >= heroHealInterval) {
             if(hero->getHealth() <= hero->getFullHealth() - hero->getHealPerSecond())
                 hero->setHealth(hero->getHealth() + hero->getHealPerSecond());
             else
