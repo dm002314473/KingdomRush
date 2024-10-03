@@ -55,7 +55,7 @@ public:
     void setAttackSpeed(int newAttackSpeed);
     void setSprite(sf::Sprite newSprite);
     void setLiveTaking(int newLiveTaking);
-    void move();
+    void move(float dtm);
     void stop();
     bool shouldEnemyTurn();
     bool isOutOfMap() { return outOfMap; }
@@ -88,4 +88,9 @@ public:
     void draw(sf::RenderWindow &window);
     void updateHealthBarsPosition();
     void updateHealthBar(int currentHealth);
+
+    void moveRight(float dtm);
+    void moveLeft(float dtm);
+    void moveUp(float dtm);
+    void moveDown(float dtm);
 };

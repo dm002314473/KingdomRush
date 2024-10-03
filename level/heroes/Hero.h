@@ -35,7 +35,9 @@ private:
     bool isHeroFighting = false;
     bool isHeroAlive = true;
     int fullHealth;
-    
+    bool shouldHeroHeal;
+    int healPerSecond;
+
 public:
     Hero(MainMenu &mainMenu, Level &level, int code);
     void setHealth(int newHealth);
@@ -82,4 +84,10 @@ public:
 
     bool isHeroPositionIsOnPath(std::vector<sf::Color> colors, sf::Color pixelColor);
     int getFullHealth();
+
+    bool getShouldHeroHeal();
+    void setShouldHeroHeal(bool condition);
+
+    int getHealPerSecond();
+    void setHealPerSecond(int newHealPerSecond);
 };

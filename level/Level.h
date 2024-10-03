@@ -64,12 +64,16 @@ private:
     sf::Vector2i targetPos;
     sf::Clock clock;
     sf::Clock clockTowerShoot;
+    sf::Clock clockMoving;
+    sf::Clock clockHeal;
     sf::Time heroAttackInterval;
     sf::Time enemyAttackInterval;
     sf::Time holyLandHealInterval;
     sf::Time timeSinceLastHeroAttack = sf::Time::Zero;
     sf::Time timeSinceLastEnemyAttack = sf::Time::Zero;
+    sf::Time timeSinceLastHeroHeal = sf::Time::Zero;
     sf::Time timeSinceLastHolyLandHeal = sf::Time::Zero;
+    sf::Time heroHealInterval = sf::milliseconds(1000);
 
     sf::Time timeSinceLastTowerAttack = sf::Time::Zero;
 
@@ -116,8 +120,10 @@ public:
     void openTowerUpgradeSplitMenu(Tower *tower);
     void openAbilityUpgradeMenu(Tower *tower);
 
-    void performBattle(Hero *&hero, Enemy *&fightingEnemy, std::vector<Enemy *> &enemies);
+    void performBattle(Hero *&hero, Enemy *&fightingEnemy, std::vector<Enemy *> &enemies, float dtm);
 
     void holyLandHeal(Hero *&hero);
     void settingHolyLand();
+
+    void heroHeal();
 };
