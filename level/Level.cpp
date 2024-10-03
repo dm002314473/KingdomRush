@@ -388,6 +388,8 @@ void Level::update()
 
     if (isHeroMoving)
     {
+        //if(fighting enemy!=nullptr)
+             //fightingenemy->setisenemyfighting(false)
         hero->setIsHeroFighting(false);
         hero->performAnimation(hero->getWalkTexture(), sf::milliseconds(1000));
         if (hero->heroMoving(hero->getSprite(), targetPos))
