@@ -5,6 +5,7 @@ int whichTowerToCreate(sf::Vector2i &mousePos, sf::Sprite &menuStand);
 bool isThereTowerAlready(std::vector<Tower *> &towers, sf::Sprite stand);
 void pauseLevel(std::vector<sf::Sprite *> buttons, bool &isLevelPaused);
 void continueLevel(std::vector<sf::Sprite *> buttons, bool &isLevelPaused);
+void loosingLevel(std::vector<sf::Sprite *> buttons, bool &isLevelPaused);
 sf::Vector2f getCenter(sf::Sprite sprite);
 bool heroIsInHolyLandRadius(Hero *hero, std::vector<int> center);
 
@@ -16,9 +17,9 @@ Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu), isLevelPa
     levelBackground.setTexture(*backgroundTexture);
     levelBackgroundTexture = backgroundTexture;
 
-    int polje[5][2] = {{20, 20}, {1800, 20}, {-1000, -1000}, {-500, -500}, {-500, 500}};
-    int sifre[5] = {WAVE_SIGN, PAUSE, FORPAUSE, EXIT, CONTINUE};
-    for (int i = 0; i < 5; i++)
+    int polje[6][2] = {{20, 20}, {1800, 20}, {-1000, -1000}, {-500, -500}, {-500, 500}, {-500, 500}};
+    int sifre[6] = {WAVE_SIGN, PAUSE, FORPAUSE, EXIT, CONTINUE, RESTART};
+    for (int i = 0; i < 6; i++)
     {
         sf::Texture *buttonTexture = mainMenu.getTexturePtr(mainMenu.getAllTexturesMatrix(), sifre[i], 0);
         sf::Sprite *button = new sf::Sprite();
@@ -54,9 +55,13 @@ Level::Level(int levelIndex, MainMenu &MainMenu) : mainMenu(MainMenu), isLevelPa
     {
         return;
     }
-    setTextBox(moneyText, font, moneyBox);
+    setTextBox(moneyText, font, moneyBox, 10, 10);
     ss << getMoney();
     moneyText.setString(ss.str());
+
+    setTextBox(hearthText, font, hearthBox, 115, 10);
+    ssh << hearth;
+    hearthText.setString(ssh.str());
 
     createHero(HERO1);
 
@@ -80,7 +85,6 @@ sf::Sprite Level::getSprite() { return levelBackground; }
 
 void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
 {
-    // Handle creating towers, and starting new waves
     if (buttons[1]->getGlobalBounds().contains((sf::Vector2f)mousePos))
     {
         if (isLevelPaused == true)
@@ -125,6 +129,8 @@ void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
             startNewWave(wave);
             wave++;
         }
+
+        //restart level nakon klika na button[5]
 
         if (isMenuStandOpen && !isSpriteClicked(mousePos, menuStand))
         {
@@ -216,6 +222,13 @@ bool isThereTowerAlready(std::vector<Tower *> &towers, sf::Sprite stand)
     return false;
 }
 
+void loosingLevel(std::vector<sf::Sprite *> buttons, bool &isLevelPaused){
+    buttons[2]->setPosition(960, 540);
+    buttons[3]->setPosition(1060, 540);
+    buttons[5]->setPosition(860, 540);
+    isLevelPaused = true;
+}
+
 void pauseLevel(std::vector<sf::Sprite *> buttons, bool &isLevelPaused)
 {
     buttons[4]->setPosition(-500, -500);
@@ -262,6 +275,8 @@ void Level::handleMenuClickEvent(sf::Vector2i &mousePos, sf::Sprite &menuStand)
             menuStand.setPosition(-1000, -1000);
             isMenuStandOpen = false;
             updateMoney(70);
+            Tower *lastTower = towers.back();
+            createSoldier(BARRACKS_LVL1, lastTower);
         }
         break;
     case 4:
@@ -387,11 +402,18 @@ void Level::update()
 
         if ((*it)->isOutOfMap())
         {
+            updateHearth((*it)->getLiveTaking());
             delete *it;
             it = enemies.erase(it);
         }
         else
             ++it;
+    }
+
+    
+    if(hearth <= 0){
+        isLevelPaused = true;
+        loosingLevel(buttons, isLevelPaused);
     }
 
     if (startNewWaveFlag == 1)
@@ -449,12 +471,16 @@ void Level::render(sf::RenderWindow &window)
         window.draw(tower->getSprite());
     for (auto &enemy : enemies)
         enemy->draw(window);
+    for (auto &soldier : soldiers)
+        soldier->draw(window);
     window.draw(menuStand);
     window.draw(towerUpgrade);
     window.draw(towerUpgradeSplit);
     window.draw(towerAbilityUpgrade);
     window.draw(moneyBox);
     window.draw(moneyText);
+    window.draw(hearthBox);
+    window.draw(hearthText);
     hero->draw(window);
     if(isRadiusVisible)
         window.draw(radius);
@@ -676,6 +702,13 @@ void Level::updateMoney(int price)
     moneyText.setString(ss.str());
 }
 
+void Level::updateHearth(int lostHearth){
+    hearth = hearth - lostHearth;
+    ssh.str("");
+    ssh << hearth;
+    hearthText.setString(ssh.str());
+}
+
 sf::Vector2f getCenter(sf::Sprite sprite)
 {
     sf::Vector2f temp;
@@ -819,4 +852,18 @@ void Level::heroHeal(){
             clockHeal.restart();
         }
     }
+}
+
+void Level::createSoldier(int code, Tower *tower)
+{
+    code += 100;
+    Soldier *soldier1 = new Soldier(mainMenu, *this, code, *tower);
+    Soldier *soldier2 = new Soldier(mainMenu, *this, code, *tower);
+    Soldier *soldier3 = new Soldier(mainMenu, *this, code, *tower);
+    soldiers.push_back(soldier1);
+    soldiers.push_back(soldier2);
+    soldiers.push_back(soldier3);
+    soldier1->getSprite().setPosition(tower->getPosition().x - 75, tower->getPosition().y - 43);
+    soldier2->getSprite().setPosition(tower->getPosition().x + 75, tower->getPosition().y - 43);
+    soldier3->getSprite().setPosition(tower->getPosition().x, tower->getPosition().y + 87);
 }

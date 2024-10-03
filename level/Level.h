@@ -8,6 +8,7 @@
 #include "towers/Tower.h"
 #include "heroes/Hero.h"
 #include "waves/Wave.h"
+#include "soldiers/Soldier.h"
 #include "../mainMenu/MainMenu.h"
 #include "../commonFunctions/CommonFunctions.h"
 
@@ -17,6 +18,7 @@ class Enemy;
 class Tower;
 class Hero;
 class Wave;
+class Soldier;
 
 class Level
 {
@@ -28,6 +30,7 @@ private:
     sf::Sprite towerUpgradeSplit;
     sf::Sprite towerAbilityUpgrade;
     std::vector<Enemy *> enemies;
+    std::vector<Soldier *> soldiers;
     std::vector<sf::Sprite *> towerStands;
     std::vector<Tower *> towers;
     Hero *hero;
@@ -42,6 +45,7 @@ private:
     std::vector<int> heroStandPosition;
     int wave = 0;
     int money = 0;
+    int hearth = 5;
 
     bool isLevelPaused;
     bool isMenuStandOpen = false;
@@ -52,6 +56,9 @@ private:
     sf::RectangleShape moneyBox;
     sf::Font font;
     std::stringstream ss;
+    sf::Text hearthText;
+    sf::RectangleShape hearthBox;
+    std::stringstream ssh;
 
     sf::CircleShape radius;
     bool isRadiusVisible;
@@ -124,4 +131,8 @@ public:
     void settingHolyLand();
 
     void heroHeal();
+
+    void createSoldier(int code, Tower *tower);
+
+    void updateHearth(int lostHearth);
 };

@@ -14,12 +14,12 @@ bool isButtonClicked(sf::Sprite &button, sf::Vector2i &mousePos)
     return false;
 }
 
-void setTextBox(sf::Text& text, sf::Font& font, sf::RectangleShape& box){
-    box.setPosition(10, 10);
+void setTextBox(sf::Text& text, sf::Font& font, sf::RectangleShape& box, int x, int y){
+    box.setPosition(x, y);
     box.setSize(sf::Vector2f(100, 30));
 
     text.setFont(font);
     text.setCharacterSize(24);
     text.setFillColor(sf::Color::Black);
-    text.setPosition(15, 15);
+    text.setPosition(x + 5, y + 5);
 }

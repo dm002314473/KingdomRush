@@ -70,6 +70,11 @@ void Enemy::move(float dtm)
     if (shouldEnemyTurn())
         currentWaypointIndex++;
 
+    if (currentWaypointIndex >= waypoints.size()) {
+        outOfMap = true;
+        return;
+    }
+
     switch (waypoints[currentWaypointIndex][2])
     {
     case 1:
@@ -101,11 +106,6 @@ void Enemy::moveRight(float dtm) { sprite.setPosition(sprite.getPosition().x + s
 void Enemy::moveLeft(float dtm) { sprite.setPosition(sprite.getPosition().x - speedX * dtm, sprite.getPosition().y); }
 void Enemy::moveUp(float dtm) { sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - speedY * dtm); }
 void Enemy::moveDown(float dtm) { sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + speedY * dtm); }
-
-// void moveRight(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x + 1, sprite.getPosition().y); }
-// void moveLeft(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x - 1, sprite.getPosition().y); }
-// void moveUp(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - 1); }
-// void moveDown(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + 1); }
 
 
 bool Enemy::shouldEnemyTurn()

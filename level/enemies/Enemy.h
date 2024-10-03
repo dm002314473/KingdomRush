@@ -58,7 +58,7 @@ public:
     void move(float dtm);
     void stop();
     bool shouldEnemyTurn();
-    bool isOutOfMap() { return outOfMap; }
+    bool isOutOfMap() { return outOfMap || sprite.getPosition().x > 2500 || sprite.getPosition().y > 1500; }
 
     void setIsEnemyFighting(bool condition);
     bool getIsEnemyFighting();
