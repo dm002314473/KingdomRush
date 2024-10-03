@@ -2,10 +2,10 @@
 
 int generateRandomNumber(int min, int max);
 void stopMoving(sf::Sprite &sprite);
-void moveUp(sf::Sprite &sprite);
-void moveDown(sf::Sprite &sprite);
-void moveLeft(sf::Sprite &sprite);
-void moveRight(sf::Sprite &sprite);
+// void moveUp(sf::Sprite &sprite);
+// void moveDown(sf::Sprite &sprite);
+// void moveLeft(sf::Sprite &sprite);
+// void moveRight(sf::Sprite &sprite);
 
 Enemy::Enemy(MainMenu &mainMenu, std::vector<std::vector<int>> &waypoints, std::pair<int, int> pair) : waypoints(waypoints)
 {
@@ -65,7 +65,7 @@ void Enemy::setBounty(int newBounty) { bounty = newBounty; }
 void Enemy::setAttackSpeed(int newAttackSpeed) { attackSpeed = newAttackSpeed; }
 void Enemy::setSprite(sf::Sprite newSprite) { sprite = newSprite; }
 
-void Enemy::move()
+void Enemy::move(float dtm)
 {
     if (shouldEnemyTurn())
         currentWaypointIndex++;
@@ -73,16 +73,16 @@ void Enemy::move()
     switch (waypoints[currentWaypointIndex][2])
     {
     case 1:
-        moveUp(sprite);
+        moveUp(dtm);
         break;
     case 2:
-        moveRight(sprite);
+        moveRight(dtm);
         break;
     case 3:
-        moveDown(sprite);
+        moveDown(dtm);
         break;
     case 4:
-        moveLeft(sprite);
+        moveLeft(dtm);
         break;
     default:
         stopMoving(sprite);
@@ -97,10 +97,16 @@ void Enemy::stop()
 }
 
 void stopMoving(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y); }
-void moveRight(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x + 1, sprite.getPosition().y); }
-void moveLeft(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x - 1, sprite.getPosition().y); }
-void moveUp(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - 1); }
-void moveDown(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + 1); }
+void Enemy::moveRight(float dtm) { sprite.setPosition(sprite.getPosition().x + speedX * dtm, sprite.getPosition().y); }
+void Enemy::moveLeft(float dtm) { sprite.setPosition(sprite.getPosition().x - speedX * dtm, sprite.getPosition().y); }
+void Enemy::moveUp(float dtm) { sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - speedY * dtm); }
+void Enemy::moveDown(float dtm) { sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + speedY * dtm); }
+
+// void moveRight(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x + 1, sprite.getPosition().y); }
+// void moveLeft(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x - 1, sprite.getPosition().y); }
+// void moveUp(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y - 1); }
+// void moveDown(sf::Sprite &sprite) { sprite.setPosition(sprite.getPosition().x, sprite.getPosition().y + 1); }
+
 
 bool Enemy::shouldEnemyTurn()
 {

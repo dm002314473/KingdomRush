@@ -21,6 +21,7 @@ Hero::Hero(MainMenu &mainMenu, Level &level, int code)
     redHealthBarSprite.setPosition(heroSprite.getPosition().x, heroSprite.getPosition().y - 10);
     greenHealthBarSprite.setPosition(redHealthBarSprite.getPosition());
     fullHealth = health;
+    shouldHeroHeal = false;
 }
 
 void Hero::setValues(std::vector<std::vector<int>> allStats, int code)
@@ -37,6 +38,7 @@ void Hero::setValues(std::vector<std::vector<int>> allStats, int code)
                 setPhysicalArmor(allStats[i][5]);
                 setSpeedX(allStats[i][6]);
                 setSpeedY(allStats[i][7]);
+                setHealPerSecond(allStats[i][9]);
                 setAttackSpeed(allStats[i][10]);
             }
         }
@@ -81,7 +83,7 @@ bool Hero::heroMoving(sf::Sprite &sprite, sf::Vector2i &mousePos)
 
     sprite.setPosition(currentPos.x + moveX, currentPos.y + moveY);
 
-    if (static_cast<int>(currentPos.x) == mousePos.x && static_cast<int>(currentPos.y) == mousePos.y)
+    if (int(currentPos.x) == mousePos.x && int(currentPos.y) == mousePos.y)
         return true;
     return false;
 }
@@ -193,3 +195,9 @@ bool Hero::isHeroPositionIsOnPath(std::vector<sf::Color> colors, sf::Color pixel
 }
 
 int Hero::getFullHealth() { return fullHealth; }
+
+bool Hero::getShouldHeroHeal() { return shouldHeroHeal; }
+void Hero::setShouldHeroHeal(bool condition) { shouldHeroHeal = condition; }
+
+int Hero::getHealPerSecond() { return healPerSecond; }
+void Hero::setHealPerSecond(int newHealPerSecond) { healPerSecond = newHealPerSecond; }

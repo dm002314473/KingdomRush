@@ -110,7 +110,14 @@ void Level::handleEvent(sf::Vector2i &mousePos, Game &game, bool &exitLevel)
             targetPos = mousePos;
             isHeroSelected = false;
             isHeroMoving = true;
+            if (fightingEnemy != nullptr) {
+                fightingEnemy->setIsEnemyFighting(false);
+                fightingEnemy = nullptr;
+            }
+            hero->setIsHeroFighting(false);
         }
+        else
+            isHeroSelected = false;
 
         if (buttons[0]->getGlobalBounds().contains((sf::Vector2f)mousePos))
         {
@@ -305,6 +312,9 @@ void Level::update()
 
     int startNewWaveFlag = 1;
 
+    sf::Time deltaTimeMove = clockMoving.restart();
+    float dtm = deltaTimeMove.asSeconds();
+
     sf::Time deltaTime = clockTowerShoot.restart();
     for (auto towerIt = towers.begin(); towerIt != towers.end(); towerIt++)
     {
@@ -345,9 +355,21 @@ void Level::update()
         }
     }
 
+    if (isHeroMoving)
+    {
+        hero->setIsHeroFighting(false);
+        hero->performAnimation(hero->getWalkTexture(), sf::milliseconds(1000));
+        if (hero->heroMoving(hero->getSprite(), targetPos))
+            isHeroMoving = false;
+        if(fightingEnemy != nullptr){
+            fightingEnemy->setIsEnemyFighting(false);
+            fightingEnemy = nullptr;
+        }
+    }
+
     for (auto it = enemies.begin(); it != enemies.end();)
     {
-        if (hero->isEnemyInHeroesRange(*it) && !hero->getIsHeroFighting())
+        if (hero->isEnemyInHeroesRange(*it) && !hero->getIsHeroFighting() && !isHeroMoving)
         {
             (*it)->setIsEnemyFighting(true);
             fightingEnemy = *it;
@@ -356,7 +378,7 @@ void Level::update()
 
         if (!(*it)->getIsEnemyFighting())
         {
-            (*it)->move();
+            (*it)->move(dtm);
             (*it)->performAnimation((*it)->getWalkTexture(), sf::milliseconds(1000));
         }
 
@@ -380,32 +402,29 @@ void Level::update()
 
     sf::Time timeSinceLastHeroAttack = sf::Time::Zero;
     sf::Time timeSinceLastEnemyAttack = sf::Time::Zero;
+    sf::Time timeSinceLastHeroHeal = sf::Time::Zero;
     sf::Time timeSinceLastHolyLandHeal = sf::Time::Zero;
+
     if(fightingEnemy != nullptr)
         enemyAttackInterval = sf::milliseconds(fightingEnemy->getAttackSpeed());
     heroAttackInterval = sf::milliseconds(hero->getAttackSpeed());
     holyLandHealInterval = sf::milliseconds(1000);
 
-    if (isHeroMoving)
-    {
-        hero->setIsHeroFighting(false);
-        hero->performAnimation(hero->getWalkTexture(), sf::milliseconds(1000));
-        if (hero->heroMoving(hero->getSprite(), targetPos))
-        {
-            isHeroMoving = false;
-        }
-    }
     if (fightingEnemy != nullptr)
-        performBattle(hero, fightingEnemy, enemies);
-    for (int i = 0; i < holyLandPoints.size(); i++){
-        if(heroIsInHolyLandRadius(hero, holyLandPoints[i]) && hero->getHealth() == hero->getFullHealth())
+        performBattle(hero, fightingEnemy, enemies, dtm);
+
+    for (int i = 0; i < holyLandPoints.size(); i++) {
+    if (heroIsInHolyLandRadius(hero, holyLandPoints[i])) {
+        if (hero->getHealth() == hero->getFullHealth())
             break;
-        if(heroIsInHolyLandRadius(hero, holyLandPoints[i]) && hero->getHealth() <= hero->getFullHealth() - 5)
+        if (hero->getHealth() <= hero->getFullHealth() - 5)
             holyLandHeal(hero);
-        else if(heroIsInHolyLandRadius(hero, holyLandPoints[i]) && hero->getHealth() < hero->getFullHealth())
+        else if (hero->getHealth() < hero->getFullHealth())
             hero->setHealth(hero->getFullHealth());
     }
+}
 
+    heroHeal();
 
     clock.restart();
 }
@@ -705,7 +724,7 @@ sf::Vector2f Level::getHeroStandPosition()
     return newHeroStandPosition;
 }
 
-void Level::performBattle(Hero *&hero, Enemy *&fightingEnemy, std::vector<Enemy *> &enemies)
+void Level::performBattle(Hero *&hero, Enemy *&fightingEnemy, std::vector<Enemy *> &enemies, float dtm)
 {
     sf::Time elapsedTime = clock.getElapsedTime();
     if (hero->getIsHeroFighting())
@@ -717,13 +736,11 @@ void Level::performBattle(Hero *&hero, Enemy *&fightingEnemy, std::vector<Enemy 
             hero->fighting(fightingEnemy);
             fightingEnemy->updateHealthBar(fightingEnemy->getHealth());
             timeSinceLastHeroAttack = sf::Time::Zero;
-            std::cout << "enemy health " << fightingEnemy->getHealth() << std::endl;
         }
         if (timeSinceLastEnemyAttack >= enemyAttackInterval) {
             fightingEnemy->fighting(hero); 
             hero->updateHealthBar(hero->getHealth());
             timeSinceLastEnemyAttack = sf::Time::Zero;
-            std::cout << "hero health " << hero->getHealth() << std::endl;
         }
         timeSinceLastHeroAttack += elapsedTime;
         timeSinceLastEnemyAttack += elapsedTime;
@@ -732,7 +749,7 @@ void Level::performBattle(Hero *&hero, Enemy *&fightingEnemy, std::vector<Enemy 
             hero->getSprite().setPosition(-1000, -1000);
             fightingEnemy->setIsEnemyFighting(false);
             hero->setIsHeroFighting(false);
-            fightingEnemy->move();
+            fightingEnemy->move(dtm);
         }
         if (!fightingEnemy->getIsEnemyAlive())
         {
@@ -749,7 +766,7 @@ void Level::performBattle(Hero *&hero, Enemy *&fightingEnemy, std::vector<Enemy 
     }
     else
         if(fightingEnemy != nullptr)
-            fightingEnemy->move();
+            fightingEnemy->move(dtm);
 }
 
 void Level::settingHolyLand(){
@@ -774,8 +791,23 @@ void Level::holyLandHeal(Hero *&hero){
     timeSinceLastHolyLandHeal += elapsedTime;
 }
 
+
 bool heroIsInHolyLandRadius(Hero *hero, std::vector<int> center){
     if(sqrt((center[0] - hero->getSprite().getPosition().x) * (center[0] - hero->getSprite().getPosition().x) + (center[1] - hero->getSprite().getPosition().y) * (center[1] - hero->getSprite().getPosition().y)) <= 100)
         return true;
     return false;
+}
+
+void Level::heroHeal(){
+    if(hero->getHealth() != hero->getFullHealth() && !hero->getIsHeroFighting()){
+        sf::Time elapsedTime = clockHeal.getElapsedTime();
+        if (elapsedTime >= heroHealInterval){
+            if(hero->getHealth() <= hero->getFullHealth() - hero->getHealPerSecond())
+                hero->setHealth(hero->getHealth() + hero->getHealPerSecond());
+            else
+                hero->setHealth(hero->getFullHealth());
+            hero->updateHealthBar(hero->getHealth());
+            clockHeal.restart();
+        }
+    }
 }
