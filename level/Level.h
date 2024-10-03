@@ -17,6 +17,7 @@ class Enemy;
 class Tower;
 class Hero;
 class Wave;
+class Projectile;
 
 class Level
 {
@@ -30,6 +31,7 @@ private:
     std::vector<Enemy *> enemies;
     std::vector<sf::Sprite *> towerStands;
     std::vector<Tower *> towers;
+    std::vector<Projectile *> projectiles;
     Hero *hero;
     std::vector<sf::Shape *> holyLands;
 
@@ -78,7 +80,7 @@ private:
 
     sf::Image image;
     std::vector<sf::Color> colors;
-    sf::Vector2u imageSize; 
+    sf::Vector2u imageSize;
 
 public:
     Level(int levelIndex, MainMenu &mainMenu);
